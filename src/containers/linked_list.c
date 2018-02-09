@@ -1,12 +1,4 @@
-#include <containers/linked_list>
-#include <conatiners/linked_list_internal>
+#include <containers/linked_list.h>
+#include <containers/linked_list_internal.h>
 
-struct LinkedList {
-    LinkedListNode_ *head
-                    *tail;
-    size_t size;
 
-#ifdef LL_DEBUG
-    char* dbgStr;
-#endif // LL_DEBUG
-};

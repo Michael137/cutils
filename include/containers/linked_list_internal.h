@@ -3,7 +3,7 @@
 
 typedef struct LinkedListNode_ {
     void* data;
-    LinkedListNode_* next;
+    struct LinkedListNode_* next;
 } LinkedListNode_;
 
 #endif // LINKED_LIST_INTERNAL_H

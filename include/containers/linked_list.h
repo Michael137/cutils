@@ -1,8 +1,21 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
+#include <containers/linked_list_internal.h>
+
+#include <stdbool.h> // bool
+#include <stddef.h> // size_t
+
 // Linked List Externals
-typedef struct LinkedList;
+typedef struct LinkedList_ {
+    LinkedListNode_ *head,
+                    *tail;
+    size_t size;
+
+#ifdef LL_DEBUG
+    char* dbgStr;
+#endif // LL_DEBUG
+} LinkedList;
 
 #ifdef LL_DEBUG
 char* ll_debug();
