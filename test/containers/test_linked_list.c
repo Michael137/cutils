@@ -8,7 +8,13 @@ int main()
     LinkedList* llist;
     ll_create( &llist );
 
-    printf( "Debug %s\n", llist->dbgStr );
+    ll_push_front( &llist, "Node 1", 7 );
+
+    ll_debug( llist );
+
+    printf( "Size: %zd\n", ll_size( llist ) );
+
+    printf( "Node Debug: %s, Node Data: %s\n", llist->head->dbgStr, llist->head->data );
 
     return 0;
 }

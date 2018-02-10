@@ -38,4 +38,4 @@ test_linked_list: $(TESTDIR)/*.c $(OBJ) $(HDRS)
 test:
 		$(OBJDIR)/test_linked_list
 
-all: compile_src test_linked_list test
+all: clean compile_src test_linked_list test
