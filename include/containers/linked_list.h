@@ -29,7 +29,7 @@ bool ll_free();
 bool ll_at();
 bool ll_find();
 bool ll_sort();
-bool ll_create();
+bool ll_create( LinkedList** llist );
 size_t ll_size();
 
 #endif // LINKED_LIST_H
