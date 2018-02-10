@@ -34,7 +34,7 @@ void ll_debug( LinkedList const* llist, char const* extra )
 }
 
 // TODO: _Generic?
-bool ll_push_front( LinkedList** llist, void const* data, size_t data_size )
+bool ll_push_front( LinkedList** llist, void const* data, const size_t data_size )
 {
     if( llist && *llist )
     {
@@ -67,8 +67,8 @@ bool ll_push_front( LinkedList** llist, void const* data, size_t data_size )
         else
             return LL_FAILURE;
     }
-
-    return LL_INVALID_ARGS;
+    else
+        return LL_INVALID_ARGS;
 }
 
 bool ll_free( LinkedList** llist )
@@ -89,5 +89,28 @@ bool ll_free( LinkedList** llist )
         llist = NULL;
     }
 
-    return LL_INVALID_ARGS;
+    return LL_SUCCESS;
+}
+
+void* ll_at( LinkedList const* llist, const size_t idx )
+{
+    if( llist != NULL )
+    {
+        LinkedListNode_* tmp = llist->head;
+
+        size_t ctr = 0;
+        while( tmp != NULL )
+        {
+            if( ctr == idx )
+            {
+                ll_debug_node_( tmp, "From at" );
+
+                return (void*)tmp->data; 
+            }
+
+            tmp = tmp->next;
+            ctr++;
+        }
+    }
+        return NULL; 
 }

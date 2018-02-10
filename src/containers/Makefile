@@ -8,7 +8,7 @@ TESTDIR=../../test/$(PROJECT)
 
 ifneq "$(DEBUG_CONTAINERS)" ""
 CFLAGS += -DLL_DEBUG
-CFLAGS += -O0
+CFLAGS += -O0 -g
 else
 CFLAGS += -O3
 endif
