@@ -1,10 +1,16 @@
 # Build instructions:
 
-# Clean src/target/containersr directory:
-make -f Containers.Makefile clean
+# Clean src/target/containers directory:
+make clean
 
-# Compile containers files without linking:
-make -f Containers.Makefile compile
+# Compile container source files without linking:
+make compile_src
 
-# Build containers .o files:
-make -f Containers.Makefile
+# Build tests:
+make compile_tests
+
+# Make everything
+make all
+
+# Run tests
+make test
