@@ -26,12 +26,12 @@ typedef struct LinkedList_ {
 bool ll_push_front( LinkedList**, void const*, size_t );
 void* ll_pop_front();
 bool ll_remove();
-bool ll_free();
+bool ll_free( LinkedList** llist );
 bool ll_at();
 bool ll_find();
 bool ll_sort();
 bool ll_create( LinkedList** );
 size_t ll_size( LinkedList const* );
-void ll_debug( LinkedList const* );
+void ll_debug( LinkedList const*, char const* );
 
 #endif // LINKED_LIST_H

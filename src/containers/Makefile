@@ -18,7 +18,7 @@ _HDRS = linked_list.h linked_list_internal.h
 # Prepend include path to every header
 HDRS = $(patsubst %,$(INCLUDES)/$(PROJECT)/%,$(_HDRS))
 
-_OBJ = linked_list.o
+_OBJ = linked_list.o linked_list_internal.o
 OBJ = $(patsubst %,$(OBJDIR)/%,$(_OBJ))
 
 $(OBJDIR)/%.o: %.c $(HDRS)

@@ -10,11 +10,11 @@ int main()
 
     ll_push_front( &llist, "Node 1", 7 );
 
-    ll_debug( llist );
+    ll_debug( llist, "From test" );
 
     printf( "Size: %zd\n", ll_size( llist ) );
 
-    printf( "Node Debug: %s, Node Data: %s\n", llist->head->dbgStr, llist->head->data );
+    ll_free( &llist );
 
     return 0;
 }

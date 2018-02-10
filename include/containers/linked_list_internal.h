@@ -12,4 +12,6 @@ typedef struct LinkedListNode_{
 
 } LinkedListNode_;
 
+void ll_debug_node_( LinkedListNode_ const*, char const* );
+
 #endif // LINKED_LIST_INTERNAL_H

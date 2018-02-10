@@ -11,7 +11,7 @@ static void ll_inc_size_( LinkedList** llist )
 
 bool ll_create( LinkedList** llist )
 {
-    *llist = malloc(sizeof(LinkedList));
+    *llist = malloc( sizeof( LinkedList ) );
     (*llist)->head = NULL;
     (*llist)->tail = NULL;
     (*llist)->size = 0;
@@ -26,10 +26,10 @@ size_t ll_size( LinkedList const* llist )
     return llist->size;
 }
 
-void ll_debug( LinkedList const* llist )
+void ll_debug( LinkedList const* llist, char const* extra )
 {
 #ifdef LL_DEBUG
-    printf( "Linked List Debug: %s\n", llist->dbgStr );
+    printf( "%s Linked List Debug: %s\n", extra, llist->dbgStr );
 #endif // LL_DEBUG
 }
 
@@ -66,6 +66,26 @@ bool ll_push_front( LinkedList** llist, void const* data, size_t data_size )
         }
         else
             return LL_FAILURE;
+    }
+
+    return LL_INVALID_ARGS;
+}
+
+bool ll_free( LinkedList** llist )
+{
+    if( llist && *llist )
+    {
+        LinkedListNode_* tmp = (*llist)->head;
+        while( tmp )
+        {
+            ll_debug_node_( tmp, "From ll_free" );
+            free( tmp->data );
+            free( tmp );
+            tmp = tmp->next;
+        }
+
+        free( *llist );
+        llist = NULL;
     }
 
     return LL_INVALID_ARGS;
