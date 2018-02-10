@@ -3,6 +3,8 @@
 
 int main()
 {
+    printf( "~~~ Starting Linked List Tests ~~~\n" );
+
     LinkedList* llist;
     ll_create( &llist );
 

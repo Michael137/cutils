@@ -31,17 +31,11 @@ clean:
 		rm -f $(OBJDIR)/*.o *~ core $(INCLUDES)/*~
 
 # Tests
-_TESTOBJ = test_linked_list.o
-TESTOBJ = $(patsubst %,$(OBJDIR)/%,$(_TESTOBJ))
-
-$(OBJDIR)/%.o: $(TESTDIR)/%.c $(HDRS)
-		$(CC) -c -o $@ $< $(CFLAGS)
-
-.PHONY: compile_tests
-compile_tests: $(TESTOBJ) $(OBJ)
-		$(CC) $< -o $(OBJDIR)/$@
+test_linked_list: $(TESTDIR)/*.c $(OBJ) $(HDRS)
+		$(CC) -o $(OBJDIR)/$@ $^ $(CFLAGS)
 
 .PHONY: test
-		$(shell exec $(OBJDIR)/test_linked_list)
+test:
+		$(OBJDIR)/test_linked_list
 
-all: compile_src compile_tests test
+all: compile_src test_linked_list test
