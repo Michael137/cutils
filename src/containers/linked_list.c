@@ -52,7 +52,7 @@ bool ll_push_front( LinkedList** llist, void const* data, size_t data_size )
             node->data = copy;
 
 #ifdef LL_DEBUG
-            node->dbgStr = "LinkedListNode_ Debug";
+            node->dbgStr = "Node created";
 #endif // LL_DEBUG
 
             LinkedListNode_* tmp = (*llist)->head;
