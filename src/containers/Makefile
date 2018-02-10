@@ -10,8 +10,11 @@ ifneq "$(DEBUG_CONTAINERS)" ""
 CFLAGS += -DLL_DEBUG
 CFLAGS += -O0
 else
-CFLGS += -O3
+CFLAGS += -O3
 endif
+
+# For strdub on C11
+CFLAGS += -D_BSD_SOURCE
 
 # Headers to include
 _HDRS = linked_list.h linked_list_internal.h

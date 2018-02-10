@@ -76,12 +76,13 @@ bool ll_free( LinkedList** llist )
     if( llist && *llist )
     {
         LinkedListNode_* tmp = (*llist)->head;
-        while( tmp )
+        while( tmp != NULL )
         {
-            ll_debug_node_( tmp, "From ll_free" );
+            ll_debug_node_( tmp, "From free" );
+            LinkedListNode_* next = tmp->next;
             free( tmp->data );
             free( tmp );
-            tmp = tmp->next;
+            tmp = next;
         }
 
         free( *llist );
