@@ -13,7 +13,7 @@ else
 CFLAGS += -O3
 endif
 
-# For strdub on C11
+# For strdup() on C11
 CFLAGS += -D_BSD_SOURCE
 
 # Headers to include
