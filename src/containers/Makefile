@@ -8,6 +8,9 @@ TESTDIR=../../test/$(PROJECT)
 
 ifneq "$(DEBUG_CONTAINERS)" ""
 CFLAGS += -DLL_DEBUG
+CFLAGS += -O0
+else
+CFLGS += -O3
 endif
 
 # Headers to include
@@ -37,5 +40,9 @@ test_linked_list: $(TESTDIR)/*.c $(OBJ) $(HDRS)
 .PHONY: test
 test:
 		$(OBJDIR)/test_linked_list
+
+.PHONY: leak
+leak:
+		valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes $(OBJDIR)/test_linked_list
 
 all: clean compile_src test_linked_list test
