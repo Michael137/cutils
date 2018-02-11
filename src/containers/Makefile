@@ -34,7 +34,8 @@ compile_src: $(OBJ)
 # Clean object files
 .PHONY: clean
 clean:
-		rm -f $(OBJDIR)/*.o *~ core $(INCLUDES)/*~
+		rm -f $(OBJDIR)/*.o *~ core $(INCLUDES)/*~ \
+		rm -f $(OBJDIR)/test_linked_list
 
 # Tests
 test_linked_list: $(TESTDIR)/*.c $(OBJ) $(HDRS)
