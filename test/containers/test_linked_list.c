@@ -10,12 +10,12 @@ int main()
     LinkedList* llist;
     ll_create( &llist );
 
-    ll_push_front( &llist, "String Node", 15 );
+    ll_push_front( &llist, "String Node", 12 );
     int integer = 137;
-    ll_push_front( &llist, &integer, 15 );
+    ll_push_front( &llist, &integer, sizeof( int ) );
 
     char* msg = strdup( "Allocated String Node" );
-    ll_push_front( &llist, msg, strlen(msg) );
+    ll_push_front( &llist, msg, strlen(msg) + 1 );
     free( msg );
     
     char* at_msg = ll_at( llist, 0 );
