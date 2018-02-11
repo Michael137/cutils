@@ -150,3 +150,11 @@ bool ll_remove( LinkedList** llist, const size_t idx )
 
     return LL_FAILURE;
 }
+
+bool ll_pop_front( LinkedList** llist )
+{
+    if( llist && *llist )
+        return ll_remove( llist, 0 );
+    else
+        return LL_INVALID_ARGS;
+}

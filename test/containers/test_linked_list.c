@@ -29,9 +29,9 @@ int main()
     char* at_msg3 = ll_at( llist, 2 );
     puts( at_msg3 );
 
-    ll_remove( &llist, 0 );
-    ll_remove( &llist, 0 );
+    ll_pop_front( &llist );
     ll_remove( &llist, 1 );
+    ll_remove( &llist, 2 );
     char* at_msg4 = ll_at( llist, 0 );
     puts( at_msg4 );
 
