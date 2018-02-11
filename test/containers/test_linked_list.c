@@ -11,6 +11,8 @@ int main()
     ll_create( &llist );
 
     ll_push_front( &llist, "String Node", 12 );
+    ll_push_front( &llist, "String Node2", 13 );
+    ll_push_front( &llist, "String Node3", 13 );
     int integer = 137;
     ll_push_front( &llist, &integer, sizeof( int ) );
 
@@ -26,6 +28,12 @@ int main()
 
     char* at_msg3 = ll_at( llist, 2 );
     puts( at_msg3 );
+
+//    ll_remove( &llist, 0 );
+//    ll_remove( &llist, 0 );
+    ll_remove( &llist, 1 );
+    char* at_msg4 = ll_at( llist, 0 );
+    puts( at_msg4 );
 
     ll_free( &llist );
 

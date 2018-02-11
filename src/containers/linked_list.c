@@ -114,3 +114,37 @@ void* ll_at( LinkedList const* llist, const size_t idx )
     }
         return NULL; 
 }
+
+bool ll_remove( LinkedList** llist, const size_t idx )
+{
+    if( llist && *llist )
+    {
+        // TODO: llist_iter?
+        LinkedListNode_* tmp = (*llist)->head;
+        LinkedListNode_* tmp2 = tmp;
+
+        size_t ctr = 0;
+        while( tmp->next != NULL )
+        {
+            if( ctr == idx )
+            {
+                ll_debug_node_( tmp, "From remove" );
+                tmp2 = tmp->next;
+                free( tmp->data );
+                free( tmp );
+                (*llist)->size--;
+
+                (*llist)->head = tmp2;
+                return LL_SUCCESS;
+            }
+
+            tmp = tmp->next;
+            tmp2 = tmp2->next;
+            ctr++;
+        }
+    }
+    else
+        return LL_INVALID_ARGS;
+
+    return LL_FAILURE;
+}
