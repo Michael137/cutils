@@ -12,13 +12,20 @@ static void ll_inc_size_( LinkedList** llist )
 bool ll_create( LinkedList** llist )
 {
     *llist = malloc( sizeof( LinkedList ) );
-    (*llist)->head = NULL;
-    (*llist)->tail = NULL;
-    (*llist)->size = 0;
+    if( *llist )
+    {
+        (*llist)->head = NULL;
+        (*llist)->tail = NULL;
+        (*llist)->size = 0;
 
 #ifdef LL_DEBUG
-    (*llist)->dbgStr = "Map Created";
+        (*llist)->dbgStr = "Map Created";
 #endif
+
+        return LL_SUCCESS;
+    }
+    else
+        return LL_FAILURE;
 }
 
 size_t ll_size( LinkedList const* llist )

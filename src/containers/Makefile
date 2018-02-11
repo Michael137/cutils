@@ -1,8 +1,22 @@
 # Top-level vars
 PROJECT=containers
 INCLUDES=../../include
+
+ifeq "$(CC_USE_CLANGPP)" "1"
+CC=clang++
+CFLAGS=-std=c++17
+else ifeq "$(CC_USE_GPP)" "1"
+CC=g++
+CFLAGS=-std=c++17
+else ifeq "$(CC_USE_CLANG)" "1"
+CC=clang
+CFLAGS=-std=c11
+else
 CC=gcc
-CFLAGS=-std=c11 -I$(INCLUDES)
+CFLAGS=-std=c11
+endif
+
+CFLAGS+=-I$(INCLUDES)
 OBJDIR=../../target/$(PROJECT)
 TESTDIR=../../test/$(PROJECT)
 
@@ -25,7 +39,7 @@ _OBJ = linked_list.o linked_list_internal.o
 OBJ = $(patsubst %,$(OBJDIR)/%,$(_OBJ))
 
 $(OBJDIR)/%.o: %.c $(HDRS)
-		$(CC) -c -o $@ $< $(CFLAGS)
+		$(CC) -c $< $(CFLAGS) -o $@ 
 
 # Compile but don't link'
 .PHONY: compile_src
@@ -39,7 +53,7 @@ clean:
 
 # Tests
 test_linked_list: $(TESTDIR)/*.c $(OBJ) $(HDRS)
-		$(CC) -o $(OBJDIR)/$@ $^ $(CFLAGS)
+		$(CC) $^ $(CFLAGS) -o $(OBJDIR)/$@ 
 
 .PHONY: test
 test:
