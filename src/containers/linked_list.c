@@ -120,27 +120,29 @@ bool ll_remove( LinkedList** llist, const size_t idx )
     if( llist && *llist )
     {
         // TODO: llist_iter?
-        LinkedListNode_* tmp = (*llist)->head;
-        LinkedListNode_* tmp2 = tmp;
+        LinkedListNode_ *curr,
+                        *prev;
 
-        size_t ctr = 0;
-        while( tmp->next != NULL )
+        prev = NULL;
+        int ctr = 0;
+        for( curr = (*llist)->head; curr != NULL; prev = curr,
+                                                  curr = curr->next,
+                                                  ++ctr )
         {
-            if( ctr == idx )
+            if( idx == ctr )
             {
-                ll_debug_node_( tmp, "From remove" );
-                tmp2 = tmp->next;
-                free( tmp->data );
-                free( tmp );
+                if( prev == NULL )
+                    (*llist)->head = curr->next;
+                else
+                    prev->next = curr->next;
+
+                free( curr->data );
+                free( curr );
+
                 (*llist)->size--;
 
-                (*llist)->head = tmp2;
                 return LL_SUCCESS;
             }
-
-            tmp = tmp->next;
-            tmp2 = tmp2->next;
-            ctr++;
         }
     }
     else
