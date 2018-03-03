@@ -3,6 +3,7 @@
 #include <stdlib.h> // malloc
 #include <string.h> // memcpy
 #include <stdio.h> // printf
+#include <stddef.h> // size_t
 
 static void ll_inc_size_( LinkedList** llist )
 {
@@ -164,4 +165,37 @@ bool ll_pop_front( LinkedList** llist )
         return ll_remove( llist, 0 );
     else
         return LL_INVALID_ARGS;
+}
+
+size_t ll_find_internal( LinkedList const* llist, void const* value, VOID_PTR_TYPE_ type_tag )
+{
+    if( llist != NULL )
+    {
+        LinkedListNode_* tmp = llist->head;
+
+        size_t ctr = 0;
+        while( tmp != NULL )
+        {
+            if( void_ptrs_equal_( value, tmp->data, type_tag ) )
+            {
+                ll_debug_node_( tmp, "From Find internal" );
+
+                return ctr; 
+            }
+
+            tmp = tmp->next;
+            ctr++;
+        }
+    }
+        return LL_FAILURE; 
+}
+
+size_t ll_find_int( LinkedList const* llist, void const* value )
+{
+    return ll_find_internal( llist, value, INT );
+}
+
+size_t ll_find_string( LinkedList const* llist, void const* value )
+{
+    return ll_find_internal( llist, value, CSTRING );
 }

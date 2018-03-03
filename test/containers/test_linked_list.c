@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h> // assert
 
 int main()
 {
@@ -34,6 +35,11 @@ int main()
     ll_remove( &llist, 2 );
     char* at_msg4 = ll_at( llist, 0 );
     puts( at_msg4 );
+
+    int to_find = 2;
+    ll_push_front( &llist, &to_find, sizeof( int ) );
+    ll_push_front( &llist, &integer, sizeof( int ) );
+    assert( to_find == *(int*) ll_at( llist, ll_find_int( llist, &to_find ) ) );
 
     ll_free( &llist );
 
