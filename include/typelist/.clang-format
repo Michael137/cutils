@@ -1,0 +1,23 @@
+AlignTrailingComments: true
+AllowShortFunctionsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: false
+BinPackArguments: true
+BreakBeforeBraces: Linux
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+IndentWidth: 4
+Language: Cpp
+NamespaceIndentation: None
+PointerBindsToType: true
+SortIncludes: false
+SortUsingDeclarations: true
+SpaceAfterTemplateKeyword: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: false
+SpaceInEmptyParentheses: false
+SpacesInParentheses: true
+Standard: Cpp11
+TabWidth: 4
+UseTab: Always
+# BasedOnStyle: WebKit
+# BasedOnStyle: LLVM
