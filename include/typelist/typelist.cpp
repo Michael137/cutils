@@ -1,4 +1,5 @@
 #include "typelist.h"
+#include <type_traits>
 
 using namespace tl;
 
@@ -17,5 +18,12 @@ int main()
 			internal::Typelist<
 				int, internal::Typelist<long int, internal::NullType>>>>
 		SignedIntegrals;
+
+	typedef TYPELIST_4( signed char, short int, int, long int )
+		MacroSignedIntegrals;
+
+	static_assert( std::is_same<SignedIntegrals, MacroSignedIntegrals>::value,
+				   "Typelist macro expansion test" );
+
 	return 0;
 }
