@@ -25,5 +25,9 @@ int main()
 	static_assert( std::is_same<SignedIntegrals, MacroSignedIntegrals>::value,
 				   "Typelist macro expansion test" );
 
+	static_assert( Length<CharList>::value == 3, "Length of typelist" );
+
+	static_assert( std::is_same<TypeAt<CharList, 2>::Result, unsigned char>::value, "TypeAt test");
+
 	return 0;
 }
