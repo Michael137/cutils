@@ -5,18 +5,15 @@ using namespace tl;
 
 int main()
 {
-	typedef internal::Typelist<
+	typedef Typelist<
 		char,
-		internal::Typelist<
-			signed char, internal::Typelist<unsigned char, internal::NullType>>>
+		Typelist<signed char, Typelist<unsigned char, internal::NullType>>>
 		CharList;
 
-	typedef internal::Typelist<
+	typedef Typelist<
 		signed char,
-		internal::Typelist<
-			short int,
-			internal::Typelist<
-				int, internal::Typelist<long int, internal::NullType>>>>
+		Typelist<short int,
+				 Typelist<int, Typelist<long int, internal::NullType>>>>
 		SignedIntegrals;
 
 	typedef TYPELIST_4( signed char, short int, int, long int )
@@ -27,7 +24,11 @@ int main()
 
 	static_assert( Length<CharList>::value == 3, "Length of typelist" );
 
-	static_assert( std::is_same<TypeAt<CharList, 2>::Result, unsigned char>::value, "TypeAt test");
+	static_assert(
+		std::is_same<TypeAt<CharList, 2>::Result, unsigned char>::value,
+		"TypeAt test" );
+
+	static_assert( IndexOf<CharList, signed char>::value == 1, "IndexOf test" );
 
 	return 0;
 }
