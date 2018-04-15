@@ -30,5 +30,11 @@ int main()
 
 	static_assert( IndexOf<CharList, signed char>::value == 1, "IndexOf test" );
 
+	static_assert( Length<Append<CharList, signed long>::Result>::value == 4 );
+
+	static_assert( Length<Append<internal::NullType, int>::Result>::value == 1 );
+
+	static_assert( IndexOf<Append<internal::NullType, int>::Result, int>::value == 0 );
+
 	return 0;
 }

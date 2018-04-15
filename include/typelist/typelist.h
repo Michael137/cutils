@@ -72,6 +72,32 @@ struct IndexOf<Typelist<Head, Tail>, T> {
 	enum { value = temp == -1 ? -1 : 1 + temp };
 };
 
+// Append
+template< typename TList, typename T> struct Append;
+template<> struct Append<internal::NullType, internal::NullType>
+{
+	typedef internal::NullType Result;
+};
+
+template< typename T>
+struct Append<internal::NullType, T>
+{
+	typedef TYPELIST_1(T) Result;
+};
+
+template< typename Head, typename Tail >
+struct Append<internal::NullType, Typelist< Head, Tail >>
+{
+	typedef Typelist< Head, Tail > Result;
+};
+
+template< typename Head, typename Tail, typename T >
+struct Append< Typelist< Head, Tail >, T>
+{
+	typedef Typelist<Head,
+		typename Append< Tail, T >::Result > Result;
+};
+
 } // namespace tl
 
 #endif // TYPELIST_H_IN
