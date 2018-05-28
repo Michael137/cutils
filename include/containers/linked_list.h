@@ -33,4 +33,7 @@ void ll_debug( LinkedList const*, char const* );
 size_t ll_find_int( LinkedList const*, void const* );
 size_t ll_find_string( LinkedList const*, void const* );
 
+// TODO: implement
+void ll_print( LinkedList const* );
+
 #endif // LINKED_LIST_H

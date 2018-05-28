@@ -175,3 +175,6 @@ size_t ll_find_string( LinkedList const* llist, void const* value )
 {
 	return ll_find_internal( llist, value, CSTRING );
 }
+
+void ll_print( LinkedList const* llist )
+{}

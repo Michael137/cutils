@@ -32,11 +32,11 @@ endif
 CFLAGS += -D_DEFAULT_SOURCE
 
 # Headers to include
-_HDRS = linked_list.h linked_list_internal.h
+_HDRS = linked_list.h linked_list_internal.h linked_list_helpers.h
 # Prepend include path to every header
 HDRS = $(patsubst %,$(INCLUDES)/$(PROJECT)/%,$(_HDRS))
 
-_OBJ = linked_list.o linked_list_internal.o
+_OBJ = linked_list.o linked_list_internal.o linked_list_helpers.o
 OBJ = $(patsubst %,$(OBJDIR)/%,$(_OBJ))
 
 $(OBJDIR)/%.o: %.c $(HDRS)

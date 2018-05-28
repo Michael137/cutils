@@ -21,4 +21,5 @@ typedef enum VOID_PTR_TYPE_ { INT = 0, CSTRING } VOID_PTR_TYPE_;
 bool void_ptrs_equal_( void const* lhs, void const* rhs,
 					   VOID_PTR_TYPE_ type_tag );
 
+
 #endif // LINKED_LIST_INTERNAL_H
