@@ -21,3 +21,7 @@ int ll_get_node_( LinkedList const* llist, size_t idx, LinkedListNode_** node )
 
 	return LL_SUCCESS;
 }
+
+void ll_print( LinkedList const* llist )
+{
+}

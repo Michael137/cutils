@@ -1,9 +1,11 @@
+#include <assert.h>
 #include <stdio.h>
+#include <string.h>
+
 #include <containers/linked_list.h>
 #include <containers/linked_list_helpers.h>
 #include <containers/linked_list_internal.h>
 
-#include <assert.h>
 
 // Node0-->Node1-->Node2-->Node3
 //                   ^     |
@@ -44,10 +46,10 @@ int main()
 	assert( strcmp( n5->next->data, n2->data ) == 0 );
 	puts( "~~~> test_ll_loop: Linked list loop created..." );
 
-//	ll_print( &llist );
+	ll_print( llist );
 
 	// Cleanup
-//	ll_free( &llist );
+	ll_free( &llist );
 
 	return 0;
 }

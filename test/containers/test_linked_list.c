@@ -1,5 +1,6 @@
 #include <assert.h> // assert
 #include <containers/linked_list.h>
+#include <containers/linked_list_helpers.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -41,7 +42,7 @@ int main()
 	ll_push_front( &llist, &integer, sizeof( int ) );
 	assert( to_find == *(int*)ll_at( llist, ll_find_int( llist, &to_find ) ) );
 
-	//ll_print( &llist );
+	ll_print( llist );
 
 	ll_free( &llist );
 

@@ -6,5 +6,6 @@
 
 // TODO: implement
 int ll_get_node_( LinkedList const*, size_t, LinkedListNode_** );
+void ll_print( LinkedList const* );
 
 #endif // LINKED_LIST_HELPERS_H
