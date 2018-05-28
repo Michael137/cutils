@@ -5,6 +5,6 @@
 #include <containers/linked_list_internal.h>
 
 // TODO: implement
-LinkedListNode_* ll_get_node_( LinkedList const*, size_t );
+int ll_get_node_( LinkedList const*, size_t, LinkedListNode_** );
 
 #endif // LINKED_LIST_HELPERS_H
