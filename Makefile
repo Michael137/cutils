@@ -1,4 +1,4 @@
-all: clean install_containers
+all: clean install_containers install_utils
 
 clean:
 	rm -rf target
@@ -9,4 +9,4 @@ install_containers:
 
 install_utils:
 	$(shell mkdir -p target/bin)
-	$(MAKE) -C src/utils all
+	$(MAKE) -C src/utils/ll_loop all
