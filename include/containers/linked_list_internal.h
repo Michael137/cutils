@@ -3,10 +3,19 @@
 
 #include <stdbool.h> // bool
 
+typedef enum VOID_PTR_TYPE_ {
+
+	UNKNOWN = -1,
+	INT = 0,
+	CSTRING
+
+} VOID_PTR_TYPE_;
+
 typedef struct LinkedListNode_ {
 
-	void* data;
+	VOID_PTR_TYPE_ type_tag_;
 	struct LinkedListNode_* next;
+	void* data;
 
 #ifdef LL_DEBUG
 	char* dbgStr;
@@ -15,8 +24,6 @@ typedef struct LinkedListNode_ {
 } LinkedListNode_;
 
 void ll_debug_node_( LinkedListNode_ const*, char const* );
-
-typedef enum VOID_PTR_TYPE_ { INT = 0, CSTRING } VOID_PTR_TYPE_;
 
 bool void_ptrs_equal_( void const* lhs, void const* rhs,
 					   VOID_PTR_TYPE_ type_tag );

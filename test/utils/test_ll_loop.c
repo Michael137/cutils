@@ -46,10 +46,10 @@ int main()
 	assert( strcmp( n5->next->data, n2->data ) == 0 );
 	puts( "~~~> test_ll_loop: Linked list loop created..." );
 
-	ll_print( llist );
+//	ll_print( llist );
 
 	// Cleanup
-	ll_free( &llist );
+//	ll_free( &llist );
 
 	return 0;
 }

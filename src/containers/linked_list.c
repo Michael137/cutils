@@ -48,6 +48,7 @@ bool ll_push_front( LinkedList** llist, void const* data,
 
 		if( node ) {
 			node->data = copy;
+			node->type_tag_ = UNKNOWN;
 
 #ifdef LL_DEBUG
 			node->dbgStr = "Node created";
