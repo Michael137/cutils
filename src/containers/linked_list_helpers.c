@@ -7,18 +7,16 @@
 
 static void ll_print_node_data_( LinkedListNode_ const* node )
 {
-	void* tmp = NULL;
+	printf("\ttype: %d\n", node->type_tag_);
 	switch( node->type_tag_ ) {
 	case UNKNOWN:
 		printf( ">> \tdata: (unknown)\n" );
 		break;
 	case INT:
-		tmp = node->data;
-		printf( ">> \tdata: %d\n", tmp );
+		printf( ">> \tdata: %d\n", *(int*)node->data );
 		break;
 	case CSTRING:
-		tmp = node->data;
-		printf( ">> \tdata: %s\n", tmp );
+		printf( ">> \tdata: %s\n", (char*)node->data );
 		break;
 	}
 }
@@ -59,7 +57,7 @@ void ll_print( LinkedList const* llist )
 		int ctr = 0;
 		while( tmp != NULL )
 		{
-			printf( ">> \tid: %d\n>> \t>---------\n", ctr );
+			printf( ">> \t>---------\n>> \tid: %d\n>>", ctr );
 			ll_print_node_( tmp );
 			printf( ">> \t---------<\n" );
 			tmp = tmp->next;
@@ -68,19 +66,18 @@ void ll_print( LinkedList const* llist )
 	}
 }
 
-// TODO: implement
-int ll_replace_node_( LinkedList** llist, size_t idx, LinkedListNode_* node ) { return 0; };
-
 int ll_node_set_type( LinkedList** llist, size_t idx, VOID_PTR_TYPE_ type_tag )
 {
-	int ret = LL_FAILURE;
-	LinkedListNode_* node = NULL;
+	// TODO: refactor to use ll_get_node_()
+	LinkedListNode_* tmp = (*llist)->head;
+	int ctr = 0;
+	while( ctr++ < idx && tmp != NULL )
+		tmp = tmp->next;
 
-	if( (ret = ll_get_node_( *llist, idx, &node )) == LL_SUCCESS )
-	{
-		node->type_tag_ = type_tag;
-		ll_replace_node_( llist, idx, node );
-	}
+	if( ctr == idx + 1 )
+		tmp->type_tag_ = type_tag;
+	else
+		return LL_FAILURE;
 
-	return ret;
+	return LL_SUCCESS;
 }
