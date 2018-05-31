@@ -30,6 +30,7 @@ endif
 # For strdup() on C11
 # CFLAGS += -D_BSD_SOURCE
 CFLAGS += -D_DEFAULT_SOURCE
+CFLAGS += -Werror -Wall --pedantic-errors -Wextra -Wstrict-aliasing -Wshadow -Wpedantic -fstrict-aliasing
 
 # Headers to include
 _HDRS = linked_list.h linked_list_internal.h linked_list_helpers.h

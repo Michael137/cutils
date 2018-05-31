@@ -23,7 +23,11 @@ typedef struct LinkedListNode_ {
 
 } LinkedListNode_;
 
+#ifdef LL_DEBUG
 void ll_debug_node_( LinkedListNode_ const*, char const* );
+#else
+inline void ll_debug_node_() {}
+#endif // LL_DEBUG
 
 bool void_ptrs_equal_( void const* lhs, void const* rhs,
 					   VOID_PTR_TYPE_ type_tag );

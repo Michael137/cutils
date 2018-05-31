@@ -26,12 +26,12 @@ bool ll_create( LinkedList** llist )
 
 size_t ll_size( LinkedList const* llist ) { return llist->size; }
 
+#ifdef LL_DEBUG
 void ll_debug( LinkedList const* llist, char const* extra )
 {
-#ifdef LL_DEBUG
 	printf( "%s Linked List Debug: %s\n", extra, llist->dbgStr );
-#endif // LL_DEBUG
 }
+#endif // LL_DEBUG
 
 // TODO: _Generic?
 bool ll_push_front( LinkedList** llist, void const* data,
@@ -113,7 +113,7 @@ bool ll_remove( LinkedList** llist, const size_t idx )
 		// TODO: llist_iter?
 		LinkedListNode_ *curr = ( *llist )->head, *prev = NULL;
 
-		int ctr = 0;
+		size_t ctr = 0;
 		while( curr ) {
 			if( ctr == idx ) {
 				if( prev == NULL )

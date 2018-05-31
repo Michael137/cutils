@@ -29,8 +29,13 @@ bool ll_free( LinkedList** );
 void* ll_at( LinkedList const*, const size_t );
 bool ll_create( LinkedList** );
 size_t ll_size( LinkedList const* );
-void ll_debug( LinkedList const*, char const* );
 size_t ll_find_int( LinkedList const*, void const* );
 size_t ll_find_string( LinkedList const*, void const* );
+
+#ifdef LL_DEBUG
+void ll_debug( LinkedList const*, char const* );
+#else
+inline void ll_debug() {}
+#endif // LL_DEBUG
 
 #endif // LINKED_LIST_H
