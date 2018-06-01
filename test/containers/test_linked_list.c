@@ -19,6 +19,9 @@ int main()
 	int integer = 137;
 	ll_push_front( &llist, &integer, sizeof( int ) );
 
+	char const* str_to_find = "String Node2";
+	assert( strcmp( str_to_find, (const char*)ll_at( llist, ll_find_string( llist, str_to_find ) ) ) == 0 );
+
 	char* msg = strdup( "Allocated String Node" );
 	ll_push_front( &llist, msg, strlen( msg ) + 1 );
 	free( msg );

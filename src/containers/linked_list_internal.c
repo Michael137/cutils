@@ -1,4 +1,5 @@
 #include <containers/linked_list_internal.h>
+#include <string.h> // strcmp
 #include <stdio.h> // printf
 
 #ifdef LL_DEBUG
@@ -17,7 +18,7 @@ bool void_ptrs_equal_( void const* lhs, void const* rhs,
 	case INT:
 		return *(int*)lhs == *(int*)rhs;
 	case CSTRING:
-		return *(char*)lhs == *(char*)rhs;
+		return strcmp( (char*)lhs, (char*)rhs ) == 0;
 	}
 
 	return false;
