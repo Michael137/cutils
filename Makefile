@@ -9,4 +9,5 @@ install_containers:
 
 install_utils:
 	$(shell mkdir -p target/bin)
+	$(shell mkdir -p target/utils)
 	$(MAKE) -C src/utils/ll_loop all

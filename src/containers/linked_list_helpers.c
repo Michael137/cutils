@@ -81,3 +81,4 @@ int ll_node_set_type( LinkedList** llist, size_t idx, VOID_PTR_TYPE_ type_tag )
 
 	return LL_SUCCESS;
 }
+

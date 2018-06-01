@@ -6,6 +6,7 @@
 #include <containers/linked_list_helpers.h>
 #include <containers/linked_list_internal.h>
 
+#include <utils/ll_loop/ll_loop.h>
 
 // Node0-->Node1-->Node2-->Node3
 //                   ^     |
@@ -45,6 +46,8 @@ int main()
 	n5->next = n2;
 	assert( strcmp( n5->next->data, n2->data ) == 0 );
 	puts( "~~~> test_ll_loop: Linked list loop created..." );
+
+	ll_has_loop_naive( llist );
 
 //	ll_print( llist );
 //
