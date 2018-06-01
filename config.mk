@@ -15,4 +15,27 @@ endif
 # CFLAGS += -D_BSD_SOURCE
 CFLAGS+=-std=c11
 CFLAGS += -D_DEFAULT_SOURCE
-CFLAGS += -Werror -Wall --pedantic-errors -Wextra -Wstrict-aliasing -Wshadow -Wpedantic -fstrict-aliasing
+
+# Base warnings
+CFLAGS += -Wall
+CFLAGS += -Wextra
+CFLAGS += -Wpedantic
+
+# Additional useful warnings
+CFLAGS += -Wshadow
+CFLAGS += -Wnull-dereference
+CFLAGS += -Wunknown-pragmas
+CFLAGS += -Winline
+
+# Warnings requires instrumentation
+CFLAGS += -Wstrict-aliasing
+CFLAGS += -fstrict-aliasing
+
+# Sanitizers
+CFLAGS += -fsanitize=undefined
+CFLAGS += -fsanitize=address
+CFLAGS += -fsanitize=leak
+
+# Warnings are errors
+CFLAGS += -Werror
+CFLAGS += -pedantic-errors
