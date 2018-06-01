@@ -52,12 +52,12 @@ void ll_print( LinkedList const* llist )
 	if( llist )
 	{
 		LinkedListNode_* tmp = llist->head;
-		printf( ">> size: %ld\n", llist->size );
+		printf( ">> size: %zd\n", llist->size );
 
 		size_t ctr = 0;
 		while( tmp != NULL )
 		{
-			printf( ">> \t>---------\n>> \tid: %ld\n>>", ctr );
+			printf( ">> \t>---------\n>> \tid: %zd\n>>", ctr );
 			ll_print_node_( tmp );
 			printf( ">> \t---------<\n" );
 			tmp = tmp->next;

@@ -8,6 +8,8 @@ CFLAGS+=-I$(INCLUDES)
 OBJDIR=../../target/$(PROJECT)
 TESTDIR=../../test/$(PROJECT)
 
+# TODO: split linked list and hashmap targets
+#       and compile/link stages
 # Headers to include
 _HDRS = linked_list.h linked_list_internal.h linked_list_helpers.h
 _HDRS += hashmap.h
