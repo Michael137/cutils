@@ -29,18 +29,24 @@ compile_src: $(OBJ)
 .PHONY: clean
 clean:
 		rm -f $(OBJDIR)/*.o *~ core $(INCLUDES)/*~ \
-		rm -f $(OBJDIR)/test_linked_list
+		rm -f $(OBJDIR)/test_linked_list \
+		rm -f $(OBJDIR)/test_hashmap
 
 # Tests
-test_linked_list: $(TESTDIR)/*.c $(OBJ) $(HDRS)
+test_linked_list: $(TESTDIR)/test_linked_list.c $(OBJ) $(HDRS)
+		$(CC) $^ $(CFLAGS) -o $(OBJDIR)/$@
+
+test_hashmap: $(TESTDIR)/test_hashmap.c $(OBJ) $(HDRS)
 		$(CC) $^ $(CFLAGS) -o $(OBJDIR)/$@ 
 
 .PHONY: test
 test:
 		$(OBJDIR)/test_linked_list
+		$(OBJDIR)/test_hashmap
 
+# TODO: move to separate script taking test name as argument
 .PHONY: leak
 leak:
 		valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes $(OBJDIR)/test_linked_list
 
-all: clean compile_src test_linked_list test
+all: clean compile_src test_linked_list test_hashmap test

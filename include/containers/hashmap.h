@@ -3,4 +3,13 @@
 
 void dummy();
 
+/*
+ * TODO:
+ *
+ * CREATE
+ * INSERT
+ * SEARCH
+ * DELETE
+ */
+
 #endif // HASHMAP_H_IN
