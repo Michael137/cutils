@@ -29,10 +29,10 @@ int hm_create( HashMap** map ) {
 	return HM_FAILURE;
 }
 
-void hm_free( HashMap** map )
+void hm_free( HashMap* map )
 {
-	free( *map );
-	*map = NULL;
+	free( map );
+	map = NULL;
 }
 
 // TODO: replace with user-defined hash function
@@ -57,27 +57,27 @@ void hm_insert( HashMap** map, void const* key, void const* value )
 	HashNode_* node = malloc( sizeof( HashNode_ ) );
 	node->key = key;
 	node->value = value;
-	ll_push_front( &llist, node, sizeof( HashNode_ ) );
+	ll_push_front( &llist, node, sizeof( HashNode_* ) );
 }
 
-void const * hm_get( HashMap const* map, void const* key )
+void* hm_get( HashMap const* map, void const* key )
 {
 	size_t hsh = hash_str(key);
 	size_t idx = hsh % map->size;
 
 	// TODO: implement ll_find with custom comparator
-	LinkedList const* llist = &(map->buckets[idx]);
-	LinkedListNode_ const* head = llist->head;
+	LinkedList* head = &(map->buckets[idx]);
 
 	while( head != NULL )
 	{
-		HashNode_* node_data = head->data;
-		if( strcmp( (char*)node_data->key, (char*) key ) == 0 )
-			return node_data->value;
+		if( strcmp( head->data->key, (char*) key ) == 0 )
+		{
+			puts( "REACHED" );
+			return head->data->value;
+		}
 
 		head = head->next;
 	}
 
 	//return ll_at( &(map->buckets[idx]), 0 );
-	return NULL;
 }

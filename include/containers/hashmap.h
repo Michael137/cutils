@@ -22,13 +22,13 @@
 typedef struct HashNode_ {
 
 	void const* key;
-	void* value;
+	void const* value;
 
 	/*
  	 * hashFn*
  	 * cmpFn*
  	 */
-} HashNode;
+} HashNode_;
 
 typedef struct HashMap_ {
 
@@ -40,8 +40,8 @@ typedef struct HashMap_ {
 
 
 int hm_create( HashMap** map );
-void hm_free( HashMap* map );
+void hm_free( HashMap** map );
 void hm_insert( HashMap** map, void const* key, void const* value );
-void* hm_get( HashMap const* map, void const* key );
+void const* hm_get( HashMap const* map, void const* key );
 
 #endif // HASHMAP_H_IN
