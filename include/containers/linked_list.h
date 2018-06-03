@@ -31,6 +31,7 @@ bool ll_create( LinkedList** );
 size_t ll_size( LinkedList const* );
 size_t ll_find_int( LinkedList const*, void const* );
 size_t ll_find_string( LinkedList const*, void const* );
+size_t ll_find( LinkedList const*, void const*, bool(*)(void const*, void const*) );
 
 #ifdef LL_DEBUG
 void ll_debug( LinkedList const*, char const* );

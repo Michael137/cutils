@@ -146,15 +146,15 @@ bool ll_pop_front( LinkedList** llist )
 		return LL_INVALID_ARGS;
 }
 
-size_t ll_find_internal( LinkedList const* llist, void const* value,
-						 VOID_PTR_TYPE_ type_tag )
+size_t ll_find( LinkedList const* llist, void const* value,
+			    bool(*cmp_fn)(void const*, void const*) )
 {
 	if( llist != NULL ) {
 		LinkedListNode_* tmp = llist->head;
 
 		size_t ctr = 0;
 		while( tmp != NULL ) {
-			if( void_ptrs_equal_( value, tmp->data, type_tag ) ) {
+			if( cmp_fn( value, tmp->data ) ) {
 				ll_debug_node_( tmp, "From Find internal" );
 
 				return ctr;
@@ -167,13 +167,15 @@ size_t ll_find_internal( LinkedList const* llist, void const* value,
 	return LL_FAILURE;
 }
 
+LL_GEN_FIND_CMP_FN_( int, INT )
+LL_GEN_FIND_CMP_FN_( str, CSTRING )
+
 size_t ll_find_int( LinkedList const* llist, void const* value )
 {
-	return ll_find_internal( llist, value, INT );
+	return ll_find( llist, value, int_cmp_fn_ );
 }
 
 size_t ll_find_string( LinkedList const* llist, void const* value )
 {
-	return ll_find_internal( llist, value, CSTRING );
+	return ll_find( llist, value, str_cmp_fn_ );
 }
-
