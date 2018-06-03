@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-
-// TODO: remove hashmap.h dep.?
-#include <containers/hashmap.h>
 #include <containers/linked_list.h>
 
 #include <utils/ll_loop/ll_loop.h>
