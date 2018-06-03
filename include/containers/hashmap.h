@@ -40,7 +40,7 @@ typedef struct HashMap_ {
 
 
 int hm_create( HashMap** map );
-void hm_free( HashMap** map );
+void hm_free( HashMap* map );
 void hm_insert( HashMap** map, void const* key, void const* value );
 void const* hm_get( HashMap const* map, void const* key );
 

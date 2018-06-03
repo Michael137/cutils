@@ -68,10 +68,10 @@ bool ll_push_front( LinkedList** llist, void const* data,
 		return LL_INVALID_ARGS;
 }
 
-bool ll_free( LinkedList** llist )
+bool ll_free( LinkedList* llist )
 {
-	if( llist && *llist ) {
-		LinkedListNode_* tmp = ( *llist )->head;
+	if( llist ) {
+		LinkedListNode_* tmp = llist->head;
 		while( tmp != NULL ) {
 			ll_debug_node_( tmp, "From free" );
 			LinkedListNode_* next = tmp->next;
@@ -80,7 +80,7 @@ bool ll_free( LinkedList** llist )
 			tmp = next;
 		}
 
-		free( *llist );
+		free( llist );
 		llist = NULL;
 	}
 

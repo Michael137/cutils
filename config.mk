@@ -1,14 +1,15 @@
 CFLAGS=
+SANITIZE_FLAGS=
 
 ifneq "$(DEBUG)" ""
-CFLAGS += -DLL_DEBUG
-CFLAGS += -O0 -g
+  CFLAGS += -DLL_DEBUG
+  CFLAGS += -O0 -g
 else
-CFLAGS += -O3
+  CFLAGS += -O3
 endif
 
 ifeq "$(CC)" ""
-CC=gcc
+  CC=gcc
 endif
 
 # For strdup() on C11
@@ -32,9 +33,10 @@ CFLAGS += -Wstrict-aliasing
 CFLAGS += -fstrict-aliasing
 
 # Sanitizers
-CFLAGS += -fsanitize=undefined
-CFLAGS += -fsanitize=address
-CFLAGS += -fsanitize=leak
+SANITIZE_FLAGS += -fsanitize=undefined
+SANITIZE_FLAGS += -fsanitize=address
+SANITIZE_FLAGS += -fsanitize=leak
+CFLAGS += $(SANITIZE_FLAGS)
 
 # Warnings are errors
 CFLAGS += -Werror

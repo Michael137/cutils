@@ -50,7 +50,7 @@ int main()
 	ll_node_set_type( &llist, 1, INT);
 	ll_print( llist );
 
-	ll_free( &llist );
+	ll_free( llist );
 
 	return 0;
 }

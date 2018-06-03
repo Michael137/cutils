@@ -52,7 +52,7 @@ int main()
 //	ll_print( llist );
 //
 //	// Cleanup
-//	ll_free( &llist );
+//	ll_free( llist );
 
 	return 0;
 }

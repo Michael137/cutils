@@ -18,6 +18,10 @@ int hm_create( HashMap** map ) {
 			LinkedList* llist;
 			ll_create( &llist );
 			(*map)->buckets[i] = *llist;
+
+			// TODO: map.buckets should be array of pointers
+			//       then this free can be moved to hm_free()
+			free( llist );
 		}
 		return HM_SUCCESS;
 	}
@@ -29,10 +33,26 @@ int hm_create( HashMap** map ) {
 	return HM_FAILURE;
 }
 
-void hm_free( HashMap** map )
+void hm_free( HashMap* map )
 {
-	free( *map );
-	*map = NULL;
+	// TODO: can be changed to ll_free()
+	//       once buckets contains pointers
+	size_t i = 0;
+	for( ; i < map->size; ++i )
+	{
+		LinkedListNode_* tmp = (map->buckets[i]).head;
+		while( tmp != NULL ) {
+			char msg[50];
+			sprintf( msg, "From free hm_free at idx %ld", i );
+			ll_debug_node_( tmp, msg );
+			LinkedListNode_* next = tmp->next;
+			free( tmp->data );
+			free( tmp );
+			tmp = next;
+		}
+	}
+	free( map );
+	map = NULL;
 }
 
 // TODO: replace with user-defined hash function
@@ -58,6 +78,7 @@ void hm_insert( HashMap** map, void const* key, void const* value )
 	node->key = key;
 	node->value = value;
 	ll_push_front( &llist, node, sizeof( HashNode_ ) );
+	free( node );
 }
 
 void const * hm_get( HashMap const* map, void const* key )
