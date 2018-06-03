@@ -21,6 +21,10 @@ static bool cmp_fn_str( void const* key, void const* value )
 	return strcmp( (char*)key, (char*)value ) == 0;
 }
 
+/*
+ * TODO: create hash_map_int() and hash_map_str()
+ *       with default hash/cmp fns
+ */
 static size_t hash_fn_int( void const* num )
 {
 	size_t key = *(int*)num;
@@ -55,8 +59,7 @@ int main()
 
 	hm_free( str_map );
 
-	HashMap* int_map;
-
+	HashMap* int_map; 
 	hm_create( &int_map, hash_fn_int, cmp_fn_int );
 	int val1 = 1;
 	int val2 = 2;

@@ -1,16 +1,34 @@
+#include <stdio.h>
+#include <string.h>
+
+// TODO: remove hashmap.h dep.?
 #include <containers/hashmap.h>
 #include <containers/linked_list.h>
 
 #include <utils/ll_loop/ll_loop.h>
 
-/*
- * Naive solution:
- * 1. Iterate over linked list
- * 2. Save pointer to each element encountered in hashmap
- * 3. On next element check if already encountered. If so,
- *    the linked list has a loop
- */
-int ll_has_loop_naive( __attribute( ( unused ) ) LinkedList const* llist )
+bool ll_has_loop_naive( LinkedList const* llist )
 {
-	return LL_FAILURE;
+	size_t ptrs[llist->size];
+	size_t i = 0;
+	for( ; i < sizeof( ptrs ) / sizeof( ptrs[0] ); ++i )
+		ptrs[i] = 0;
+
+	LinkedListNode_* head = llist->head;
+	while( head != NULL ) {
+		size_t ptr = (size_t)head;
+		size_t j = 0;
+		for( ; j < sizeof( ptrs ) / sizeof( ptrs[0] ); ++j ) {
+			if( ptrs[j] == ptr )
+				return true;
+			else if( ptrs[j] == 0 ) {
+				ptrs[j] = ptr;
+				break;
+			}
+		}
+
+		head = head->next;
+	}
+
+	return false;
 }

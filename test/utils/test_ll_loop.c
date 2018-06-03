@@ -46,13 +46,15 @@ int main()
 	n5->next = n2;
 	assert( strcmp( n5->next->data, n2->data ) == 0 );
 	puts( "~~~> test_ll_loop: Linked list loop created..." );
+	assert( ll_has_loop_naive( llist ) );
 
-	ll_has_loop_naive( llist );
+	// Remove loop
+	puts( "~~~> test_ll_loop: Linked list loop removed..." );
+	n5->next = NULL;
+	assert( !ll_has_loop_naive( llist ) );
 
-	//	ll_print( llist );
-	//
-	//	// Cleanup
-	//	ll_free( llist );
+	// Cleanup
+	ll_free( llist );
 
 	return 0;
 }
