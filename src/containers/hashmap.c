@@ -5,30 +5,27 @@
 
 static size_t const sc_hm_min_size_ = 128;
 
-
-int hm_create( HashMap** map, size_t(*hash_fn)(void const*), bool(*cmp_fn)(void const*, void const*) ) {
+int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
+			   bool ( *cmp_fn )( void const*, void const* ) )
+{
 	*map = malloc( sizeof( HashMap ) + sc_hm_min_size_ * sizeof( LinkedList ) );
-	if( map && *map )
-	{
-		(*map)->size = sc_hm_min_size_;
-		(*map)->hash_fn = hash_fn;
-		(*map)->cmp_fn = cmp_fn;
+	if( map && *map ) {
+		( *map )->size = sc_hm_min_size_;
+		( *map )->hash_fn = hash_fn;
+		( *map )->cmp_fn = cmp_fn;
 
 		size_t i = 0;
-		for( ; i < sc_hm_min_size_; ++i)
-		{
+		for( ; i < sc_hm_min_size_; ++i ) {
 			LinkedList* llist;
 			ll_create( &llist );
-			(*map)->buckets[i] = *llist;
+			( *map )->buckets[i] = *llist;
 
 			// TODO: map.buckets should be array of pointers
 			//       then this free can be moved to hm_free()
 			free( llist );
 		}
 		return HM_SUCCESS;
-	}
-	else
-	{
+	} else {
 		return HM_INVALID_ARGS;
 	}
 
@@ -40,9 +37,8 @@ void hm_free( HashMap* map )
 	// TODO: can be changed to ll_free()
 	//       once buckets contains pointers
 	size_t i = 0;
-	for( ; i < map->size; ++i )
-	{
-		LinkedListNode_* tmp = (map->buckets[i]).head;
+	for( ; i < map->size; ++i ) {
+		LinkedListNode_* tmp = ( map->buckets[i] ).head;
 		while( tmp != NULL ) {
 			char msg[50];
 			sprintf( msg, "From free hm_free at idx %ld", i );
@@ -59,11 +55,11 @@ void hm_free( HashMap* map )
 
 void hm_insert( HashMap** map, void const* key, void const* value )
 {
-	size_t hsh = (*map)->hash_fn(key);
-	size_t idx = hsh % (*map)->size;
+	size_t hsh = ( *map )->hash_fn( key );
+	size_t idx = hsh % ( *map )->size;
 
 	// TODO: error handling
-	LinkedList* llist = &((*map)->buckets[idx]);
+	LinkedList* llist = &( ( *map )->buckets[idx] );
 	HashNode_* node = malloc( sizeof( HashNode_ ) );
 	node->key = key;
 	node->value = value;
@@ -71,24 +67,22 @@ void hm_insert( HashMap** map, void const* key, void const* value )
 	free( node );
 }
 
-void const * hm_get( HashMap const* map, void const* key )
+void const* hm_get( HashMap const* map, void const* key )
 {
-	size_t hsh = map->hash_fn(key);
+	size_t hsh = map->hash_fn( key );
 	size_t idx = hsh % map->size;
 
 	// TODO: implement ll_find with custom comparator
-	LinkedList const* llist = &(map->buckets[idx]);
+	LinkedList const* llist = &( map->buckets[idx] );
 	LinkedListNode_ const* head = llist->head;
 
-	while( head != NULL )
-	{
+	while( head != NULL ) {
 		HashNode_* node_data = head->data;
-		if( map->cmp_fn( node_data->key, key ) )
-			return node_data->value;
+		if( map->cmp_fn( node_data->key, key ) ) return node_data->value;
 
 		head = head->next;
 	}
 
-	//return ll_at( &(map->buckets[idx]), 0 );
+	// return ll_at( &(map->buckets[idx]), 0 );
 	return NULL;
 }

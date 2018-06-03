@@ -32,9 +32,10 @@ inline void ll_debug_node_() {}
 bool void_ptrs_equal_( void const* lhs, void const* rhs,
 					   VOID_PTR_TYPE_ type_tag );
 
-#define LL_GEN_FIND_CMP_FN_( name, t ) \
-		static bool name##_cmp_fn_( void const* arg1, void const* arg2 ) { \
-			return void_ptrs_equal_( arg1, arg2, t ); \
-		}
+#define LL_GEN_FIND_CMP_FN_( name, t )                                         \
+	static bool name##_cmp_fn_( void const* arg1, void const* arg2 )           \
+	{                                                                          \
+		return void_ptrs_equal_( arg1, arg2, t );                              \
+	}
 
 #endif // LINKED_LIST_INTERNAL_H

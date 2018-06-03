@@ -147,7 +147,7 @@ bool ll_pop_front( LinkedList** llist )
 }
 
 size_t ll_find( LinkedList const* llist, void const* value,
-			    bool(*cmp_fn)(void const*, void const*) )
+				bool ( *cmp_fn )( void const*, void const* ) )
 {
 	if( llist != NULL ) {
 		LinkedListNode_* tmp = llist->head;

@@ -10,7 +10,7 @@
  * 3. On next element check if already encountered. If so,
  *    the linked list has a loop
  */
-int ll_has_loop_naive( __attribute((unused)) LinkedList const* llist )
+int ll_has_loop_naive( __attribute( ( unused ) ) LinkedList const* llist )
 {
 	return LL_FAILURE;
 }

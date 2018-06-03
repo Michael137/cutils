@@ -30,15 +30,16 @@ typedef struct HashMap_ {
 
 	size_t size;
 
-	size_t (*hash_fn)(void const*);
-	bool (*cmp_fn)(void const*, void const*);
+	size_t ( *hash_fn )( void const* );
+	bool ( *cmp_fn )( void const*, void const* );
 
 	// Array of hash buckets of hash nodes
 	LinkedList buckets[];
 
 } HashMap;
 
-int hm_create( HashMap** map, size_t(*hash_fn)(void const*), bool(*cmp_fn)(void const*, void const*) );
+int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
+			   bool ( *cmp_fn )( void const*, void const* ) );
 void hm_free( HashMap* map );
 void hm_insert( HashMap** map, void const* key, void const* value );
 void const* hm_get( HashMap const* map, void const* key );

@@ -10,8 +10,8 @@ static size_t hash_fn_str( void const* key )
 	char const* str = (char const*)key;
 	int c;
 
-	while ((c = *str++))
-		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+	while( ( c = *str++ ) )
+		hash = ( ( hash << 5 ) + hash ) + c; /* hash * 33 + c */
 
 	return hash;
 }
@@ -24,13 +24,13 @@ static bool cmp_fn_str( void const* key, void const* value )
 static size_t hash_fn_int( void const* num )
 {
 	size_t key = *(int*)num;
-	key = (~key) + (key << 21); // key = (key << 21) - key - 1;
-	key = key ^ (key >> 24);
-	key = (key + (key << 3)) + (key << 8); // key * 265
-	key = key ^ (key >> 14);
-	key = (key + (key << 2)) + (key << 4); // key * 21
-	key = key ^ (key >> 28);
-	key = key + (key << 31);
+	key = ( ~key ) + ( key << 21 ); // key = (key << 21) - key - 1;
+	key = key ^ ( key >> 24 );
+	key = ( key + ( key << 3 ) ) + ( key << 8 ); // key * 265
+	key = key ^ ( key >> 14 );
+	key = ( key + ( key << 2 ) ) + ( key << 4 ); // key * 21
+	key = key ^ ( key >> 28 );
+	key = key + ( key << 31 );
 	return key;
 }
 

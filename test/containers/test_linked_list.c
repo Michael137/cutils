@@ -26,7 +26,9 @@ int main()
 	ll_push_front( &llist, &integer, sizeof( int ) );
 
 	char const* str_to_find = "String Node2";
-	assert( strcmp( str_to_find, (const char*)ll_at( llist, ll_find_string( llist, str_to_find ) ) ) == 0 );
+	assert( strcmp( str_to_find,
+					(const char*)ll_at(
+						llist, ll_find_string( llist, str_to_find ) ) ) == 0 );
 
 	char* msg = strdup( "Allocated String Node" );
 	ll_push_front( &llist, msg, strlen( msg ) + 1 );
@@ -54,8 +56,8 @@ int main()
 
 	ll_find( llist, &to_find, cmp_fn );
 
-	ll_node_set_type( &llist, 0, INT);
-	ll_node_set_type( &llist, 1, INT);
+	ll_node_set_type( &llist, 0, INT );
+	ll_node_set_type( &llist, 1, INT );
 	ll_print( llist );
 
 	ll_free( llist );
