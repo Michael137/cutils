@@ -41,3 +41,11 @@ CFLAGS += $(SANITIZE_FLAGS)
 # Warnings are errors
 CFLAGS += -Werror
 CFLAGS += -pedantic-errors
+
+# TODO: enable flags on per-target basis
+# Instrumentation
+ifneq "$(COVERAGE)" ""
+  CFLAGS += -fprofile-arcs -ftest-coverage
+#  GCOV_PREFIX=src/containers/
+#  GCOV_PREFIX_STRIP=1
+endif
