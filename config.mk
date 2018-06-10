@@ -33,10 +33,12 @@ CFLAGS += -Wstrict-aliasing
 CFLAGS += -fstrict-aliasing
 
 # Sanitizers
-SANITIZE_FLAGS += -fsanitize=undefined
-SANITIZE_FLAGS += -fsanitize=address
-SANITIZE_FLAGS += -fsanitize=leak
-CFLAGS += $(SANITIZE_FLAGS)
+ifneq "$(DEBUG)" ""
+  SANITIZE_FLAGS += -fsanitize=undefined
+  SANITIZE_FLAGS += -fsanitize=address
+  SANITIZE_FLAGS += -fsanitize=leak
+  CFLAGS += $(SANITIZE_FLAGS)
+endif
 
 # Warnings are errors
 CFLAGS += -Werror
@@ -46,6 +48,4 @@ CFLAGS += -pedantic-errors
 # Instrumentation
 ifneq "$(COVERAGE)" ""
   CFLAGS += -fprofile-arcs -ftest-coverage
-#  GCOV_PREFIX=src/containers/
-#  GCOV_PREFIX_STRIP=1
 endif

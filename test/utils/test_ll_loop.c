@@ -21,12 +21,12 @@ int main()
 	// Construct linked list
 	LinkedList* llist;
 	ll_create( &llist );
-	ll_push_front( &llist, "Node5", 5 );
-	ll_push_front( &llist, "Node4", 5 );
-	ll_push_front( &llist, "Node3", 5 );
-	ll_push_front( &llist, "Node2", 5 );
-	ll_push_front( &llist, "Node1", 5 );
-	ll_push_front( &llist, "Node0", 5 );
+	ll_push_front( &llist, "Node5", 6 );
+	ll_push_front( &llist, "Node4", 6 );
+	ll_push_front( &llist, "Node3", 6 );
+	ll_push_front( &llist, "Node2", 6 );
+	ll_push_front( &llist, "Node1", 6 );
+	ll_push_front( &llist, "Node0", 6 );
 
 	char* at_msg2 = ll_at( llist, 2 );
 	puts( at_msg2 );
@@ -44,7 +44,11 @@ int main()
 	assert( ll_get_node_( llist, 5, &n5 ) == LL_SUCCESS );
 
 	n5->next = n2;
-	assert( strcmp( n5->next->data, n2->data ) == 0 );
+	char const* ret_msg2 = n2->data;
+	char const* ret_msg5 = n5->next->data;
+	size_t cmp_sz = strlen( at_msg5 );
+	//assert( strncmp( ret_msg2, ret_msg5, strlen( ret_msg5 ) ) == 0 );
+	assert( strncmp( ret_msg2, ret_msg5, cmp_sz ) == 0 );
 	puts( "~~~> test_ll_loop: Linked list loop created..." );
 	assert( ll_has_loop_naive( llist ) );
 
