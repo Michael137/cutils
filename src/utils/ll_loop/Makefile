@@ -10,6 +10,7 @@ TESTDIR=../../../test/$(PROJECT)
 UTILS_OBJDIR=../../../target/utils
 
 _OBJ = linked_list.o linked_list_internal.o linked_list_helpers.o
+_OBJ += hashmap.o
 OBJ = $(patsubst %,$(CONTAINER_OBJDIR)/%,$(_OBJ))
 
 _UTILS_OBJ = ll_loop.o

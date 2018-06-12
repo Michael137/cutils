@@ -51,11 +51,13 @@ int main()
 	assert( strncmp( ret_msg2, ret_msg5, cmp_sz ) == 0 );
 	puts( "~~~> test_ll_loop: Linked list loop created..." );
 	assert( ll_has_loop_naive( llist ) );
+	assert( ll_has_loop_naive_hashed( llist ) );
 
 	// Remove loop
 	puts( "~~~> test_ll_loop: Linked list loop removed..." );
 	n5->next = NULL;
 	assert( !ll_has_loop_naive( llist ) );
+	assert( !ll_has_loop_naive_hashed( llist ) );
 
 	// Cleanup
 	ll_free( llist );

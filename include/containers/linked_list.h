@@ -40,3 +40,5 @@ inline void ll_debug() {}
 #endif // LL_DEBUG
 
 #endif // LINKED_LIST_H
+
+// TODO: implement alternative linked list with only macros as templating/codegen
