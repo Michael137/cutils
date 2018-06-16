@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include <containers/linked_list.h>
 #include <containers/linked_list_helpers.h>
@@ -46,14 +47,21 @@ int main()
 	n5->next = n2;
 	char const* ret_msg2 = n2->data;
 	char const* ret_msg5 = n5->next->data;
-	size_t cmp_sz = strlen( at_msg5 );
-	// assert( strncmp( ret_msg2, ret_msg5, strlen( ret_msg5 ) ) == 0 );
-	assert( strncmp( ret_msg2, ret_msg5, cmp_sz ) == 0 );
+	assert( strncmp( ret_msg2, ret_msg5, strlen( ret_msg5 ) ) == 0 );
+
+	// Detect loop; Benchmark different methods
 	puts( "~~~> test_ll_loop: Linked list loop created..." );
 	puts( "\t~~~> test_ll_loop: testing naive..." );
+	float start = (float)clock()/CLOCKS_PER_SEC;
 	assert( ll_has_loop_naive( llist ) );
+	float end = (float)clock()/CLOCKS_PER_SEC;
+	printf( "\t\t~~~> %fs elapsed\n", end - start );
+
 	puts( "\t~~~> test_ll_loop: testing naive hashed..." );
+	start = (float)clock()/CLOCKS_PER_SEC;
 	assert( ll_has_loop_naive_hashed( llist ) );
+	end = (float)clock()/CLOCKS_PER_SEC;
+	printf( "\t\t~~~> %fs elapsed\n", end - start );
 
 	// Remove loop
 	puts( "~~~> test_ll_loop: Linked list loop removed..." );
