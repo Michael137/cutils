@@ -1,4 +1,7 @@
+#include <inttypes.h>
 #include <stdint.h>
+
+#include <stdio.h>
 
 #include <containers/hashmap.h>
 #include <containers/linked_list.h>
@@ -37,7 +40,7 @@ bool ll_has_loop_naive( LinkedList const* llist )
  */
 static size_t hash_fn( void const* num )
 {
-	size_t key = *(int*)num;
+	size_t key = ((size_t)(uintptr_t)num);
 	key = ( ~key ) + ( key << 21 ); // key = (key << 21) - key - 1;
 	key = key ^ ( key >> 24 );
 	key = ( key + ( key << 3 ) ) + ( key << 8 ); // key * 265
@@ -50,7 +53,7 @@ static size_t hash_fn( void const* num )
 
 static bool cmp_fn( void const* key, void const* value )
 {
-	return *(int*)key == *(int*)value;
+	return (uintptr_t)key == (uintptr_t)value;
 }
 
 bool ll_has_loop_naive_hashed( LinkedList const* llist )
@@ -61,14 +64,22 @@ bool ll_has_loop_naive_hashed( LinkedList const* llist )
 	LinkedListNode_* head = llist->head;
 	while( head != NULL ) {
 		void* ptr = (void*)(uintptr_t)head;
-		size_t cached = *(size_t*)hm_get( map, ptr );
+		uintptr_t cached = (uintptr_t)hm_get( map, ptr );
 		if( !cached )
+		{
 			hm_insert( &map, ptr, ptr );
+			ll_debug_node_( head, "From loop_naive_hashed *inserting*" );
+		}
 		else if( cached == (uintptr_t)ptr )
+		{
+			ll_debug_node_( head, "From loop_naive_hashed *found->retrieving*" );
 			return true;
+		}
 
 		head = head->next;
 	}
+
+	hm_free( map );
 
 	return false;
 }
