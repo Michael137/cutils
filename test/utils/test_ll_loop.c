@@ -50,7 +50,9 @@ int main()
 	//assert( strncmp( ret_msg2, ret_msg5, strlen( ret_msg5 ) ) == 0 );
 	assert( strncmp( ret_msg2, ret_msg5, cmp_sz ) == 0 );
 	puts( "~~~> test_ll_loop: Linked list loop created..." );
+	puts( "\t~~~> test_ll_loop: testing naive..." );
 	assert( ll_has_loop_naive( llist ) );
+	puts( "\t~~~> test_ll_loop: testing naive hashed..." );
 	assert( ll_has_loop_naive_hashed( llist ) );
 
 	// Remove loop
