@@ -58,6 +58,7 @@ static bool cmp_fn( void const* key, void const* value )
 
 bool ll_has_loop_naive_hashed( LinkedList const* llist )
 {
+	bool found = false;
 	HashMap* map;
 	hm_create( &map, hash_fn, cmp_fn );
 
@@ -73,7 +74,8 @@ bool ll_has_loop_naive_hashed( LinkedList const* llist )
 		else if( cached == (uintptr_t)ptr )
 		{
 			ll_debug_node_( head, "From loop_naive_hashed *found->retrieving*" );
-			return true;
+			found = true;
+			break;
 		}
 
 		head = head->next;
@@ -81,5 +83,5 @@ bool ll_has_loop_naive_hashed( LinkedList const* llist )
 
 	hm_free( map );
 
-	return false;
+	return found;
 }
