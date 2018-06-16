@@ -47,7 +47,7 @@ int main()
 	char const* ret_msg2 = n2->data;
 	char const* ret_msg5 = n5->next->data;
 	size_t cmp_sz = strlen( at_msg5 );
-	//assert( strncmp( ret_msg2, ret_msg5, strlen( ret_msg5 ) ) == 0 );
+	// assert( strncmp( ret_msg2, ret_msg5, strlen( ret_msg5 ) ) == 0 );
 	assert( strncmp( ret_msg2, ret_msg5, cmp_sz ) == 0 );
 	puts( "~~~> test_ll_loop: Linked list loop created..." );
 	puts( "\t~~~> test_ll_loop: testing naive..." );

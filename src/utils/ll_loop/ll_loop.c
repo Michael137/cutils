@@ -40,7 +40,7 @@ bool ll_has_loop_naive( LinkedList const* llist )
  */
 static size_t hash_fn( void const* num )
 {
-	size_t key = ((size_t)(uintptr_t)num);
+	size_t key = ( ( size_t )(uintptr_t)num );
 	key = ( ~key ) + ( key << 21 ); // key = (key << 21) - key - 1;
 	key = key ^ ( key >> 24 );
 	key = ( key + ( key << 3 ) ) + ( key << 8 ); // key * 265
@@ -66,14 +66,12 @@ bool ll_has_loop_naive_hashed( LinkedList const* llist )
 	while( head != NULL ) {
 		void* ptr = (void*)(uintptr_t)head;
 		uintptr_t cached = (uintptr_t)hm_get( map, ptr );
-		if( !cached )
-		{
+		if( !cached ) {
 			hm_insert( &map, ptr, ptr );
 			ll_debug_node_( head, "From loop_naive_hashed *inserting*" );
-		}
-		else if( cached == (uintptr_t)ptr )
-		{
-			ll_debug_node_( head, "From loop_naive_hashed *found->retrieving*" );
+		} else if( cached == (uintptr_t)ptr ) {
+			ll_debug_node_( head,
+							"From loop_naive_hashed *found->retrieving*" );
 			found = true;
 			break;
 		}
