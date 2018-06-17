@@ -30,8 +30,7 @@ int main()
 	LinkedList* llist;
 	ll_create( &llist );
 
-	for( int i = 0; i < LIST_SZ; ++i )
-	{
+	for( int i = 0; i < LIST_SZ; ++i ) {
 		char buf[BUF_SZ];
 		BUF_SPRINTF( buf );
 		ll_push_front( &llist, buf, BUF_SZ );
@@ -60,15 +59,15 @@ int main()
 	// Detect loop; Benchmark different methods
 	puts( "~~~> test_ll_loop: Linked list loop created..." );
 	puts( "\t~~~> test_ll_loop: testing naive..." );
-	float start = (float)clock()/CLOCKS_PER_SEC;
+	float start = (float)clock() / CLOCKS_PER_SEC;
 	assert( ll_has_loop_naive( llist ) );
-	float end = (float)clock()/CLOCKS_PER_SEC;
+	float end = (float)clock() / CLOCKS_PER_SEC;
 	printf( "\t\t~~~> %fs elapsed\n", end - start );
 
 	puts( "\t~~~> test_ll_loop: testing naive hashed..." );
-	start = (float)clock()/CLOCKS_PER_SEC;
+	start = (float)clock() / CLOCKS_PER_SEC;
 	assert( ll_has_loop_naive_hashed( llist ) );
-	end = (float)clock()/CLOCKS_PER_SEC;
+	end = (float)clock() / CLOCKS_PER_SEC;
 	printf( "\t\t~~~> %fs elapsed\n", end - start );
 
 	// Remove loop
