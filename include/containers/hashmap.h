@@ -32,6 +32,7 @@ typedef struct HashMap_ {
 
 #ifdef HM_DEBUG
 	size_t collisions_;
+	char* dbgStr;
 #endif
 
 	size_t ( *hash_fn )( void const* );
@@ -50,12 +51,10 @@ void const* hm_get( HashMap const* map, void const* key );
 
 #ifdef HM_DEBUG
 void hm_debug( HashMap const*, char const* );
-inline size_t hm_debug_get_collisions( HashMap const* map ) { return map->collisions_; }
-inline void hm_debug_collisions_incr( HashMap** const map ) { (*map)->collisions_++; }
+size_t hm_debug_get_collisions( HashMap const* map );
 #else
 inline void hm_debug() {}
 inline size_t hm_debug_get_collisions() {}
-inline void hm_debug_collisions_incr() {}
 #endif // HM_DEBUG
 
 #endif // HASHMAP_H_IN

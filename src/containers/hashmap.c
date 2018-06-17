@@ -3,6 +3,19 @@
 
 #include <containers/hashmap.h>
 
+#ifdef HM_DEBUG
+static void hm_debug_collisions_incr( HashMap** const map ) { (*map)->collisions_++; }
+
+size_t hm_debug_get_collisions( HashMap const* map ) { return map->collisions_; }
+
+void hm_debug( HashMap const* map, char const* extra )
+{
+	printf( "%s HashMap Debug: %s\n", extra, map->dbgStr );
+}
+#else
+static void hm_debug_collisions_incr() {}
+#endif // HM_DEBUG
+
 static size_t const sc_hm_min_size_ = 128;
 
 int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
@@ -16,6 +29,7 @@ int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
 
 #ifdef HM_DEBUG
 		( *map )->collisions_ = 0;
+		( *map )->dbgStr = "HashMap created";
 #endif
 
 		size_t i = 0;
@@ -96,6 +110,5 @@ void const* hm_get( HashMap const* map, void const* key )
 		head = head->next;
 	}
 
-	// return ll_at( &(map->buckets[idx]), 0 );
 	return NULL;
 }

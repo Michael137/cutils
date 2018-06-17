@@ -79,6 +79,13 @@ bool ll_has_loop_naive_hashed( LinkedList const* llist )
 		head = head->next;
 	}
 
+#ifdef HM_DEBUG
+	size_t const collisions = hm_debug_get_collisions( map );
+	char buf[collisions];
+	sprintf( buf, "Number of collisions: %ld", collisions );
+	hm_debug( map, buf );
+#endif
+
 	hm_free( map );
 
 	return found;
