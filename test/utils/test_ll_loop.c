@@ -9,15 +9,25 @@
 
 #include <utils/ll_loop/ll_loop.h>
 
-// Node0-->Node1-->Node2-->Node3
-//                   ^     |
-//                   |     |
-//                   |     v
-//                Node5<--Node4
+// p-shaped:
+//
+//	   Node0-->Node1-->Node2-->Node3
+//						 ^     |
+//						 |     |
+//						 |     v
+//					  Node5<--Node4
+//
+// Circular:
+//
+//	   Node0-->Node1-->Node2-->Node3
+//		^			            |
+//		|			            |
+//		|   		            v
+//    Node7<--Node6<--Node5<--Node4
 
 // Test defines
-#define LIST_SZ 1500
-#define LOOP_OFFSET 128
+#define LIST_SZ 5000
+#define LOOP_OFFSET 2371
 #define BUF_SZ 21
 #define BUF_MSG "Node%016d"
 #define BUF_SPRINTF( buffer ) sprintf( buffer, BUF_MSG, i );
@@ -36,25 +46,26 @@ int main()
 		ll_push_front( &llist, buf, BUF_SZ );
 	}
 
-	char* at_msg2 = ll_at( llist, LIST_SZ - LOOP_OFFSET );
-	puts( at_msg2 );
+	char* collision_pt = ll_at( llist, LIST_SZ - LOOP_OFFSET );
+	puts( collision_pt );
 
-	char* at_msg5 = ll_at( llist, LIST_SZ - 1 );
-	puts( at_msg5 );
+	char* last_pt = ll_at( llist, LIST_SZ - 1 );
+	puts( last_pt );
 
 	puts( "~~~> test_ll_loop: Linked list created..." );
 
 	// Create loop
-	LinkedListNode_* n2 = NULL;
-	assert( ll_get_node_( llist, LIST_SZ - LOOP_OFFSET, &n2 ) == LL_SUCCESS );
+	LinkedListNode_* collision_node = NULL;
+	assert( ll_get_node_( llist, LIST_SZ - LOOP_OFFSET, &collision_node ) ==
+			LL_SUCCESS );
 
-	LinkedListNode_* n5 = NULL;
-	assert( ll_get_node_( llist, LIST_SZ - 1, &n5 ) == LL_SUCCESS );
+	LinkedListNode_* last_node = NULL;
+	assert( ll_get_node_( llist, LIST_SZ - 1, &last_node ) == LL_SUCCESS );
 
-	n5->next = n2;
-	char const* ret_msg2 = n2->data;
-	char const* ret_msg5 = n5->next->data;
-	assert( strncmp( ret_msg2, ret_msg5, strlen( ret_msg5 ) ) == 0 );
+	last_node->next = collision_node;
+	char const* collision_data = collision_node->data;
+	char const* last_data = last_node->next->data;
+	assert( strncmp( collision_data, last_data, BUF_SZ ) == 0 );
 
 	// Detect loop; Benchmark different methods
 	puts( "~~~> test_ll_loop: Linked list loop created..." );
@@ -72,7 +83,7 @@ int main()
 
 	// Remove loop
 	puts( "~~~> test_ll_loop: Linked list loop removed..." );
-	n5->next = NULL;
+	last_node->next = NULL;
 	assert( !ll_has_loop_naive( llist ) );
 	assert( !ll_has_loop_naive_hashed( llist ) );
 
