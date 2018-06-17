@@ -36,7 +36,7 @@ size_t ll_find( LinkedList const*, void const*, bool(*)(void const*, void const*
 #ifdef LL_DEBUG
 void ll_debug( LinkedList const*, char const* );
 #else
-inline void ll_debug() {}
+void ll_debug();
 #endif // LL_DEBUG
 
 #endif // LINKED_LIST_H

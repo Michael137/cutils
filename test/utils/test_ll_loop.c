@@ -26,8 +26,8 @@
 //    Node7<--Node6<--Node5<--Node4
 
 // Test defines
-#define LIST_SZ 100
-#define LOOP_OFFSET 10
+#define LIST_SZ 20000
+#define LOOP_OFFSET 14723
 #define BUF_SZ 21
 #define BUF_MSG "Node%016d"
 #define BUF_SPRINTF( buffer ) sprintf( buffer, BUF_MSG, i );
@@ -73,13 +73,13 @@ int main()
 	float start = (float)clock() / CLOCKS_PER_SEC;
 	assert( ll_has_loop_naive( llist ) );
 	float end = (float)clock() / CLOCKS_PER_SEC;
-	printf( "\t\t~~~> %fs elapsed\n", end - start );
+	printf( "\t\t~~~> %fs elapsed\n", end - start);
 
 	puts( "\t~~~> test_ll_loop: testing naive hashed..." );
 	start = (float)clock() / CLOCKS_PER_SEC;
 	assert( ll_has_loop_naive_hashed( llist ) );
 	end = (float)clock() / CLOCKS_PER_SEC;
-	printf( "\t\t~~~> %fs elapsed\n", end - start );
+	printf( "\t\t~~~> %fs elapsed\n", end - start);
 
 	// Remove loop
 	puts( "~~~> test_ll_loop: Linked list loop removed..." );

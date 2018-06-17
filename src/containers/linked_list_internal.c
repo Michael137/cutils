@@ -7,6 +7,8 @@ void ll_debug_node_( LinkedListNode_ const* node, char const* extra )
 {
 	printf( "%s LinkedListNode_ Debug: %s\n", extra, node->dbgStr );
 }
+#else
+void ll_debug_node_() {}
 #endif // LL_DEBUG
 
 bool void_ptrs_equal_( void const* lhs, void const* rhs,

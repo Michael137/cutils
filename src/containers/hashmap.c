@@ -58,11 +58,14 @@ void hm_free( HashMap* map )
 	for( ; i < map->size; ++i ) {
 		LinkedListNode_* tmp = ( map->buckets[i] ).head;
 		while( tmp != NULL ) {
-#ifdef LL_DEBUG
-			char msg[50];
-			sprintf( msg, "From free hm_free at idx %ld", i );
-			ll_debug_node_( tmp, msg );
-#endif
+
+// TODO: streamline ll_debug so it can be uncommented
+//#ifdef LL_DEBUG
+//			char msg[50];
+//			sprintf( msg, "From free hm_free at idx %ld", i );
+//			ll_debug_node_( tmp, msg );
+//#endif
+
 			LinkedListNode_* next = tmp->next;
 			free( tmp->data );
 			free( tmp );
@@ -83,7 +86,8 @@ void hm_insert( HashMap** const map, void const* key, void const* value )
 
 	if( llist->head != NULL )
 	{
-		ll_debug( llist, "From hm_insert: *COLLISION*" );
+//		TODO: streamline ll_debug so it can be uncommented
+//		ll_debug( llist, "From hm_insert: *COLLISION*" );
 		hm_debug_collisions_incr( map );
 	}
 

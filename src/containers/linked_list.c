@@ -31,6 +31,8 @@ void ll_debug( LinkedList const* llist, char const* extra )
 {
 	printf( "%s Linked List Debug: %s\n", extra, llist->dbgStr );
 }
+#else
+void ll_debug() {}
 #endif // LL_DEBUG
 
 // TODO: _Generic?
@@ -73,7 +75,8 @@ bool ll_free( LinkedList* llist )
 	if( llist ) {
 		LinkedListNode_* tmp = llist->head;
 		while( tmp != NULL ) {
-			ll_debug_node_( tmp, "From free" );
+			// TODO: streamline ll_debug so it can be uncommented
+			//ll_debug_node_( tmp, "From free" );
 			LinkedListNode_* next = tmp->next;
 			free( tmp->data );
 			free( tmp );
@@ -155,7 +158,8 @@ size_t ll_find( LinkedList const* llist, void const* value,
 		size_t ctr = 0;
 		while( tmp != NULL ) {
 			if( cmp_fn( value, tmp->data ) ) {
-				ll_debug_node_( tmp, "From Find internal" );
+				// TODO: streamline ll_debug so it can be uncommented
+				//ll_debug_node_( tmp, "From Find internal" );
 
 				return ctr;
 			}
