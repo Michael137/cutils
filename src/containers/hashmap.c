@@ -14,6 +14,10 @@ int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
 		( *map )->hash_fn = hash_fn;
 		( *map )->cmp_fn = cmp_fn;
 
+#ifdef HM_DEBUG
+		( *map )->collisions_ = 0;
+#endif
+
 		size_t i = 0;
 		for( ; i < sc_hm_min_size_; ++i ) {
 			LinkedList* llist;
@@ -55,7 +59,7 @@ void hm_free( HashMap* map )
 	map = NULL;
 }
 
-void hm_insert( HashMap** map, void const* key, void const* value )
+void hm_insert( HashMap** const map, void const* key, void const* value )
 {
 	size_t hsh = ( *map )->hash_fn( key );
 	size_t idx = hsh % ( *map )->size;
@@ -63,11 +67,11 @@ void hm_insert( HashMap** map, void const* key, void const* value )
 	// TODO: error handling
 	LinkedList* llist = &( ( *map )->buckets[idx] );
 
-#ifdef LL_DEBUG
-	char buf[256];
-	sprintf( buf, "From hm_insert inserting at idx %ld", idx );
-	ll_debug( llist, buf );
-#endif
+	if( llist->head != NULL )
+	{
+		ll_debug( llist, "From hm_insert: *COLLISION*" );
+		hm_debug_collisions_incr( map );
+	}
 
 	HashNode_* node = malloc( sizeof( HashNode_ ) );
 	node->key = key;

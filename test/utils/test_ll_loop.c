@@ -26,8 +26,8 @@
 //    Node7<--Node6<--Node5<--Node4
 
 // Test defines
-#define LIST_SZ 5000
-#define LOOP_OFFSET 2371
+#define LIST_SZ 100
+#define LOOP_OFFSET 10
 #define BUF_SZ 21
 #define BUF_MSG "Node%016d"
 #define BUF_SPRINTF( buffer ) sprintf( buffer, BUF_MSG, i );

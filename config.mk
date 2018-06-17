@@ -3,6 +3,7 @@ SANITIZE_FLAGS=
 
 ifneq "$(DEBUG)" ""
   CFLAGS += -DLL_DEBUG
+  CFLAGS += -DHM_DEBUG
   CFLAGS += -O0 -g
 else
   CFLAGS += -O3
