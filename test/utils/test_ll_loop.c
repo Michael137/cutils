@@ -15,6 +15,13 @@
 //                   |     v
 //                Node5<--Node4
 
+// Test defines
+#define LIST_SZ 1500
+#define LOOP_OFFSET 128
+#define BUF_SZ 21
+#define BUF_MSG "Node%016d"
+#define BUF_SPRINTF( buffer ) sprintf( buffer, BUF_MSG, i );
+
 int main()
 {
 	puts( "~~~ Starting test_ll_loop ~~~" );
@@ -22,27 +29,28 @@ int main()
 	// Construct linked list
 	LinkedList* llist;
 	ll_create( &llist );
-	ll_push_front( &llist, "Node5", 6 );
-	ll_push_front( &llist, "Node4", 6 );
-	ll_push_front( &llist, "Node3", 6 );
-	ll_push_front( &llist, "Node2", 6 );
-	ll_push_front( &llist, "Node1", 6 );
-	ll_push_front( &llist, "Node0", 6 );
 
-	char* at_msg2 = ll_at( llist, 2 );
+	for( int i = 0; i < LIST_SZ; ++i )
+	{
+		char buf[BUF_SZ];
+		BUF_SPRINTF( buf );
+		ll_push_front( &llist, buf, BUF_SZ );
+	}
+
+	char* at_msg2 = ll_at( llist, LIST_SZ - LOOP_OFFSET );
 	puts( at_msg2 );
 
-	char* at_msg5 = ll_at( llist, 5 );
+	char* at_msg5 = ll_at( llist, LIST_SZ - 1 );
 	puts( at_msg5 );
 
 	puts( "~~~> test_ll_loop: Linked list created..." );
 
 	// Create loop
 	LinkedListNode_* n2 = NULL;
-	assert( ll_get_node_( llist, 2, &n2 ) == LL_SUCCESS );
+	assert( ll_get_node_( llist, LIST_SZ - LOOP_OFFSET, &n2 ) == LL_SUCCESS );
 
 	LinkedListNode_* n5 = NULL;
-	assert( ll_get_node_( llist, 5, &n5 ) == LL_SUCCESS );
+	assert( ll_get_node_( llist, LIST_SZ - 1, &n5 ) == LL_SUCCESS );
 
 	n5->next = n2;
 	char const* ret_msg2 = n2->data;
