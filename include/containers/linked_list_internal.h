@@ -3,6 +3,8 @@
 
 #include <stdbool.h> // bool
 
+#include <utils/debug.h> // debug_more_
+
 typedef enum VOID_PTR_TYPE_ {
 
 	UNKNOWN = -1,
@@ -17,17 +19,16 @@ typedef struct LinkedListNode_ {
 	struct LinkedListNode_* next;
 	void* data;
 
-#ifdef LL_DEBUG
+#if LL_DEBUG == 1
 	char* dbgStr;
 #endif // LL_DEBUG
 
 } LinkedListNode_;
 
-#ifdef LL_DEBUG
-void ll_debug_node_( LinkedListNode_ const*, char const* );
-#else
-void ll_debug_node_();
-#endif // LL_DEBUG
+#define ll_debug_node_( node )                                                 \
+	do {                                                                       \
+		debug_more_( "LL_DEBUG", "%s\n", node->dbgStr );                       \
+	} while( 0 )
 
 bool void_ptrs_equal_( void const* lhs, void const* rhs,
 					   VOID_PTR_TYPE_ type_tag );

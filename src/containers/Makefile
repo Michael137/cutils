@@ -21,7 +21,7 @@ _OBJ += hashmap.o
 OBJ = $(patsubst %,$(OBJDIR)/%,$(_OBJ))
 
 $(OBJDIR)/%.o: %.c $(HDRS)
-	$(CC) -c $< $(CFLAGS) -o $@ 
+	$(CC) -c $< $(CFLAGS) -o $@
 
 # Compile but don't link'
 .PHONY: compile_src

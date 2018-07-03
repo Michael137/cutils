@@ -1,9 +1,10 @@
-#include <containers/linked_list.h>
-#include <containers/linked_list_internal.h>
 #include <stddef.h> // size_t
 #include <stdio.h>  // printf
 #include <stdlib.h> // malloc
 #include <string.h> // memcpy
+
+#include <containers/linked_list.h>
+#include <containers/linked_list_internal.h>
 
 static void ll_inc_size_( LinkedList** llist ) { ( *llist )->size++; }
 
@@ -15,8 +16,8 @@ bool ll_create( LinkedList** llist )
 		( *llist )->tail = NULL;
 		( *llist )->size = 0;
 
-#ifdef LL_DEBUG
-		( *llist )->dbgStr = "Map Created";
+#if LL_DEBUG == 1
+		( *llist )->dbgStr = "Linked List Created";
 #endif
 
 		return LL_SUCCESS;
@@ -25,15 +26,6 @@ bool ll_create( LinkedList** llist )
 }
 
 size_t ll_size( LinkedList const* llist ) { return llist->size; }
-
-#ifdef LL_DEBUG
-void ll_debug( LinkedList const* llist, char const* extra )
-{
-	printf( "%s Linked List Debug: %s\n", extra, llist->dbgStr );
-}
-#else
-void ll_debug() {}
-#endif // LL_DEBUG
 
 // TODO: _Generic?
 bool ll_push_front( LinkedList** llist, void const* data,
@@ -52,7 +44,7 @@ bool ll_push_front( LinkedList** llist, void const* data,
 			node->data = copy;
 			node->type_tag_ = UNKNOWN;
 
-#ifdef LL_DEBUG
+#if LL_DEBUG == 1
 			node->dbgStr = "Node created";
 #endif // LL_DEBUG
 
@@ -76,7 +68,7 @@ bool ll_free( LinkedList* llist )
 		LinkedListNode_* tmp = llist->head;
 		while( tmp != NULL ) {
 			// TODO: streamline ll_debug so it can be uncommented
-			//ll_debug_node_( tmp, "From free" );
+			// ll_debug_node_( tmp, "From free" );
 			LinkedListNode_* next = tmp->next;
 			free( tmp->data );
 			free( tmp );
@@ -98,7 +90,7 @@ void* ll_at( LinkedList const* llist, const size_t idx )
 		size_t ctr = 0;
 		while( tmp != NULL ) {
 			if( ctr == idx ) {
-				ll_debug_node_( tmp, "From at" );
+				ll_debug_node_( tmp );
 
 				return (void*)tmp->data;
 			}
@@ -159,7 +151,7 @@ size_t ll_find( LinkedList const* llist, void const* value,
 		while( tmp != NULL ) {
 			if( cmp_fn( value, tmp->data ) ) {
 				// TODO: streamline ll_debug so it can be uncommented
-				//ll_debug_node_( tmp, "From Find internal" );
+				// ll_debug_node_( tmp, "From Find internal" );
 
 				return ctr;
 			}

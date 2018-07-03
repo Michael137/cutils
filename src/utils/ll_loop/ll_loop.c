@@ -71,8 +71,7 @@ bool ll_has_loop_naive_hashed( LinkedList const* llist )
 			// TODO: streamline ll_debug so it can be uncommented
 			//ll_debug_node_( head, "From loop_naive_hashed *inserting*" );
 		} else if( cached == (uintptr_t)ptr ) {
-			ll_debug_node_( head,
-							"From loop_naive_hashed *found->retrieving*" );
+			ll_debug_node_( head );
 			found = true;
 			break;
 		}

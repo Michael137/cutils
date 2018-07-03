@@ -2,10 +2,12 @@ CFLAGS=
 SANITIZE_FLAGS=
 
 ifneq "$(DEBUG)" ""
-  CFLAGS += -DLL_DEBUG
-  CFLAGS += -DHM_DEBUG
+  CFLAGS += -DLL_DEBUG=1
+  CFLAGS += -DHM_DEBUG=1
   CFLAGS += -O0 -g
 else
+  CFLAGS += -DLL_DEBUG=0
+  CFLAGS += -DHM_DEBUG=0
   CFLAGS += -O3
 endif
 
@@ -15,7 +17,7 @@ endif
 
 # For strdup() on C11
 # CFLAGS += -D_BSD_SOURCE
-CFLAGS+=-std=c11
+CFLAGS += -std=c11
 CFLAGS += -D_DEFAULT_SOURCE
 
 # Base warnings

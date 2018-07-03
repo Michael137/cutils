@@ -1,7 +1,8 @@
-#ifndef LINKED_LIST_H
-#define LINKED_LIST_H
+#ifndef LINKED_LIST_H_IN
+#define LINKED_LIST_H_IN
 
 #include <containers/linked_list_internal.h>
+#include <utils/debug.h> // debug_more_
 
 #include <stdbool.h> // bool
 #include <stddef.h>  // size_t
@@ -16,10 +17,15 @@ typedef struct LinkedList_ {
 	LinkedListNode_ *head, *tail;
 	size_t size;
 
-#ifdef LL_DEBUG
+#if LL_DEBUG == 1
 	char* dbgStr;
 #endif // LL_DEBUG
 } LinkedList;
+
+#define ll_debug( llist )                                                      \
+	do {                                                                       \
+		debug_more_( "LL_DEBUG", "%s\n", llist->dbgStr );                      \
+	} while( 0 )
 
 // External methods
 bool ll_push_front( LinkedList**, void const*, const size_t );
@@ -31,14 +37,10 @@ bool ll_create( LinkedList** );
 size_t ll_size( LinkedList const* );
 size_t ll_find_int( LinkedList const*, void const* );
 size_t ll_find_string( LinkedList const*, void const* );
-size_t ll_find( LinkedList const*, void const*, bool(*)(void const*, void const*) );
+size_t ll_find( LinkedList const*, void const*,
+				bool ( * )( void const*, void const* ) );
 
-#ifdef LL_DEBUG
-void ll_debug( LinkedList const*, char const* );
-#else
-void ll_debug();
-#endif // LL_DEBUG
+#endif // LINKED_LIST_H_IN
 
-#endif // LINKED_LIST_H
-
-// TODO: implement alternative linked list with only macros as templating/codegen
+// TODO: implement alternative linked list with only macros as
+// templating/codegen
