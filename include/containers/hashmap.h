@@ -51,10 +51,15 @@ int hm_create_str2int( HashMap** map );
 int hm_create_str2str( HashMap** map );
 int hm_create_int2int( HashMap** map );
 int hm_create_int2str( HashMap** map );
+int hm_create_ptr2ptr( HashMap** map );
 
 void hm_free( HashMap* map );
+
+// TODO: hm_insert with option to call set_node_type()
 void hm_insert( HashMap** const map, void const* key, void const* value );
 void const* hm_get( HashMap const* map, void const* key );
+
+void hm_print( HashMap const* const );
 
 size_t hm_debug_get_collisions( HashMap const* map );
 

@@ -49,6 +49,7 @@ static void test_int2int()
 	int num = *(int*)hm_get( int2int_map, &key2 );
 	assert( num == val2 );
 	printf( "%d\n", num );
+	hm_print( int2int_map );
 	hm_free( int2int_map );
 }
 

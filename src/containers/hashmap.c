@@ -3,6 +3,9 @@
 #include <string.h>
 
 #include <containers/hashmap.h>
+#include <containers/linked_list_helpers.h>
+
+#include <stdint.h>
 
 static void hm_debug_collisions_incr( __attribute( ( unused ) )
 									  HashMap** const map )
@@ -143,9 +146,27 @@ static size_t default_hash_int_( void const* num )
 	return key;
 }
 
+static size_t default_hash_ptr_( void const* num )
+{
+	size_t key = (uintptr_t)num;
+	key = ( ~key ) + ( key << 21 ); // key = (key << 21) - key - 1;
+	key = key ^ ( key >> 24 );
+	key = ( key + ( key << 3 ) ) + ( key << 8 ); // key * 265
+	key = key ^ ( key >> 14 );
+	key = ( key + ( key << 2 ) ) + ( key << 4 ); // key * 21
+	key = key ^ ( key >> 28 );
+	key = key + ( key << 31 );
+	return key;
+}
+
 static bool default_cmp_int_( void const* key, void const* value )
 {
 	return *(int*)key == *(int*)value;
+}
+
+static bool default_cmp_ptr_( void const* key, void const* value )
+{
+	return (uintptr_t)key == (uintptr_t)value;
 }
 
 int hm_create_str2int( HashMap** map )
@@ -166,4 +187,23 @@ int hm_create_int2int( HashMap** map )
 int hm_create_int2str( HashMap** map )
 {
 	return hm_create( map, default_hash_int_, default_cmp_str_ );
+}
+
+int hm_create_ptr2ptr( HashMap** map )
+{
+	return hm_create( map, default_hash_ptr_, default_cmp_ptr_ );
+}
+
+void hm_print( HashMap const* const map )
+{
+	LinkedList const* llist = NULL;
+	size_t i = 0;
+	for( ; i < map->size; ++i )
+	{
+		llist = &(map->buckets[i]);
+		if( llist->size != 0 ) {
+			printf( "Bucket %ld\n", i );
+			ll_print( llist );
+		}
+	}
 }
