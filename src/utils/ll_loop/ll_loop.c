@@ -8,9 +8,6 @@
 
 #include <utils/ll_loop/ll_loop.h>
 
-// TODO: remove this define once sleep() is removed
-#include <unistd.h>
-
 bool ll_has_loop_naive( LinkedList const* llist )
 {
 	size_t ptrs[llist->size];

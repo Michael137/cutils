@@ -1,11 +1,10 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <containers/hashmap.h>
 #include <containers/linked_list_helpers.h>
-
-#include <stdint.h>
 
 static void hm_debug_collisions_incr( __attribute( ( unused ) )
 									  HashMap** const map )
