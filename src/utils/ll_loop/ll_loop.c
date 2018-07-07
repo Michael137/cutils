@@ -68,8 +68,6 @@ bool ll_has_loop_naive_hashed( LinkedList const* llist )
 		uintptr_t cached = (uintptr_t)hm_get( map, ptr );
 		if( !cached ) {
 			hm_insert( &map, ptr, ptr );
-			// TODO: streamline LL_DEBUG_LOG so it can be uncommented
-			// LL_DEBUG_NODE_LOG( head, "From loop_naive_hashed *inserting*" );
 		} else if( cached == (uintptr_t)ptr ) {
 			LL_DEBUG_NODE_LOG( head );
 			found = true;
