@@ -24,7 +24,7 @@ static void ll_print_node_data_( LinkedListNode_ const* node )
 static void ll_print_node_( LinkedListNode_ const* node )
 {
 	ll_print_node_data_( node );
-#ifdef LL_DEBUG
+#if LL_DEBUG == 1
 	printf( ">> \tdbgStr: %s\n", node->dbgStr );
 #endif
 }

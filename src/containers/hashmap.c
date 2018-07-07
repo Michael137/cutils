@@ -3,18 +3,21 @@
 
 #include <containers/hashmap.h>
 
-#ifdef HM_DEBUG
-static void hm_debug_collisions_incr( HashMap** const map ) { (*map)->collisions_++; }
-
-size_t hm_debug_get_collisions( HashMap const* map ) { return map->collisions_; }
-
-void hm_debug( HashMap const* map, char const* extra )
+static void hm_debug_collisions_incr( __attribute((unused)) HashMap** const map )
 {
-	printf( "%s HashMap Debug: %s\n", extra, map->dbgStr );
+#if HM_DEBUG == 1
+	( *map )->collisions_++;
+#endif
 }
+
+size_t hm_debug_get_collisions( __attribute((unused)) HashMap const* map )
+{
+#if HM_DEBUG == 1
+	return map->collisions_;
 #else
-static void hm_debug_collisions_incr() {}
-#endif // HM_DEBUG
+	return 0;
+#endif
+}
 
 static size_t const sc_hm_min_size_ = 128;
 
@@ -27,7 +30,7 @@ int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
 		( *map )->hash_fn = hash_fn;
 		( *map )->cmp_fn = cmp_fn;
 
-#ifdef HM_DEBUG
+#if HM_DEBUG == 1
 		( *map )->collisions_ = 0;
 		( *map )->dbgStr = "HashMap created";
 #endif
@@ -59,12 +62,12 @@ void hm_free( HashMap* map )
 		LinkedListNode_* tmp = ( map->buckets[i] ).head;
 		while( tmp != NULL ) {
 
-// TODO: streamline ll_debug so it can be uncommented
-//#ifdef LL_DEBUG
-//			char msg[50];
-//			sprintf( msg, "From free hm_free at idx %ld", i );
-//			ll_debug_node_( tmp, msg );
-//#endif
+			// TODO: streamline ll_debug so it can be uncommented
+			//#ifdef LL_DEBUG
+			//			char msg[50];
+			//			sprintf( msg, "From free hm_free at idx %ld", i );
+			//			ll_debug_node_( tmp, msg );
+			//#endif
 
 			LinkedListNode_* next = tmp->next;
 			free( tmp->data );
@@ -84,10 +87,9 @@ void hm_insert( HashMap** const map, void const* key, void const* value )
 	// TODO: error handling
 	LinkedList* llist = &( ( *map )->buckets[idx] );
 
-	if( llist->head != NULL )
-	{
-//		TODO: streamline ll_debug so it can be uncommented
-//		ll_debug( llist, "From hm_insert: *COLLISION*" );
+	if( llist->head != NULL ) {
+		//		TODO: streamline ll_debug so it can be uncommented
+				// ll_debug( llist );
 		hm_debug_collisions_incr( map );
 	}
 

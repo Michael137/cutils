@@ -3,6 +3,8 @@
 
 #include <containers/linked_list.h>
 
+#include <utils/debug.h> // debug_more_
+
 // TODO: consolidate error handling mechanisms
 // HashMap Constats
 #define HM_FAILURE -1
@@ -30,7 +32,7 @@ typedef struct HashMap_ {
 
 	size_t size;
 
-#ifdef HM_DEBUG
+#if HM_DEBUG == 1
 	size_t collisions_;
 	char* dbgStr;
 #endif
@@ -49,12 +51,12 @@ void hm_free( HashMap* map );
 void hm_insert( HashMap** const map, void const* key, void const* value );
 void const* hm_get( HashMap const* map, void const* key );
 
-#ifdef HM_DEBUG
-void hm_debug( HashMap const*, char const* );
 size_t hm_debug_get_collisions( HashMap const* map );
-#else
-inline void hm_debug() {}
-inline size_t hm_debug_get_collisions() {}
-#endif // HM_DEBUG
+
+#define hm_debug( map )                                                        \
+	do {                                                                       \
+		debug_more_( HM_DEBUG, "%s (%ld)\n", DBGSTR( HM_DEBUG, map ),          \
+					 DBG_CONTAINER_MEM( HM_DEBUG, map, collisions_ ) );        \
+	} while( 0 )
 
 #endif // HASHMAP_H_IN

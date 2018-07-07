@@ -69,7 +69,7 @@ bool ll_has_loop_naive_hashed( LinkedList const* llist )
 		if( !cached ) {
 			hm_insert( &map, ptr, ptr );
 			// TODO: streamline ll_debug so it can be uncommented
-			//ll_debug_node_( head, "From loop_naive_hashed *inserting*" );
+			// ll_debug_node_( head, "From loop_naive_hashed *inserting*" );
 		} else if( cached == (uintptr_t)ptr ) {
 			ll_debug_node_( head );
 			found = true;
@@ -79,14 +79,7 @@ bool ll_has_loop_naive_hashed( LinkedList const* llist )
 		head = head->next;
 	}
 
-#ifdef HM_DEBUG
-	size_t const collisions = hm_debug_get_collisions( map );
-	// TODO: magic buffer size number
-	char buf[29];
-	sprintf( buf, "collisions: %ld", collisions );
-	hm_debug( map, buf );
-#endif
-
+	hm_debug( map );
 	hm_free( map );
 
 	return found;
