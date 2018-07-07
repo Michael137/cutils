@@ -69,23 +69,26 @@ static void test_int2str()
 }
 
 // Test defines
-#define LIST_SZ 20000
-#define LOOP_OFFSET 14723
-#define BUF_SZ 21
-#define BUF_MSG "Node%016d"
-#define BUF_SPRINTF( buffer ) sprintf( buffer, BUF_MSG, i );
+#define MAP_SZ 300
+#define BUF_SZ 20
+#define BUF_MSG "Val%016d"
+#define BUF_SPRINTF( buffer ) snprintf( buffer, BUF_SZ, BUF_MSG, i );
 static void test_resize()
 {
 	HashMap* map;
 	hm_create_str2str( &map );
-	for( int i = 0; i < LIST_SZ; ++i ) {
-		char buf[BUF_SZ];
-		BUF_SPRINTF( buf );
-		hm_insert( &map, buf, "Value" );
+
+	char buffs[MAP_SZ][BUF_SZ];
+	for( int i = 0; i < MAP_SZ; ++i ) {
+		BUF_SPRINTF( buffs[i] );
+		hm_insert( &map, buffs[i], buffs[i] );
 	}
-	char buf[21];
-	sprintf( buf, "Node%016d", 25 );
-	printf( "%s\n", (char const*)hm_get( map, buf ) );
+
+	for( int i = 0; i < MAP_SZ; ++i ) {
+		assert( buffs[i] == (char const*)hm_get( map, buffs[i] ) );
+	}
+
+	HM_DEBUG_LOG( map );
 	hm_free( map );
 }
 

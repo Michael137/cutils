@@ -30,7 +30,7 @@
 #define LOOP_OFFSET 14723
 #define BUF_SZ 21
 #define BUF_MSG "Node%016d"
-#define BUF_SPRINTF( buffer ) sprintf( buffer, BUF_MSG, i );
+#define BUF_SPRINTF( buffer ) snprintf( buffer, BUF_SZ, BUF_MSG, i );
 
 int main()
 {
