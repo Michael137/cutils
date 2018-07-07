@@ -68,6 +68,12 @@ static void test_int2str()
 	hm_free( int2str_map );
 }
 
+//static void test_resize()
+//{
+//	HashMap* map;
+//	hm_create_str2str( &map );
+//}
+
 int main()
 {
 	printf( "~~~ Starting Hashmap Tests ~~~\n" );
@@ -76,6 +82,8 @@ int main()
 	test_str2int();
 	test_int2str();
 	test_int2int();
+
+//	test_resize();
 
 	return 0;
 }
