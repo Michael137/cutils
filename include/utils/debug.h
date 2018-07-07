@@ -13,15 +13,15 @@
 		if( debug_type ) fprintf( stderr, fmt, __VA_ARGS__ );                  \
 	} while( 0 )
 
-#define _DBGSTR_( debug_type ) DBGSTR_##debug_type
-#define DBGSTR_0( container, member ) ""
-#define DBGSTR_1( container, member ) ( container )->member
+#define _DBG_( debug_type ) _DBG_##debug_type
+#define _DBG_0( container, member, default ) default
+#define _DBG_1( container, member, default ) ( container )->member
 
-#define DBG_CONTAINER_MEM( debug_type, container, member )                     \
-	_DBGSTR_( debug_type )( container, member )
+#define DBG_CONTAINER_MEM( debug_type, container, member, default )            \
+	_DBG_( debug_type )( container, member, default )
 
 // For containers that have conditional "dbgStr" members
 #define DBGSTR( debug_type, container )                                        \
-	DBG_CONTAINER_MEM( debug_type, container, dbgStr )
+	DBG_CONTAINER_MEM( debug_type, container, dbgStr, "" )
 
 #endif // DEBUG_H_IN

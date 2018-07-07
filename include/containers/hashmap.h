@@ -56,7 +56,7 @@ size_t hm_debug_get_collisions( HashMap const* map );
 #define hm_debug( map )                                                        \
 	do {                                                                       \
 		debug_more_( HM_DEBUG, "%s (%ld)\n", DBGSTR( HM_DEBUG, map ),          \
-					 DBG_CONTAINER_MEM( HM_DEBUG, map, collisions_ ) );        \
+					 DBG_CONTAINER_MEM( HM_DEBUG, map, collisions_, 0UL ) );   \
 	} while( 0 )
 
 #endif // HASHMAP_H_IN
