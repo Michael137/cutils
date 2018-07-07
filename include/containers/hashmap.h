@@ -32,7 +32,7 @@ typedef struct HashMap_ {
 
 	size_t size;
 
-#if HM_DEBUG == 1
+#if HM_DEBUG
 	size_t collisions_;
 	char* dbgStr;
 #endif

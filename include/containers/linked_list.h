@@ -17,7 +17,7 @@ typedef struct LinkedList_ {
 	LinkedListNode_ *head, *tail;
 	size_t size;
 
-#if LL_DEBUG == 1
+#if LL_DEBUG
 	char* dbgStr;
 #endif // LL_DEBUG
 } LinkedList;

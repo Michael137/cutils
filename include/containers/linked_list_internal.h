@@ -19,7 +19,7 @@ typedef struct LinkedListNode_ {
 	struct LinkedListNode_* next;
 	void* data;
 
-#if LL_DEBUG == 1
+#if LL_DEBUG
 	char* dbgStr;
 #endif // LL_DEBUG
 

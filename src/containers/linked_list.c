@@ -16,7 +16,7 @@ bool ll_create( LinkedList** llist )
 		( *llist )->tail = NULL;
 		( *llist )->size = 0;
 
-#if LL_DEBUG == 1
+#if LL_DEBUG
 		( *llist )->dbgStr = "Linked List Created";
 #endif
 
@@ -44,7 +44,7 @@ bool ll_push_front( LinkedList** llist, void const* data,
 			node->data = copy;
 			node->type_tag_ = UNKNOWN;
 
-#if LL_DEBUG == 1
+#if LL_DEBUG
 			node->dbgStr = "Node created";
 #endif // LL_DEBUG
 

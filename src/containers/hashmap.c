@@ -5,14 +5,14 @@
 
 static void hm_debug_collisions_incr( __attribute((unused)) HashMap** const map )
 {
-#if HM_DEBUG == 1
+#if HM_DEBUG
 	( *map )->collisions_++;
 #endif
 }
 
 size_t hm_debug_get_collisions( __attribute((unused)) HashMap const* map )
 {
-#if HM_DEBUG == 1
+#if HM_DEBUG
 	return map->collisions_;
 #else
 	return 0;
@@ -30,7 +30,7 @@ int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
 		( *map )->hash_fn = hash_fn;
 		( *map )->cmp_fn = cmp_fn;
 
-#if HM_DEBUG == 1
+#if HM_DEBUG
 		( *map )->collisions_ = 0;
 		( *map )->dbgStr = "HashMap created";
 #endif
