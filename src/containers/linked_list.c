@@ -67,8 +67,8 @@ bool ll_free( LinkedList* llist )
 	if( llist ) {
 		LinkedListNode_* tmp = llist->head;
 		while( tmp != NULL ) {
-			// TODO: streamline ll_debug so it can be uncommented
-			// ll_debug_node_( tmp, "From free" );
+			// TODO: streamline LL_DEBUG_LOG so it can be uncommented
+			// LL_DEBUG_NODE_LOG( tmp, "From free" );
 			LinkedListNode_* next = tmp->next;
 			free( tmp->data );
 			free( tmp );
@@ -90,7 +90,7 @@ void* ll_at( LinkedList const* llist, const size_t idx )
 		size_t ctr = 0;
 		while( tmp != NULL ) {
 			if( ctr == idx ) {
-				ll_debug_node_( tmp );
+				LL_DEBUG_NODE_LOG( tmp );
 
 				return (void*)tmp->data;
 			}
@@ -150,8 +150,8 @@ size_t ll_find( LinkedList const* llist, void const* value,
 		size_t ctr = 0;
 		while( tmp != NULL ) {
 			if( cmp_fn( value, tmp->data ) ) {
-				// TODO: streamline ll_debug so it can be uncommented
-				// ll_debug_node_( tmp, "From Find internal" );
+				// TODO: streamline LL_DEBUG_LOG so it can be uncommented
+				// LL_DEBUG_NODE_LOG( tmp, "From Find internal" );
 
 				return ctr;
 			}

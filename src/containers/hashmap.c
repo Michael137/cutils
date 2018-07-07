@@ -62,11 +62,11 @@ void hm_free( HashMap* map )
 		LinkedListNode_* tmp = ( map->buckets[i] ).head;
 		while( tmp != NULL ) {
 
-			// TODO: streamline ll_debug so it can be uncommented
+			// TODO: streamline LL_DEBUG_LOG so it can be uncommented
 			//#ifdef LL_DEBUG
 			//			char msg[50];
 			//			sprintf( msg, "From free hm_free at idx %ld", i );
-			//			ll_debug_node_( tmp, msg );
+			//			LL_DEBUG_NODE_LOG( tmp, msg );
 			//#endif
 
 			LinkedListNode_* next = tmp->next;
@@ -88,8 +88,8 @@ void hm_insert( HashMap** const map, void const* key, void const* value )
 	LinkedList* llist = &( ( *map )->buckets[idx] );
 
 	if( llist->head != NULL ) {
-		//		TODO: streamline ll_debug so it can be uncommented
-				// ll_debug( llist );
+		//		TODO: streamline LL_DEBUG_LOG so it can be uncommented
+				// LL_DEBUG_LOG( llist );
 		hm_debug_collisions_incr( map );
 	}
 

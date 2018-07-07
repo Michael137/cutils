@@ -53,9 +53,9 @@ void const* hm_get( HashMap const* map, void const* key );
 
 size_t hm_debug_get_collisions( HashMap const* map );
 
-#define hm_debug( map )                                                        \
+#define HM_DEBUG_LOG( map )                                                    \
 	do {                                                                       \
-		debug_more_( HM_DEBUG, "%s (%ld)\n", DBGSTR( HM_DEBUG, map ),          \
+		DEBUG_MORE_( HM_DEBUG, "%s (%ld)\n", DBGSTR( HM_DEBUG, map ),          \
 					 DBG_CONTAINER_MEM( HM_DEBUG, map, collisions_, 0UL ) );   \
 	} while( 0 )
 

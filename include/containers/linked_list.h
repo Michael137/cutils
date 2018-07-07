@@ -22,9 +22,9 @@ typedef struct LinkedList_ {
 #endif // LL_DEBUG
 } LinkedList;
 
-#define ll_debug( llist )                                                      \
+#define LL_DEBUG_LOG( llist )                                                  \
 	do {                                                                       \
-		debug_more_( LL_DEBUG, "%s\n", DBGSTR( LL_DEBUG, llist ) );            \
+		DEBUG_MORE_( LL_DEBUG, "%s\n", DBGSTR( LL_DEBUG, llist ) );            \
 	} while( 0 )
 
 // External methods

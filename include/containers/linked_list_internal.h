@@ -25,9 +25,9 @@ typedef struct LinkedListNode_ {
 
 } LinkedListNode_;
 
-#define ll_debug_node_( node )                                                 \
+#define LL_DEBUG_NODE_LOG( node )                                              \
 	do {                                                                       \
-		debug_more_( LL_DEBUG, "%s\n", DBGSTR( LL_DEBUG, node ) );             \
+		DEBUG_MORE_( LL_DEBUG, "%s\n", DBGSTR( LL_DEBUG, node ) );             \
 	} while( 0 )
 
 bool void_ptrs_equal_( void const* lhs, void const* rhs,

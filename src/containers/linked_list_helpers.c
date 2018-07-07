@@ -34,8 +34,8 @@ int ll_get_node_( LinkedList const* llist, size_t idx, LinkedListNode_** node )
 	LinkedListNode_* tmp = llist->head;
 	size_t ctr = 0;
 	while( ctr++ < idx && tmp != NULL ) {
-		// TODO: streamline ll_debug so it can be uncommented
-		//ll_debug_node_( tmp, "From ll_get_node_" );
+		// TODO: streamline LL_DEBUG_LOG so it can be uncommented
+		//LL_DEBUG_NODE_LOG( tmp, "From ll_get_node_" );
 		tmp = tmp->next;
 	}
 
