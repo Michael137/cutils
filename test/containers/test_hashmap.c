@@ -4,74 +4,78 @@
 
 #include <containers/hashmap.h>
 
-static size_t hash_fn_str( void const* key )
+static void test_str2str()
 {
-	size_t hash = 5381;
-	char const* str = (char const*)key;
-	int c;
-
-	while( ( c = *str++ ) )
-		hash = ( ( hash << 5 ) + hash ) + c; /* hash * 33 + c */
-
-	return hash;
-}
-
-static bool cmp_fn_str( void const* key, void const* value )
-{
-	return strcmp( (char*)key, (char*)value ) == 0;
-}
-
-/*
- * TODO: create hash_map_int() and hash_map_str()
- *       with default hash/cmp fns
- */
-static size_t hash_fn_int( void const* num )
-{
-	size_t key = *(int*)num;
-	key = ( ~key ) + ( key << 21 ); // key = (key << 21) - key - 1;
-	key = key ^ ( key >> 24 );
-	key = ( key + ( key << 3 ) ) + ( key << 8 ); // key * 265
-	key = key ^ ( key >> 14 );
-	key = ( key + ( key << 2 ) ) + ( key << 4 ); // key * 21
-	key = key ^ ( key >> 28 );
-	key = key + ( key << 31 );
-	return key;
-}
-
-static bool cmp_fn_int( void const* key, void const* value )
-{
-	return *(int*)key == *(int*)value;
-}
-
-int main()
-{
-	printf( "~~~ Starting Hashmap Tests ~~~\n" );
-
 	HashMap* str_map;
-
-	hm_create( &str_map, hash_fn_str, cmp_fn_str );
+	hm_create_str2str( &str_map );
 	hm_insert( &str_map, "Key1", "Value1" );
 	hm_insert( &str_map, "Key2", "Value2" );
 	hm_insert( &str_map, "Key3", "Value3" );
 	char const* val = hm_get( str_map, "Key1" );
 	assert( strcmp( "Value1", val ) == 0 );
 	printf( "%s\n", val );
-
 	hm_free( str_map );
+}
 
-	HashMap* int_map; 
-	hm_create( &int_map, hash_fn_int, cmp_fn_int );
-	int val1 = 1;
-	int val2 = 2;
-	int val3 = 3;
+static void test_str2int()
+{
+	HashMap* int_map;
+	hm_create_str2int( &int_map );
+	int val1 = -1231;
+	int val2 = 31232;
+	int val3 = 137;
 	hm_insert( &int_map, "Key1", &val1 );
 	hm_insert( &int_map, "Key2", &val2 );
 	hm_insert( &int_map, "Key3", &val3 );
 	int num = *(int*)hm_get( int_map, "Key1" );
-	assert( strcmp( "Value1", val ) == 0 );
+	assert( num == val1 );
 	printf( "%d\n", num );
-
 	hm_free( int_map );
+}
+
+static void test_int2int()
+{
+	HashMap* int2int_map;
+	hm_create_int2int( &int2int_map );
+	int val1 = -1231;
+	int val2 = 31232;
+	int val3 = 137;
+	int key1 = -121;
+	int key2 = 21238;
+	int key3 = 30198;
+	hm_insert( &int2int_map, &key1, &val1 );
+	hm_insert( &int2int_map, &key2, &val2 );
+	hm_insert( &int2int_map, &key3, &val3 );
+	int num = *(int*)hm_get( int2int_map, &key2 );
+	assert( num == val2 );
+	printf( "%d\n", num );
+	hm_free( int2int_map );
+}
+
+static void test_int2str()
+{
+	HashMap* int2str_map;
+	hm_create_int2str( &int2str_map );
+	int key1 = -121;
+	int key2 = 21238;
+	int key3 = 30198;
+	hm_insert( &int2str_map, &key1, "Value1" );
+	hm_insert( &int2str_map, &key2, "Value2" );
+	hm_insert( &int2str_map, &key3, "Value3" );
+	char const* val = hm_get( int2str_map, &key3 );
+	assert( strcmp( "Value3", val ) == 0 );
+	printf( "%s\n", val );
+	hm_free( int2str_map );
+}
+
+int main()
+{
+	printf( "~~~ Starting Hashmap Tests ~~~\n" );
+
+	test_str2str();
+	test_str2int();
+	test_int2str();
+	test_int2int();
 
 	return 0;
 }

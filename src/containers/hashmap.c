@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <containers/hashmap.h>
 
-static void hm_debug_collisions_incr( __attribute((unused)) HashMap** const map )
+static void hm_debug_collisions_incr( __attribute( ( unused ) )
+									  HashMap** const map )
 {
 #if HM_DEBUG
 	( *map )->collisions_++;
 #endif
 }
 
-size_t hm_debug_get_collisions( __attribute((unused)) HashMap const* map )
+size_t hm_debug_get_collisions( __attribute( ( unused ) ) HashMap const* map )
 {
 #if HM_DEBUG
 	return map->collisions_;
@@ -108,4 +110,60 @@ void const* hm_get( HashMap const* map, void const* key )
 	}
 
 	return NULL;
+}
+
+// djb hash
+static size_t default_hash_str_( void const* key )
+{
+	size_t hash = 5381;
+	char const* str = (char const*)key;
+	int c;
+
+	while( ( c = *str++ ) )
+		hash = ( ( hash << 5 ) + hash ) + c; /* hash * 33 + c */
+
+	return hash;
+}
+
+static bool default_cmp_str_( void const* key, void const* value )
+{
+	return strcmp( (char*)key, (char*)value ) == 0;
+}
+
+static size_t default_hash_int_( void const* num )
+{
+	size_t key = *(int*)num;
+	key = ( ~key ) + ( key << 21 ); // key = (key << 21) - key - 1;
+	key = key ^ ( key >> 24 );
+	key = ( key + ( key << 3 ) ) + ( key << 8 ); // key * 265
+	key = key ^ ( key >> 14 );
+	key = ( key + ( key << 2 ) ) + ( key << 4 ); // key * 21
+	key = key ^ ( key >> 28 );
+	key = key + ( key << 31 );
+	return key;
+}
+
+static bool default_cmp_int_( void const* key, void const* value )
+{
+	return *(int*)key == *(int*)value;
+}
+
+int hm_create_str2int( HashMap** map )
+{
+	return hm_create( map, default_hash_str_, default_cmp_int_ );
+}
+
+int hm_create_str2str( HashMap** map )
+{
+	return hm_create( map, default_hash_str_, default_cmp_str_ );
+}
+
+int hm_create_int2int( HashMap** map )
+{
+	return hm_create( map, default_hash_int_, default_cmp_int_ );
+}
+
+int hm_create_int2str( HashMap** map )
+{
+	return hm_create( map, default_hash_int_, default_cmp_str_ );
 }

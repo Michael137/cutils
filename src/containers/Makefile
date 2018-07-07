@@ -49,6 +49,7 @@ test:
 # TODO: move to separate script taking test name as argument
 .PHONY: leak
 leak:
-	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes $(OBJDIR)/test_linked_list
+	@valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=no --track-origins=yes $(OBJDIR)/test_linked_list || \
+	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=no --track-origins=yes $(OBJDIR)/test_hashmap
 
 all: clean compile_src test_linked_list test_hashmap test
