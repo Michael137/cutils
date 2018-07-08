@@ -6,6 +6,25 @@
 #include <containers/hashmap.h>
 #include <containers/linked_list_helpers.h>
 
+static size_t const sc_hm_min_size_ = 4096;
+
+// Forward declares for statics
+static void hm_rebalance_( HashMap** const map, size_t new_size );
+static void hm_insert_( HashMap** const map, void const* key, void const* value,
+						bool rebalancing );
+static void hm_debug_collisions_incr( __attribute( ( unused ) )
+									  HashMap** const map );
+size_t hm_debug_get_collisions( __attribute( ( unused ) ) HashMap const* map );
+static int hm_create_( HashMap** map, size_t ( *hash_fn )( void const* ),
+					   bool ( *cmp_fn )( void const*, void const* ),
+					   size_t size );
+static size_t default_hash_str_( void const* key );
+static bool default_cmp_str_( void const* key, void const* value );
+static size_t default_hash_int_( void const* num );
+static size_t default_hash_ptr_( void const* num );
+static bool default_cmp_int_( void const* key, void const* value );
+static bool default_cmp_ptr_( void const* key, void const* value );
+
 static void hm_debug_collisions_incr( __attribute( ( unused ) )
 									  HashMap** const map )
 {
@@ -23,16 +42,16 @@ size_t hm_debug_get_collisions( __attribute( ( unused ) ) HashMap const* map )
 #endif
 }
 
-static size_t const sc_hm_min_size_ = 128;
-
-int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
-			   bool ( *cmp_fn )( void const*, void const* ) )
+static int hm_create_( HashMap** map, size_t ( *hash_fn )( void const* ),
+					   bool ( *cmp_fn )( void const*, void const* ),
+					   size_t size )
 {
-	*map = malloc( sizeof( HashMap ) + sc_hm_min_size_ * sizeof( LinkedList ) );
+	*map = malloc( sizeof( HashMap ) + size * sizeof( LinkedList ) );
 	if( map && *map ) {
-		( *map )->size = sc_hm_min_size_;
+		( *map )->size = size;
 		( *map )->hash_fn = hash_fn;
 		( *map )->cmp_fn = cmp_fn;
+		( *map )->elements = 0;
 
 #if HM_DEBUG
 		( *map )->collisions_ = 0;
@@ -40,7 +59,7 @@ int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
 #endif
 
 		size_t i = 0;
-		for( ; i < sc_hm_min_size_; ++i ) {
+		for( ; i < size; ++i ) {
 			LinkedList* llist;
 			ll_create( &llist );
 			( *map )->buckets[i] = *llist;
@@ -55,6 +74,12 @@ int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
 	}
 
 	return HM_FAILURE;
+}
+
+int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
+			   bool ( *cmp_fn )( void const*, void const* ) )
+{
+	return hm_create_( map, hash_fn, cmp_fn, sc_hm_min_size_ );
 }
 
 void hm_free( HashMap* map )
@@ -76,8 +101,13 @@ void hm_free( HashMap* map )
 	map = NULL;
 }
 
-void hm_insert( HashMap** const map, void const* key, void const* value )
+static void hm_insert_( HashMap** const map, void const* key, void const* value,
+						bool rebalancing )
 {
+	// TODO: profile
+	if( !rebalancing && ( *map )->elements >= 1.5 * ( *map )->size ) {
+		hm_rebalance_( map, ( *map )->elements * 2.5 );
+	}
 	size_t hsh = ( *map )->hash_fn( key );
 	size_t idx = hsh % ( *map )->size;
 
@@ -93,6 +123,34 @@ void hm_insert( HashMap** const map, void const* key, void const* value )
 	node->value = value;
 	ll_push_front( &llist, node, sizeof( HashNode_ ) );
 	free( node );
+
+	( *map )->elements++;
+}
+
+static void hm_rebalance_( HashMap** const map, size_t new_size )
+{
+	HashMap* tmp;
+	hm_create_( &tmp, NULL, NULL, new_size );
+	tmp->hash_fn = ( *map )->hash_fn;
+	tmp->cmp_fn = ( *map )->cmp_fn;
+	size_t i = 0;
+	for( ; i < ( *map )->size; ++i ) {
+		LinkedList llist = ( *map )->buckets[i];
+		LinkedListNode_* node = llist.head;
+		while( node != NULL ) {
+			hm_insert_( &tmp, ( (HashNode_*)node->data )->key,
+						( (HashNode_*)node->data )->value, true );
+			node = node->next;
+		}
+	}
+
+	hm_free( *map );
+	*map = tmp;
+}
+
+void hm_insert( HashMap** const map, void const* key, void const* value )
+{
+	hm_insert_( map, key, value, false );
 }
 
 void const* hm_get( HashMap const* map, void const* key )
@@ -197,9 +255,8 @@ void hm_print( HashMap const* const map )
 {
 	LinkedList const* llist = NULL;
 	size_t i = 0;
-	for( ; i < map->size; ++i )
-	{
-		llist = &(map->buckets[i]);
+	for( ; i < map->size; ++i ) {
+		llist = &( map->buckets[i] );
 		if( llist->size != 0 ) {
 			printf( "Bucket %ld\n", i );
 			ll_print( llist );

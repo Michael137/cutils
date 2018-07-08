@@ -30,6 +30,7 @@ CFLAGS += -Wshadow
 CFLAGS += -Wnull-dereference
 CFLAGS += -Wunknown-pragmas
 CFLAGS += -Winline
+CFLAGS += -Wnull-dereference
 
 # Warnings requires instrumentation
 CFLAGS += -Wstrict-aliasing

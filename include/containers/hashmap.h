@@ -14,12 +14,13 @@
 /*
  * TODO:
  *
- * struct HashMap
- *
- * CREATE
- * INSERT
- * SEARCH
+ * CREATE: done
+ * INSERT: done
+ * SEARCH: done
+ * KEY SEARCH
  * DELETE
+ * ITERATOR
+ * RESIZE
  */
 typedef struct HashNode_ {
 
@@ -31,6 +32,7 @@ typedef struct HashNode_ {
 typedef struct HashMap_ {
 
 	size_t size;
+	size_t elements;
 
 #if HM_DEBUG
 	size_t collisions_;

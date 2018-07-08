@@ -70,7 +70,7 @@ static void test_int2str()
 }
 
 // Test defines
-#define MAP_SZ 300
+#define MAP_SZ 10000
 #define BUF_SZ 20
 #define BUF_MSG "Val%016d"
 #define BUF_SPRINTF( buffer ) snprintf( buffer, BUF_SZ, BUF_MSG, i );
@@ -78,6 +78,7 @@ static void test_resize()
 {
 	HashMap* map;
 	hm_create_str2str( &map );
+	size_t old_size = map->size;
 
 	char buffs[MAP_SZ][BUF_SZ];
 	for( int i = 0; i < MAP_SZ; ++i ) {
@@ -89,6 +90,7 @@ static void test_resize()
 		assert( buffs[i] == (char const*)hm_get( map, buffs[i] ) );
 	}
 
+	assert( map->size != old_size );
 	HM_DEBUG_LOG( map );
 	hm_free( map );
 }
