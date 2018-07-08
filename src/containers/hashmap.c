@@ -14,7 +14,6 @@ static void hm_insert_( HashMap** const map, void const* key, void const* value,
 						bool rebalancing );
 static void hm_debug_collisions_incr( __attribute( ( unused ) )
 									  HashMap** const map );
-size_t hm_debug_get_collisions( __attribute( ( unused ) ) HashMap const* map );
 static int hm_create_( HashMap** map, size_t ( *hash_fn )( void const* ),
 					   bool ( *cmp_fn )( void const*, void const* ),
 					   size_t size );

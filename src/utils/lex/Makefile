@@ -9,17 +9,12 @@ TESTDIR=../../../test/$(PROJECT)
 
 UTILS_OBJDIR=../../../target/utils
 
+_OBJ = linked_list.o linked_list_internal.o linked_list_helpers.o
 _OBJ += hashmap.o
 OBJ = $(patsubst %,$(CONTAINER_OBJDIR)/%,$(_OBJ))
 
-_UTILS_OBJ = dfa.o
-UTILS_OBJ = $(patsubst %,$(UTILS_OBJDIR)/%,$(_UTILS_OBJ))
-
-$(UTILS_OBJDIR)/dfa.o: dfa.c
-	$(CC) -c $< $(CFLAGS) -o $@
-
-.PHONY: compile_src
-compile_src: $(UTILS_OBJ)
+test_dfa: dfa.c
+	$(CC) $< $(OBJ) $(CFLAGS) -o $(OBJDIR)/test_dfa
 
 .PHONY:
 clean:
@@ -30,6 +25,6 @@ test:
 
 .PHONY: leak
 leak:
-	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes $(OBJDIR)/test_dfa
+	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=no --track-origins=yes $(OBJDIR)/test_dfa
 
-all: clean compile_src test_dfa test
+all: clean test_dfa test
