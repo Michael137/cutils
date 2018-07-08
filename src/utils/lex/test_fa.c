@@ -14,7 +14,8 @@
 
 // DFA Structure:
 // * Map<Pair<State,Symbol>,State>
-// ** Map<State,Map<Symbol,State>>: m1 = map("A"); m1("c1");
+// or
+// * Map<State,Map<Symbol,State>>: m1 = map("A"); m1("c1");
 // * Start state
 
 // State
@@ -42,18 +43,21 @@ typedef struct State_ {
 
 typedef struct FiniteAutomaton {
 	State start_state;
-	HashMap* trans;
+
+	// Map<Trans, State>
+	HashMap* transT;
 } FA, DFA, NFA;
+
+typedef struct Transition_ {
+	State start;
+	State end;
+	char const* symbol;
+} Trans;
 
 void fa_create( FA** fa )
 {
 	*fa = malloc( sizeof(FA) );
-	hm_create( &((*fa)->trans), NULL, NULL );
-//	State s0;
-//	s0.state_id = "A";
-//	s0.is_accepting = true;
-//	(*fa)->start_state = s0;
-//	hm_insert(&((*fa)->trans), s0.state_id, "a");
+	hm_create( &((*fa)->transT), NULL, NULL );
 }
 
 void dfa_create( DFA** dfa )
@@ -63,8 +67,8 @@ void dfa_create( DFA** dfa )
 
 void fa_free( FA* fa )
 {
-	hm_free( fa->trans );
-	fa->trans = NULL;
+	hm_free( fa->transT );
+	fa->transT = NULL;
 
 	free( fa );
 	fa = NULL;
