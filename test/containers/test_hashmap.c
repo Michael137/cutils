@@ -1,5 +1,6 @@
 #include <assert.h> // assert
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <containers/hashmap.h>
@@ -8,13 +9,19 @@ static void test_str2str()
 {
 	HashMap* str_map;
 	hm_create_str2str( &str_map );
+	char* allocated = strdup("Allocated");
 	hm_insert( &str_map, "Key1", "Value1" );
 	hm_insert( &str_map, "Key2", "Value2" );
 	hm_insert( &str_map, "Key3", "Value3" );
+	hm_insert( &str_map, "Key4", allocated );
 	char const* val = hm_get( str_map, "Key1" );
+	char const* val4 = hm_get( str_map, "Key4" );
 	assert( strcmp( "Value1", val ) == 0 );
+	assert( strcmp( allocated, val4 ) == 0 );
 	printf( "%s\n", val );
+	printf( "%s\n", val4 );
 	hm_free( str_map );
+	free( allocated );
 }
 
 static void test_str2int()
@@ -49,7 +56,7 @@ static void test_int2int()
 	int num = *(int*)hm_get( int2int_map, &key2 );
 	assert( num == val2 );
 	printf( "%d\n", num );
-	hm_print( int2int_map );
+	hm_print( int2int_map, NULL );
 	hm_free( int2int_map );
 }
 

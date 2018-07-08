@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <containers/hashmap.h>
+#include <containers/linked_list.h>
 
 // Example DFA using transition table:
 
@@ -31,7 +33,7 @@
 // (* last)
 
 // Example usage for DFA:
-// FA* fa = malloc(sizeof(FA));
+// FA* fa
 // dfa_create(&fa)
 // fa_insert({"s_n", "b", "s_0"})
 // fa_change({"s_n", "b", "s_0", "s_1"})
@@ -54,16 +56,63 @@ typedef struct Transition_ {
 	char const* symbol;
 } Trans;
 
-void fa_create( FA** fa )
+// TODO: consolidate hash fns throughout all projs
+static size_t trans_hash_fn( void const* key )
 {
-	*fa = malloc( sizeof(FA) );
-	hm_create( &((*fa)->transT), NULL, NULL );
+	size_t hash = 5381;
+	Trans const* tmp = key;
+	char str[strlen( ( tmp->start ).state_id ) +
+			 strlen( ( tmp->end ).state_id ) + strlen( tmp->symbol ) + 1];
+	snprintf( str, sizeof( str ), "%s%s%s", ( tmp->start ).state_id,
+			  ( tmp->end ).state_id, tmp->symbol );
+
+	int c;
+
+	while( ( c = ( *str )++ ) )
+		hash = ( ( hash << 5 ) + hash ) + c; /* hash * 33 + c */
+
+	return hash;
 }
 
-void dfa_create( DFA** dfa )
+static bool trans_cmp_fn( void const* key, void const* value )
 {
-	fa_create( dfa );
+	Trans const* tmp_k = key;
+	Trans const* tmp_v = value;
+
+	return ( strcmp( ( tmp_k->start ).state_id, ( tmp_v->start ).state_id ) ) ==
+			   0 &&
+		   ( strcmp( ( tmp_k->start ).state_id, ( tmp_v->start ).state_id ) ) ==
+			   0 &&
+		   ( strcmp( tmp_k->symbol, tmp_v->symbol ) == 0 );
 }
+
+static void trans_print_fn( LinkedListNode_ const* node )
+{
+	HashNode_ const* h_node = node->data;
+	Trans const* key = h_node->key;
+	State s1 = *(State*)h_node->value;
+	puts( "\ttype: Transition" );
+	char const* s0 = (key->start).state_id;
+	char const* sym = key->symbol;
+	puts( ">> \tdata:\n>> " );
+	printf( ">> \t%4s\n", sym );
+	printf( ">> \t%s", s0 );
+	if( (key->start).is_accepting )
+		printf( " (final)" );
+	printf(" ----> %s", s1.state_id);
+	if( s1.is_accepting )
+		printf( " (final)" );
+
+	puts( "\n>> " );
+}
+
+void fa_create( FA** fa )
+{
+	*fa = malloc( sizeof( FA ) );
+	hm_create( &( ( *fa )->transT ), trans_hash_fn, trans_cmp_fn );
+}
+
+void dfa_create( DFA** dfa ) { fa_create( dfa ); }
 
 void fa_free( FA* fa )
 {
@@ -74,14 +123,32 @@ void fa_free( FA* fa )
 	fa = NULL;
 }
 
-void dfa_free( DFA* const dfa )
+void dfa_free( DFA* const dfa ) { fa_free( dfa ); }
+
+Trans* fa_insert( FA* const* const fa, State const* s1, char const* sym, State const* s2 )
 {
-	fa_free( dfa );
+	Trans* trans = malloc( sizeof( Trans ) );
+	trans->start = *s1;
+	trans->end = *s2;
+	trans->symbol = sym;
+	hm_insert( &( ( *fa )->transT ), trans, s2 );
+	return trans;
 }
 
-int main() {
+int main()
+{
 	DFA* dfa;
 	dfa_create( &dfa );
+
+	State s0 = {"A", false};
+	State s1 = {"B", true};
+	Trans* trans = fa_insert( &dfa, &s0, "b", &s1 );
+	State found = *(State*)hm_get( dfa->transT, trans );
+	printf( "%s %ld\n", found.state_id, strlen(found.state_id) );
+
+	hm_print( dfa->transT, trans_print_fn );
+
 	dfa_free( dfa );
+	free( trans );
 	return 0;
 }

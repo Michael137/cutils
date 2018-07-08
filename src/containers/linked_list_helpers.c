@@ -45,7 +45,7 @@ int ll_get_node_( LinkedList const* llist, size_t idx, LinkedListNode_** node )
 	return LL_SUCCESS;
 }
 
-void ll_print( LinkedList const* llist )
+void ll_print_custom( LinkedList const* llist, void (*print_fn)( LinkedListNode_ const* node ) )
 {
 	if( llist ) {
 		LinkedListNode_* tmp = llist->head;
@@ -54,12 +54,17 @@ void ll_print( LinkedList const* llist )
 		size_t ctr = 0;
 		while( tmp != NULL ) {
 			printf( ">> \t>---------\n>> \tid: %zd\n>>", ctr );
-			ll_print_node_( tmp );
+			print_fn( tmp );
 			printf( ">> \t---------<\n" );
 			tmp = tmp->next;
 			++ctr;
 		}
 	}
+}
+
+void ll_print( LinkedList const* llist )
+{
+	ll_print_custom( llist, ll_print_node_ );
 }
 
 int ll_node_set_type( LinkedList** llist, size_t idx, VOID_PTR_TYPE_ type_tag )

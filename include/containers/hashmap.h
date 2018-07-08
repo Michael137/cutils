@@ -43,6 +43,7 @@ typedef struct HashMap_ {
 	bool ( *cmp_fn )( void const*, void const* );
 
 	// Array of hash buckets of hash nodes
+	// TODO: should be LinkedList**
 	LinkedList buckets[];
 
 } HashMap;
@@ -59,9 +60,10 @@ void hm_free( HashMap* map );
 
 // TODO: hm_insert with option to call set_node_type()
 void hm_insert( HashMap** const map, void const* key, void const* value );
+void hm_insert_typed( HashMap** const map, void const* key, void const* value );
 void const* hm_get( HashMap const* map, void const* key );
 
-void hm_print( HashMap const* const );
+void hm_print( HashMap const* const, void (*print_fn)(LinkedListNode_ const*) );
 
 size_t hm_debug_get_collisions( HashMap const* map );
 

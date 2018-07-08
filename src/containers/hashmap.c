@@ -163,6 +163,7 @@ void const* hm_get( HashMap const* map, void const* key )
 
 	while( head != NULL ) {
 		HashNode_* node_data = head->data;
+
 		if( map->cmp_fn( node_data->key, key ) ) return node_data->value;
 
 		head = head->next;
@@ -250,7 +251,7 @@ int hm_create_ptr2ptr( HashMap** map )
 	return hm_create( map, default_hash_ptr_, default_cmp_ptr_ );
 }
 
-void hm_print( HashMap const* const map )
+void hm_print( HashMap const* const map, void (*print_fn)(LinkedListNode_ const* node))
 {
 	LinkedList const* llist = NULL;
 	size_t i = 0;
@@ -258,7 +259,10 @@ void hm_print( HashMap const* const map )
 		llist = &( map->buckets[i] );
 		if( llist->size != 0 ) {
 			printf( "Bucket %ld\n", i );
-			ll_print( llist );
+			if(print_fn != NULL)
+				ll_print_custom( llist, print_fn );
+			else
+				ll_print( llist );
 		}
 	}
 }
