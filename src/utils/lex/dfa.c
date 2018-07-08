@@ -14,6 +14,7 @@
 
 // DFA Structure:
 // * Map<Pair<State,Symbol>,State>
+// ** Map<State,Map<Symbol,State>>: m1 = map("A"); m1("c1");
 // * Start state
 
 // State
@@ -28,26 +29,55 @@
 // * add(Start State, Symbol, End State)
 // (* last)
 
+// Example usage for DFA:
+// FA* fa = malloc(sizeof(FA));
+// dfa_create(&fa)
+// fa_insert({"s_n", "b", "s_0"})
+// fa_change({"s_n", "b", "s_0", "s_1"})
+
 typedef struct State_ {
 	char const* state_id;
 	bool is_accepting;
 } State;
 
-typedef struct DFA_ {
+typedef struct FiniteAutomaton {
 	State start_state;
-	HashMap* dtrans;
-} DFA;
+	HashMap* trans;
+} FA, DFA, NFA;
+
+void fa_create( FA** fa )
+{
+	*fa = malloc( sizeof(FA) );
+	hm_create( &((*fa)->trans), NULL, NULL );
+//	State s0;
+//	s0.state_id = "A";
+//	s0.is_accepting = true;
+//	(*fa)->start_state = s0;
+//	hm_insert(&((*fa)->trans), s0.state_id, "a");
+}
+
+void dfa_create( DFA** dfa )
+{
+	fa_create( dfa );
+}
+
+void fa_free( FA* fa )
+{
+	hm_free( fa->trans );
+	fa->trans = NULL;
+
+	free( fa );
+	fa = NULL;
+}
+
+void dfa_free( DFA* const dfa )
+{
+	fa_free( dfa );
+}
 
 int main() {
-	DFA* dfa = malloc( sizeof(DFA) );
-	State s0;
-	s0.state_id = "A";
-	s0.is_accepting = true;
-	hm_create_str2str( &(dfa->dtrans) );
-	dfa->start_state = s0;
-	hm_insert(&(dfa->dtrans), s0.state_id, "a");
-
-	hm_free( dfa->dtrans );
-	free( dfa );
+	DFA* dfa;
+	dfa_create( &dfa );
+	dfa_free( dfa );
 	return 0;
 }
