@@ -42,6 +42,7 @@ bool ll_has_loop_naive_hashed( LinkedList const* llist )
 
 	LinkedListNode_* head = llist->head;
 	while( head != NULL ) {
+		// TODO: store address value in map properly
 		void* ptr = (void*)(uintptr_t)head;
 		uintptr_t cached = (uintptr_t)hm_get( map, ptr );
 		if( !cached ) {
