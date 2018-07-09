@@ -71,7 +71,9 @@ static void test_int2str()
 	hm_insert( &int2str_map, &key2, "Value2" );
 	hm_insert( &int2str_map, &key3, "Value3" );
 	char const* val = hm_get( int2str_map, &key3 );
+	char const* val_neg = hm_get( int2str_map, &key1 );
 	assert( strcmp( "Value3", val ) == 0 );
+	assert( strcmp( "Value1", val_neg ) == 0 );
 	printf( "%s\n", val );
 	hm_free( int2str_map );
 }
@@ -106,11 +108,10 @@ int main()
 {
 	printf( "~~~ Starting Hashmap Tests ~~~\n" );
 
-	test_str2str();
-	test_str2int();
 	test_int2str();
 	test_int2int();
-
+	test_str2str();
+	test_str2int();
 	test_resize();
 
 	return 0;

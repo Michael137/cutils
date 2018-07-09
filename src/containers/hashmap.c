@@ -185,10 +185,13 @@ static bool default_cmp_str_( void const* key, void const* value )
 
 static size_t default_hash_int_( void const* key )
 {
-	return hash_int_64( *(int64_t*)key );
+	return hash_int_32( *(uint32_t*)key );
 }
 
-static size_t default_hash_ptr_( void const* key ) { return (uintptr_t)key; }
+static size_t default_hash_ptr_( void const* key )
+{
+	return hash_int_64( (uintptr_t)key );
+}
 
 static bool default_cmp_int_( void const* key, void const* value )
 {
@@ -202,7 +205,7 @@ static bool default_cmp_ptr_( void const* key, void const* value )
 
 int hm_create_str2int( HashMap** map )
 {
-	return hm_create( map, default_hash_str_, default_cmp_int_ );
+	return hm_create( map, default_hash_str_, default_cmp_str_ );
 }
 
 int hm_create_str2str( HashMap** map )
@@ -217,7 +220,7 @@ int hm_create_int2int( HashMap** map )
 
 int hm_create_int2str( HashMap** map )
 {
-	return hm_create( map, default_hash_int_, default_cmp_str_ );
+	return hm_create( map, default_hash_int_, default_cmp_int_ );
 }
 
 int hm_create_ptr2ptr( HashMap** map )
