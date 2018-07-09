@@ -178,9 +178,9 @@ static size_t default_hash_str_( void const* key )
 	return hash_str_djb( (char const*)key );
 }
 
-static bool default_cmp_str_( void const* key, void const* value )
+static bool default_cmp_str_( void const* e1, void const* e2 )
 {
-	return strcmp( (char*)key, (char*)value ) == 0;
+	return strcmp( (char*)e1, (char*)e2 ) == 0;
 }
 
 static size_t default_hash_int_( void const* key )
@@ -193,14 +193,14 @@ static size_t default_hash_ptr_( void const* key )
 	return hash_int_64( (uintptr_t)key );
 }
 
-static bool default_cmp_int_( void const* key, void const* value )
+static bool default_cmp_int_( void const* e1, void const* e2 )
 {
-	return *(int*)key == *(int*)value;
+	return *(int*)e1 == *(int*)e2;
 }
 
-static bool default_cmp_ptr_( void const* key, void const* value )
+static bool default_cmp_ptr_( void const* e1, void const* e2 )
 {
-	return (uintptr_t)key == (uintptr_t)value;
+	return (uintptr_t)e1 == (uintptr_t)e2;
 }
 
 int hm_create_str2int( HashMap** map )
