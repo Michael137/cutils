@@ -13,6 +13,9 @@ _OBJ = linked_list.o linked_list_internal.o linked_list_helpers.o
 _OBJ += hashmap.o
 OBJ = $(patsubst %,$(CONTAINER_OBJDIR)/%,$(_OBJ))
 
+# TODO: cleaner inclusion of other project
+OBJ += $(CONTAINER_OBJDIR)/../core/hash.o
+
 _UTILS_OBJ = ll_loop.o
 UTILS_OBJ = $(patsubst %,$(UTILS_OBJDIR)/%,$(_UTILS_OBJ))
 

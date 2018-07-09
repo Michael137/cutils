@@ -5,6 +5,7 @@
 
 #include <containers/hashmap.h>
 #include <containers/linked_list_helpers.h>
+#include <core/hash.h>
 
 static size_t const sc_hm_min_size_ = 4096;
 
@@ -172,17 +173,9 @@ void const* hm_get( HashMap const* map, void const* key )
 	return NULL;
 }
 
-// djb hash
 static size_t default_hash_str_( void const* key )
 {
-	size_t hash = 5381;
-	char const* str = (char const*)key;
-	int c;
-
-	while( ( c = *str++ ) )
-		hash = ( ( hash << 5 ) + hash ) + c; /* hash * 33 + c */
-
-	return hash;
+	return hash_str_djb( (char const*)key );
 }
 
 static bool default_cmp_str_( void const* key, void const* value )
@@ -190,31 +183,12 @@ static bool default_cmp_str_( void const* key, void const* value )
 	return strcmp( (char*)key, (char*)value ) == 0;
 }
 
-static size_t default_hash_int_( void const* num )
+static size_t default_hash_int_( void const* key )
 {
-	size_t key = *(int*)num;
-	key = ( ~key ) + ( key << 21 ); // key = (key << 21) - key - 1;
-	key = key ^ ( key >> 24 );
-	key = ( key + ( key << 3 ) ) + ( key << 8 ); // key * 265
-	key = key ^ ( key >> 14 );
-	key = ( key + ( key << 2 ) ) + ( key << 4 ); // key * 21
-	key = key ^ ( key >> 28 );
-	key = key + ( key << 31 );
-	return key;
+	return hash_int_64( *(int64_t*)key );
 }
 
-static size_t default_hash_ptr_( void const* num )
-{
-	size_t key = (uintptr_t)num;
-	key = ( ~key ) + ( key << 21 ); // key = (key << 21) - key - 1;
-	key = key ^ ( key >> 24 );
-	key = ( key + ( key << 3 ) ) + ( key << 8 ); // key * 265
-	key = key ^ ( key >> 14 );
-	key = ( key + ( key << 2 ) ) + ( key << 4 ); // key * 21
-	key = key ^ ( key >> 28 );
-	key = key + ( key << 31 );
-	return key;
-}
+static size_t default_hash_ptr_( void const* key ) { return (uintptr_t)key; }
 
 static bool default_cmp_int_( void const* key, void const* value )
 {
@@ -251,7 +225,8 @@ int hm_create_ptr2ptr( HashMap** map )
 	return hm_create( map, default_hash_ptr_, default_cmp_ptr_ );
 }
 
-void hm_print( HashMap const* const map, void (*print_fn)(LinkedListNode_ const* node))
+void hm_print( HashMap const* const map,
+			   void ( *print_fn )( LinkedListNode_ const* node ) )
 {
 	LinkedList const* llist = NULL;
 	size_t i = 0;
@@ -259,7 +234,7 @@ void hm_print( HashMap const* const map, void (*print_fn)(LinkedListNode_ const*
 		llist = &( map->buckets[i] );
 		if( llist->size != 0 ) {
 			printf( "Bucket %ld\n", i );
-			if(print_fn != NULL)
+			if( print_fn != NULL )
 				ll_print_custom( llist, print_fn );
 			else
 				ll_print( llist );

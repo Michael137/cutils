@@ -4,6 +4,7 @@
 
 #include <containers/hashmap.h>
 #include <containers/linked_list.h>
+#include <core/hash.h>
 
 // Example DFA using transition table:
 
@@ -59,19 +60,13 @@ typedef struct Transition_ {
 // TODO: consolidate hash fns throughout all projs
 static size_t trans_hash_fn( void const* key )
 {
-	size_t hash = 5381;
 	Trans const* tmp = key;
 	char str[strlen( ( tmp->start ).state_id ) +
 			 strlen( ( tmp->end ).state_id ) + strlen( tmp->symbol ) + 1];
 	snprintf( str, sizeof( str ), "%s%s%s", ( tmp->start ).state_id,
 			  ( tmp->end ).state_id, tmp->symbol );
 
-	int c;
-
-	while( ( c = ( *str )++ ) )
-		hash = ( ( hash << 5 ) + hash ) + c; /* hash * 33 + c */
-
-	return hash;
+	return hash_str_djb( str );
 }
 
 static bool trans_cmp_fn( void const* key, void const* value )

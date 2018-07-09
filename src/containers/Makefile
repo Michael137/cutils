@@ -1,5 +1,8 @@
 include ../../config.mk
 
+# TODO: for all projs create .so to reduce makefile clutter
+#       and remove static linking
+
 # Top-level vars
 PROJECT=containers
 INCLUDES=../../include
@@ -19,6 +22,9 @@ HDRS = $(patsubst %,$(INCLUDES)/$(PROJECT)/%,$(_HDRS))
 _OBJ = linked_list.o linked_list_internal.o linked_list_helpers.o
 _OBJ += hashmap.o
 OBJ = $(patsubst %,$(OBJDIR)/%,$(_OBJ))
+
+# TODO: cleaner inclusion of other project
+OBJ += $(OBJDIR)/../core/hash.o
 
 $(OBJDIR)/%.o: %.c $(HDRS)
 	$(CC) -c $< $(CFLAGS) -o $@
