@@ -185,6 +185,7 @@ static bool default_cmp_str_( void const* e1, void const* e2 )
 
 static size_t default_hash_int_( void const* key )
 {
+	// TODO: deal with negative hashes; _Generic
 	return hash_int_32( *(uint32_t*)key );
 }
 
