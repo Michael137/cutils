@@ -101,6 +101,10 @@ void hm_free( HashMap* map )
 	map = NULL;
 }
 
+/*
+ * Pre-conditions: assumes the "map" argument is a non-null pointer to
+ *                 a valid non-null HashMap*
+ */
 static void hm_insert_( HashMap** const map, void const* key, void const* value,
 						bool rebalancing )
 {
@@ -108,6 +112,7 @@ static void hm_insert_( HashMap** const map, void const* key, void const* value,
 	if( !rebalancing && ( *map )->elements >= 1.5 * ( *map )->size ) {
 		hm_rebalance_( map, ( *map )->elements * 2.5 );
 	}
+
 	size_t hsh = ( *map )->hash_fn( key );
 	size_t idx = hsh % ( *map )->size;
 
