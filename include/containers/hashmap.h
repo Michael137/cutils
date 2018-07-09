@@ -43,8 +43,7 @@ typedef struct HashMap_ {
 	bool ( *cmp_fn )( void const*, void const* );
 
 	// Array of hash buckets of hash nodes
-	// TODO: should be LinkedList**
-	LinkedList buckets[];
+	LinkedList** buckets;
 
 } HashMap;
 

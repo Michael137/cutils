@@ -13,11 +13,6 @@ static size_t const sc_hm_min_size_ = 4096;
 static void hm_rebalance_( HashMap** const map, size_t new_size );
 static void hm_insert_( HashMap** const map, void const* key, void const* value,
 						bool rebalancing );
-static void hm_debug_collisions_incr( __attribute( ( unused ) )
-									  HashMap** const map );
-static int hm_create_( HashMap** map, size_t ( *hash_fn )( void const* ),
-					   bool ( *cmp_fn )( void const*, void const* ),
-					   size_t size );
 static size_t default_hash_str_( void const* key );
 static bool default_cmp_str_( void const* key, void const* value );
 static size_t default_hash_int_( void const* num );
@@ -46,7 +41,7 @@ static int hm_create_( HashMap** map, size_t ( *hash_fn )( void const* ),
 					   bool ( *cmp_fn )( void const*, void const* ),
 					   size_t size )
 {
-	*map = malloc( sizeof( HashMap ) + size * sizeof( LinkedList ) );
+	*map = malloc( sizeof( HashMap ) );
 	if( map && *map ) {
 		( *map )->size = size;
 		( *map )->hash_fn = hash_fn;
@@ -57,16 +52,18 @@ static int hm_create_( HashMap** map, size_t ( *hash_fn )( void const* ),
 		( *map )->collisions_ = 0;
 		( *map )->dbgStr = "HashMap created";
 #endif
+		( *map )->buckets = malloc( sizeof( LinkedList ) * size );
+		if( ( *map )->buckets == NULL ) {
+			free( *map );
+			*map = NULL;
+			return HM_FAILURE;
+		}
 
 		size_t i = 0;
 		for( ; i < size; ++i ) {
 			LinkedList* llist;
 			ll_create( &llist );
-			( *map )->buckets[i] = *llist;
-
-			// TODO: map.buckets should be array of pointers
-			//       then this free can be moved to hm_free()
-			free( llist );
+			( *map )->buckets[i] = llist;
 		}
 		return HM_SUCCESS;
 	} else {
@@ -84,19 +81,14 @@ int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
 
 void hm_free( HashMap* map )
 {
-	// TODO: can be changed to ll_free()
-	//       once buckets contains pointers
 	size_t i = 0;
 	for( ; i < map->size; ++i ) {
-		LinkedListNode_* tmp = ( map->buckets[i] ).head;
-		while( tmp != NULL ) {
-
-			LinkedListNode_* next = tmp->next;
-			free( tmp->data );
-			free( tmp );
-			tmp = next;
-		}
+		ll_free( map->buckets[i] );
+		map->buckets[i] = NULL;
 	}
+	free( map->buckets );
+
+	map->buckets = NULL;
 	free( map );
 	map = NULL;
 }
@@ -117,7 +109,7 @@ static void hm_insert_( HashMap** const map, void const* key, void const* value,
 	size_t idx = hsh % ( *map )->size;
 
 	// TODO: error handling
-	LinkedList* llist = &( ( *map )->buckets[idx] );
+	LinkedList* llist = ( *map )->buckets[idx];
 
 	if( llist->head != NULL ) {
 		hm_debug_collisions_incr( map );
@@ -140,8 +132,8 @@ static void hm_rebalance_( HashMap** const map, size_t new_size )
 	tmp->cmp_fn = ( *map )->cmp_fn;
 	size_t i = 0;
 	for( ; i < ( *map )->size; ++i ) {
-		LinkedList llist = ( *map )->buckets[i];
-		LinkedListNode_* node = llist.head;
+		LinkedList* llist = ( *map )->buckets[i];
+		LinkedListNode_* node = llist->head;
 		while( node != NULL ) {
 			hm_insert_( &tmp, ( (HashNode_*)node->data )->key,
 						( (HashNode_*)node->data )->value, true );
@@ -164,7 +156,7 @@ void const* hm_get( HashMap const* map, void const* key )
 	size_t idx = hsh % map->size;
 
 	// TODO: implement ll_find with custom comparator
-	LinkedList const* llist = &( map->buckets[idx] );
+	LinkedList const* llist = map->buckets[idx];
 	LinkedListNode_ const* head = llist->head;
 
 	while( head != NULL ) {
@@ -242,7 +234,7 @@ void hm_print( HashMap const* const map,
 	LinkedList const* llist = NULL;
 	size_t i = 0;
 	for( ; i < map->size; ++i ) {
-		llist = &( map->buckets[i] );
+		llist = map->buckets[i];
 		if( llist->size != 0 ) {
 			printf( "Bucket %ld\n", i );
 			if( print_fn != NULL )
