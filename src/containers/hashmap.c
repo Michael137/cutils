@@ -1,11 +1,10 @@
+#include <containers/hashmap.h>
+#include <containers/linked_list_helpers.h>
+#include <core/hash.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <containers/hashmap.h>
-#include <containers/linked_list_helpers.h>
-#include <core/hash.h>
 
 static size_t const sc_hm_min_size_ = 16;
 
@@ -163,16 +162,10 @@ void const* hm_get( HashMap const* map, void const* key )
 
 	LinkedList const* llist = map->buckets[idx];
 
-	// TODO: implement ll_find with custom comparator
-	LinkedListNode_ const* head = llist->head;
-
-	while( head != NULL ) {
-		HashNode_* node_data = head->data;
-
-		if( map->cmp_fn( node_data->key, key ) ) return node_data->value;
-
-		head = head->next;
-	}
+	HashNode_* node_data;
+	LL_FOR_EACH_BEGIN( node_data, llist )
+	if( map->cmp_fn( node_data->key, key ) ) return node_data->value;
+	LL_FOR_EACH_END()
 
 	return NULL;
 }

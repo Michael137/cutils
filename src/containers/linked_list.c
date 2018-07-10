@@ -1,12 +1,22 @@
+#include <containers/linked_list.h>
+#include <containers/linked_list_internal.h>
 #include <stddef.h> // size_t
 #include <stdio.h>  // printf
 #include <stdlib.h> // malloc
 #include <string.h> // memcpy
 
-#include <containers/linked_list.h>
-#include <containers/linked_list_internal.h>
-
 static void ll_inc_size_( LinkedList** llist ) { ( *llist )->size++; }
+
+static void default_dealloc_fn_( LinkedListNode_* data )
+{
+	free( data );
+	data = NULL;
+}
+
+void ll_set_dealloc_fn( LinkedList** llist, void ( *fn )( LinkedListNode_* ) )
+{
+	( *llist )->dealloc_data_fn_ = fn;
+}
 
 bool ll_create( LinkedList** llist )
 {
@@ -15,6 +25,7 @@ bool ll_create( LinkedList** llist )
 		( *llist )->head = NULL;
 		( *llist )->tail = NULL;
 		( *llist )->size = 0;
+		( *llist )->dealloc_data_fn_ = default_dealloc_fn_;
 
 #if LL_DEBUG
 		( *llist )->dbgStr = "Linked List Created";
@@ -83,7 +94,7 @@ bool ll_free( LinkedList* llist )
 		LinkedListNode_* tmp = llist->head;
 		while( tmp != NULL ) {
 			LinkedListNode_* next = tmp->next;
-			free( tmp->data );
+			llist->dealloc_data_fn_( tmp->data );
 			free( tmp );
 			tmp = next;
 		}
@@ -129,7 +140,7 @@ bool ll_remove( LinkedList** llist, const size_t idx )
 				else
 					prev->next = curr->next;
 
-				free( curr->data );
+				(*llist)->dealloc_data_fn_( curr->data );
 				free( curr );
 				( *llist )->size--;
 

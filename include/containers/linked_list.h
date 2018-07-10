@@ -2,10 +2,9 @@
 #define LINKED_LIST_H_IN
 
 #include <containers/linked_list_internal.h>
+#include <stdbool.h>	 // bool
+#include <stddef.h>		 // size_t
 #include <utils/debug.h> // debug_more_
-
-#include <stdbool.h> // bool
-#include <stddef.h>  // size_t
 
 // Linked List Constats
 #define LL_FAILURE -1
@@ -13,9 +12,11 @@
 #define LL_INVALID_ARGS 2
 
 // Linked List Externals
-typedef struct LinkedList_ {
+typedef struct LinkedList_
+{
 	LinkedListNode_ *head, *tail;
 	size_t size;
+	void ( *dealloc_data_fn_ )( LinkedListNode_* );
 
 #if LL_DEBUG
 	char* dbgStr;
@@ -43,10 +44,12 @@ size_t ll_find( LinkedList const*, void const*,
 
 #define LL_FOR_EACH_BEGIN( var, llist )                                        \
 	LinkedListNode_* tmp = llist->head;                                        \
-	while( ( tmp = tmp->next ) != NULL ) {                                     \
+	while( tmp != NULL ) {                                                     \
 		var = tmp->data;
 
-#define LL_FOR_EACH_END() }
+#define LL_FOR_EACH_END()                                                      \
+	tmp = tmp->next;                                                           \
+	}
 
 #endif // LINKED_LIST_H_IN
 
