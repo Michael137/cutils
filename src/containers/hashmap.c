@@ -11,8 +11,6 @@ static size_t const sc_hm_min_size_ = 16;
 
 // Forward declares for statics
 static void hm_rebalance_( HashMap** const map, size_t new_size );
-static void hm_insert_( HashMap** const map, void const* key, void const* value,
-						bool rebalancing );
 static size_t default_hash_str_( void const* key );
 static bool default_cmp_str_( void const* key, void const* value );
 static size_t default_hash_int_( void const* num );

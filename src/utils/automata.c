@@ -78,6 +78,8 @@ void fa_insert( FA* const* const fa, State const* s1, char const* sym,
 	trans->end = *s2;
 	trans->symbol = sym;
 	hm_insert( &( ( *fa )->transT ), trans, s2 );
+
+	// TODO: shouldn't need to keep track of transitions
 	ll_push_front_alloc( &( ( *fa )->trans_buf_ ), trans,
 						 sizeof( Transition ) );
 }
