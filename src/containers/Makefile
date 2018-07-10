@@ -44,8 +44,9 @@ clean:
 test_linked_list: $(TESTDIR)/test_linked_list.c $(OBJ) $(HDRS)
 	$(CC) $^ $(CFLAGS) -DNO_DEBUG_TEST -o $(OBJDIR)/$@
 
+# TODO: cleaner externals inclusion
 test_hashmap: $(TESTDIR)/test_hashmap.c $(OBJ) $(HDRS)
-	$(CC) $^ $(CFLAGS) -DNO_DEBUG_TEST -o $(OBJDIR)/$@ 
+	$(CC) $^ $(CFLAGS) -DNO_DEBUG_TEST -o $(OBJDIR)/$@ -lgsl -lgslcblas -lm
 
 .PHONY: test
 test:

@@ -134,8 +134,7 @@ static void hm_rebalance_( HashMap** const map, size_t new_size )
 	HashMap* tmp;
 	hm_create_( &tmp, NULL, NULL, new_size );
 
-	if( tmp != NULL )
-		{
+	if( tmp != NULL ) {
 		tmp->hash_fn = ( *map )->hash_fn;
 		tmp->cmp_fn = ( *map )->cmp_fn;
 		size_t i = 0;
@@ -162,10 +161,11 @@ void hm_insert( HashMap** const map, void const* key, void const* value )
 void const* hm_get( HashMap const* map, void const* key )
 {
 	size_t hsh = map->hash_fn( key );
-	size_t idx = hsh % map->size;
+	size_t idx = hash_idx( hsh, map->size );
+
+	LinkedList const* llist = map->buckets[idx];
 
 	// TODO: implement ll_find with custom comparator
-	LinkedList const* llist = map->buckets[idx];
 	LinkedListNode_ const* head = llist->head;
 
 	while( head != NULL ) {

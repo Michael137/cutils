@@ -5,11 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-static bool cmp_fn( void const* a, void const* b )
-{
-	return *(int*)a == *(int*)b;
-}
-
 // TODO: turn into unit test
 int main()
 {
@@ -53,8 +48,6 @@ int main()
 	ll_push_front( &llist, &to_find, sizeof( int ) );
 	ll_push_front( &llist, &integer, sizeof( int ) );
 	assert( to_find == *(int*)ll_at( llist, ll_find_int( llist, &to_find ) ) );
-
-	ll_find( llist, &to_find, cmp_fn );
 
 	ll_node_set_type( &llist, 0, INT );
 	ll_node_set_type( &llist, 1, INT );
