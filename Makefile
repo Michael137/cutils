@@ -3,6 +3,8 @@ all: clean setup install_core install_containers install_utils tags
 clean:
 	@rm -rf target
 	@rm -f tags
+	@rm -f gmon.out
+	@rm -f gmon.sum
 
 setup:
 	$(shell mkdir -p target/bin)

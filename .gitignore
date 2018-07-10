@@ -6,3 +6,4 @@ a.out
 *.gcda
 tags
 gmon.out
+gmon.sum
