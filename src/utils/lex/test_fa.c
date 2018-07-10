@@ -36,8 +36,8 @@
 // Example usage for DFA:
 // FA* fa
 // dfa_create(&fa)
-// fa_insert({"s_n", "b", "s_0"})
-// fa_change({"s_n", "b", "s_0", "s_1"})
+// fa_insert({s_n, "b", s_0})
+// fa_get( s_n, "b" ) == s_0
 
 typedef struct State_ {
 	char const* state_id;
@@ -86,16 +86,14 @@ static void trans_print_fn( LinkedListNode_ const* node )
 	Trans const* key = h_node->key;
 	State s1 = *(State*)h_node->value;
 	puts( "\ttype: Transition" );
-	char const* s0 = (key->start).state_id;
+	char const* s0 = ( key->start ).state_id;
 	char const* sym = key->symbol;
 	puts( ">> \tdata:\n>> " );
 	printf( ">> \t%4s\n", sym );
 	printf( ">> \t%s", s0 );
-	if( (key->start).is_accepting )
-		printf( " (final)" );
-	printf(" ----> %s", s1.state_id);
-	if( s1.is_accepting )
-		printf( " (final)" );
+	if( ( key->start ).is_accepting ) printf( " (final)" );
+	printf( " ----> %s", s1.state_id );
+	if( s1.is_accepting ) printf( " (final)" );
 
 	puts( "\n>> " );
 }
@@ -119,7 +117,8 @@ void fa_free( FA* fa )
 
 void dfa_free( DFA* const dfa ) { fa_free( dfa ); }
 
-Trans* fa_insert( FA* const* const fa, State const* s1, char const* sym, State const* s2 )
+Trans* fa_insert( FA* const* const fa, State const* s1, char const* sym,
+				  State const* s2 )
 {
 	Trans* trans = malloc( sizeof( Trans ) );
 	trans->start = *s1;
@@ -129,6 +128,27 @@ Trans* fa_insert( FA* const* const fa, State const* s1, char const* sym, State c
 	return trans;
 }
 
+State const* fa_get( FA* fa, Trans const* trans )
+{
+	return (State const*)hm_get( fa->transT, trans );
+}
+
+State const* dfa_get( DFA* dfa, Trans const* trans )
+{
+	return fa_get( dfa, trans );
+}
+
+Trans* dfa_insert( DFA* const* const dfa, State const* s1, char const* sym,
+				   State const* s2 )
+{
+	return fa_insert( dfa, s1, sym, s2 );
+}
+
+void dfa_trans_print( DFA const* const dfa )
+{
+	hm_print( dfa->transT, trans_print_fn );
+}
+
 int main()
 {
 	DFA* dfa;
@@ -136,11 +156,11 @@ int main()
 
 	State s0 = {"A", false};
 	State s1 = {"B", true};
-	Trans* trans = fa_insert( &dfa, &s0, "b", &s1 );
-	State found = *(State*)hm_get( dfa->transT, trans );
-	printf( "%s %ld\n", found.state_id, strlen(found.state_id) );
+	Trans* trans = dfa_insert( &dfa, &s0, "b", &s1 );
+	State const* found = dfa_get( dfa, trans );
+	printf( "%s %ld\n", found->state_id, strlen( found->state_id ) );
 
-	hm_print( dfa->transT, trans_print_fn );
+	dfa_trans_print( dfa );
 
 	dfa_free( dfa );
 	free( trans );
