@@ -40,6 +40,8 @@ clean:
 	rm -f $(OBJDIR)/test_linked_list \
 	rm -f $(OBJDIR)/test_hashmap
 	rm -f gmon.out
+	rm -f *.gcno
+	rm -f *.gcda
 
 # Tests
 test_linked_list: $(TESTDIR)/test_linked_list.c $(OBJ) $(HDRS)

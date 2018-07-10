@@ -50,8 +50,10 @@ CFLAGS += -pedantic-errors
 
 # TODO: enable flags on per-target basis
 # Instrumentation
-ifneq "$(COVERAGE)" ""
-  CFLAGS += -fprofile-arcs -ftest-coverage
+ifneq "$(DEBUG)" ""
+  ifneq "$(DEBUG)" ""
+    CFLAGS += -fprofile-arcs -ftest-coverage
+  endif
 endif
 
 ifneq "$(PROFILE)" ""
