@@ -16,8 +16,17 @@ OBJ = $(patsubst %,$(CONTAINER_OBJDIR)/%,$(_OBJ))
 # TODO: cleaner inclusion of other project
 OBJ += $(CONTAINER_OBJDIR)/../core/hash.o
 
+# TODO: move makefile to src/utils level and call lex makefile
+OBJ += $(UTILS_OBJDIR)/automata.o
+
+$(UTILS_OBJDIR)/automata.o: ../automata.c $(HDRS)
+	$(CC) -c $< $(CFLAGS) -o $@
+
 test_fa: test_fa.c
 	$(CC) $< $(OBJ) $(CFLAGS) -o $(OBJDIR)/test_fa
+
+.PHONY: compile_src
+compile_src: $(UTILS_OBJDIR)/automata.o
 
 .PHONY:
 clean:
@@ -30,4 +39,4 @@ test:
 leak:
 	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=no --track-origins=yes $(OBJDIR)/test_fa
 
-all: clean test_fa test
+all: clean compile_src test_fa test
