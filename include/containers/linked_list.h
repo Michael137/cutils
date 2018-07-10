@@ -41,6 +41,13 @@ size_t ll_find_string( LinkedList const*, void const* );
 size_t ll_find( LinkedList const*, void const*,
 				bool ( * )( void const*, void const* ) );
 
+#define LL_FOR_EACH_BEGIN( var, llist )                                        \
+	LinkedListNode_* tmp = llist->head;                                        \
+	while( ( tmp = tmp->next ) != NULL ) {                                     \
+		var = tmp->data;
+
+#define LL_FOR_EACH_END() }
+
 #endif // LINKED_LIST_H_IN
 
 // TODO: implement alternative linked list with only macros as

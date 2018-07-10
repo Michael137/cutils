@@ -68,15 +68,11 @@ static bool ll_push_front_( LinkedList** llist, void const* data,
 bool ll_push_front_alloc( LinkedList** llist, void* data,
 						  const size_t data_size )
 {
-	bool ret = ll_push_front_( llist, data, data_size, true );
-//	if( ret == LL_SUCCESS ) {
-//		free( data );
-//		data = NULL;
-//	}
-	return ret;
+	return ll_push_front_( llist, data, data_size, true );
 }
 
-bool ll_push_front( LinkedList** llist, void const* data, const size_t data_size )
+bool ll_push_front( LinkedList** llist, void const* data,
+					const size_t data_size )
 {
 	return ll_push_front_( llist, data, data_size, false );
 }

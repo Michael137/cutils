@@ -4,7 +4,6 @@
 
 #include <containers/hashmap.h>
 #include <containers/linked_list.h>
-#include <containers/linked_list_helpers.h>
 #include <core/hash.h>
 
 // Example DFA using transition table:
@@ -114,10 +113,8 @@ void fa_free( FA* fa )
 	hm_free( fa->transT );
 	fa->transT = NULL;
 
-	printf("%s\n", ((Transition*)(fa->trans_buf_->head->data))->start.state_id);
 	ll_free( fa->trans_buf_ );
 	fa->trans_buf_ = NULL;
-//	printf("%s\n", ((Transition*)(fa->trans_buf_->head->data))->start.state_id);
 
 	free( fa );
 	fa = NULL;
@@ -126,14 +123,15 @@ void fa_free( FA* fa )
 void dfa_free( DFA* const dfa ) { fa_free( dfa ); }
 
 void fa_insert( FA* const* const fa, State const* s1, char const* sym,
-				  State const* s2 )
+				State const* s2 )
 {
 	Trans* trans = malloc( sizeof( Trans ) );
 	trans->start = *s1;
 	trans->end = *s2;
 	trans->symbol = sym;
 	hm_insert( &( ( *fa )->transT ), trans, s2 );
-	ll_push_front( &( ( *fa )->trans_buf_ ), trans, sizeof( Transition ) );
+	ll_push_front_alloc( &( ( *fa )->trans_buf_ ), trans,
+						 sizeof( Transition ) );
 }
 
 State const* fa_get( FA* fa, Trans const* trans )
@@ -147,7 +145,7 @@ State const* dfa_get( DFA* dfa, Trans const* trans )
 }
 
 void dfa_insert( DFA* const* const dfa, State const* s1, char const* sym,
-				   State const* s2 )
+				 State const* s2 )
 {
 	fa_insert( dfa, s1, sym, s2 );
 }
@@ -165,8 +163,12 @@ int main()
 	State s0 = {"A", false};
 	State s1 = {"B", true};
 	dfa_insert( &dfa, &s0, "b", &s1 );
-	//State const* found = dfa_get( dfa, trans );
-	//printf( "%s %ld\n", found->state_id, strlen( found->state_id ) );
+
+	Trans* trans;
+	LL_FOR_EACH_BEGIN( trans, dfa->trans_buf_ )
+	State const* found = dfa_get( dfa, trans );
+	printf( "%s %ld\n", found->state_id, strlen( found->state_id ) );
+	LL_FOR_EACH_END()
 
 	dfa_trans_print( dfa );
 
