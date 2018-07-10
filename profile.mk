@@ -20,8 +20,8 @@ prof_utils_ll_loop:
 	$(call PROF_FN, target/bin/test_ll_loop)
 
 .PHONY:
-prof_utils_lex:
-	$(call PROF_FN, target/bin/test_fa)
+prof_utils_automata:
+	$(call PROF_FN, target/utils/test_automata)
 
 .PHONY:
 prof_core_hash:
