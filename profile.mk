@@ -1,29 +1,28 @@
-ifeq "$(wildcard gmon.out)" ""
-  $(error "gmon.out does not exist. Were the sources compiled with the -pg flag? Try: \
-           PROFILE=1 make clean all")
-endif
+define PROF_FN
+	$(1) && \
+	if [[ ! -f "gmon.out" ]]; then \\
+		echo "gmon.out does not exist. Were the sources compiled with the -pg flag?" \\
+		echo "Try: PROFILE=1 make clean all" \\
+	fi && \
+	gprof $(1) gmon.out
+endef
 
 .PHONY:
 prof_test_hashmap:
-	./target/containers/test_hashmap
-	gprof ./target/containers/test_hashmap gmon.out
+	$(call PROF_FN, target/containers/test_hashmap)
 
 .PHONY:
 prof_test_linkedlist:
-	./target/containers/test_linked_list
-	gprof ./target/containers/test_linked_list gmon.out
+	$(call PROF_FN, target/containers/test_linked_list)
 
 .PHONY:
 prof_utils_ll_loop:
-	./target/bin/test_ll_loop
-	gprof ./target/bin/test_ll_loop gmon.out
+	$(call PROF_FN, target/bin/test_ll_loop)
 
 .PHONY:
 prof_utils_lex:
-	./target/bin/test_fa
-	gprof ./target/bin/test_fa gmon.out
+	$(call PROF_FN, target/bin/test_fa)
 
 .PHONY:
 prof_core_hash:
-	./target/core/test_hash
-	gprof ./target/core/test_hash gmon.out
+	$(call PROF_FN, target/core/test_hash)
