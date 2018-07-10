@@ -17,10 +17,10 @@
  * CREATE: done
  * INSERT: done
  * SEARCH: done
+ * RESIZE: done
  * KEY SEARCH
  * DELETE
  * ITERATOR
- * RESIZE
  */
 typedef struct HashNode_ {
 
