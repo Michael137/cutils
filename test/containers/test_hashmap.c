@@ -7,7 +7,13 @@
 #include <containers/hashmap.h>
 
 // GNU Scientific Library
-#include <gsl/gsl_rng.h> // 
+#include <gsl/gsl_rng.h> //
+
+// Test defines
+#define MAP_SZ 500000
+#define BUF_SZ 20
+#define BUF_MSG "Val%016d"
+#define BUF_SPRINTF( buffer ) snprintf( buffer, BUF_SZ, BUF_MSG, i );
 
 static void test_str2str()
 {
@@ -82,11 +88,6 @@ static void test_int2str()
 	hm_free( int2str_map );
 }
 
-// Test defines
-#define MAP_SZ 500000
-#define BUF_SZ 20
-#define BUF_MSG "Val%016d"
-#define BUF_SPRINTF( buffer ) snprintf( buffer, BUF_SZ, BUF_MSG, i );
 static void test_resize()
 {
 	HashMap* map;
@@ -104,18 +105,19 @@ static void test_resize()
 	printf( "\t~~~> %fs elapsed\n", end - start );
 
 	puts( "~~~> Starting HashMap random fetch benchmark" );
-	const gsl_rng_type * T;
-	gsl_rng * r;
+	const gsl_rng_type* T;
+	gsl_rng* r;
 	gsl_rng_env_setup();
 	T = gsl_rng_default;
-	r = gsl_rng_alloc (T);
+	r = gsl_rng_alloc( T );
 	size_t test_idx[MAP_SZ];
 	for( int i = 0; i < MAP_SZ; ++i )
 		test_idx[i] = gsl_rng_uniform_int( r, MAP_SZ );
 	gsl_rng_free( r );
 	start = (float)clock() / CLOCKS_PER_SEC;
 	for( int i = 0; i < MAP_SZ; ++i ) {
-		assert( buffs[test_idx[i]] == (char const*)hm_get( map, buffs[test_idx[i]] ) );
+		assert( buffs[test_idx[i]] ==
+				(char const*)hm_get( map, buffs[test_idx[i]] ) );
 	}
 	end = (float)clock() / CLOCKS_PER_SEC;
 	printf( "\t~~~> %fs elapsed\n", end - start );
@@ -125,12 +127,29 @@ static void test_resize()
 		test_idx[i] = i;
 	start = (float)clock() / CLOCKS_PER_SEC;
 	for( int i = 0; i < MAP_SZ; ++i ) {
-		assert( buffs[test_idx[i]] == (char const*)hm_get( map, buffs[test_idx[i]] ) );
+		assert( buffs[test_idx[i]] ==
+				(char const*)hm_get( map, buffs[test_idx[i]] ) );
 	}
 	end = (float)clock() / CLOCKS_PER_SEC;
 	printf( "\t~~~> %fs elapsed\n", end - start );
 
 	assert( map->size != old_size );
+	HM_DEBUG_LOG( map );
+	hm_free( map );
+}
+
+void test_print()
+{
+	HashMap* map;
+	hm_create_str2str( &map );
+	int old_size = map->size;
+
+	char buffs[old_size * 2][BUF_SZ];
+	for( int i = 0; i < old_size * 2; ++i ) {
+		BUF_SPRINTF( buffs[i] );
+		hm_insert( &map, buffs[i], buffs[i] );
+	}
+	hm_print( map, NULL );
 	HM_DEBUG_LOG( map );
 	hm_free( map );
 }
@@ -144,6 +163,7 @@ int main()
 	test_str2str();
 	test_str2int();
 	test_resize();
+	test_print();
 
 	return 0;
 }
