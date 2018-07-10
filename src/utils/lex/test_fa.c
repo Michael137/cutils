@@ -57,7 +57,6 @@ typedef struct Transition_ {
 	char const* symbol;
 } Trans;
 
-// TODO: consolidate hash fns throughout all projs
 static size_t trans_hash_fn( void const* key )
 {
 	Trans const* tmp = key;

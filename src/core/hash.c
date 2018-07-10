@@ -1,8 +1,5 @@
 #include <core/hash.h>
 
-// TODO REMOVE
-#include <stdio.h>
-
 // djb hash
 size_t hash_str_djb( char const* str )
 {

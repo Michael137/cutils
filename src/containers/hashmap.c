@@ -7,7 +7,7 @@
 #include <containers/linked_list_helpers.h>
 #include <core/hash.h>
 
-static size_t const sc_hm_min_size_ = 4096;
+static size_t const sc_hm_min_size_ = 16;
 
 // Forward declares for statics
 static void hm_rebalance_( HashMap** const map, size_t new_size );
@@ -66,9 +66,9 @@ static int hm_create_( HashMap** map, size_t ( *hash_fn )( void const* ),
 			( *map )->buckets[i] = llist;
 		}
 		return HM_SUCCESS;
-	} else {
-		return HM_INVALID_ARGS;
 	}
+
+	*map = NULL;
 
 	return HM_FAILURE;
 }
@@ -93,6 +93,12 @@ void hm_free( HashMap* map )
 	map = NULL;
 }
 
+size_t hash_idx( size_t hash, size_t map_size )
+{
+	// return hash % map_size;
+	return hash & ( map_size - 1 );
+}
+
 /*
  * Pre-conditions: assumes the "map" argument is a non-null pointer to
  *                 a valid non-null HashMap*
@@ -100,21 +106,21 @@ void hm_free( HashMap* map )
 static void hm_insert_( HashMap** const map, void const* key, void const* value,
 						bool rebalancing )
 {
-	// TODO: profile
-	if( !rebalancing && ( *map )->elements >= 1.5 * ( *map )->size ) {
-		hm_rebalance_( map, ( *map )->elements * 2.5 );
+	// TODO: profile load factor
+	if( !rebalancing && ( *map )->elements >= 0.8 * ( *map )->size ) {
+		hm_rebalance_( map, ( *map )->size * 2 );
 	}
 
 	size_t hsh = ( *map )->hash_fn( key );
-	size_t idx = hsh % ( *map )->size;
+	size_t idx = hash_idx( hsh, ( *map )->size );
 
-	// TODO: error handling
 	LinkedList* llist = ( *map )->buckets[idx];
 
 	if( llist->head != NULL ) {
 		hm_debug_collisions_incr( map );
 	}
 
+	// TODO: error handling
 	HashNode_* node = malloc( sizeof( HashNode_ ) );
 	node->key = key;
 	node->value = value;
@@ -128,21 +134,25 @@ static void hm_rebalance_( HashMap** const map, size_t new_size )
 {
 	HashMap* tmp;
 	hm_create_( &tmp, NULL, NULL, new_size );
-	tmp->hash_fn = ( *map )->hash_fn;
-	tmp->cmp_fn = ( *map )->cmp_fn;
-	size_t i = 0;
-	for( ; i < ( *map )->size; ++i ) {
-		LinkedList* llist = ( *map )->buckets[i];
-		LinkedListNode_* node = llist->head;
-		while( node != NULL ) {
-			hm_insert_( &tmp, ( (HashNode_*)node->data )->key,
-						( (HashNode_*)node->data )->value, true );
-			node = node->next;
-		}
-	}
 
-	hm_free( *map );
-	*map = tmp;
+	if( tmp != NULL )
+		{
+		tmp->hash_fn = ( *map )->hash_fn;
+		tmp->cmp_fn = ( *map )->cmp_fn;
+		size_t i = 0;
+		for( ; i < ( *map )->size; ++i ) {
+			LinkedList* llist = ( *map )->buckets[i];
+			LinkedListNode_* node = llist->head;
+			while( node != NULL ) {
+				hm_insert_( &tmp, ( (HashNode_*)node->data )->key,
+							( (HashNode_*)node->data )->value, true );
+				node = node->next;
+			}
+		}
+
+		hm_free( *map );
+		*map = tmp;
+	}
 }
 
 void hm_insert( HashMap** const map, void const* key, void const* value )

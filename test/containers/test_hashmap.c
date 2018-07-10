@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include <containers/hashmap.h>
 
@@ -9,7 +10,7 @@ static void test_str2str()
 {
 	HashMap* str_map;
 	hm_create_str2str( &str_map );
-	char* allocated = strdup("Allocated");
+	char* allocated = strdup( "Allocated" );
 	hm_insert( &str_map, "Key1", "Value1" );
 	hm_insert( &str_map, "Key2", "Value2" );
 	hm_insert( &str_map, "Key3", "Value3" );
@@ -79,7 +80,7 @@ static void test_int2str()
 }
 
 // Test defines
-#define MAP_SZ 10000
+#define MAP_SZ 100000
 #define BUF_SZ 20
 #define BUF_MSG "Val%016d"
 #define BUF_SPRINTF( buffer ) snprintf( buffer, BUF_SZ, BUF_MSG, i );
@@ -89,11 +90,15 @@ static void test_resize()
 	hm_create_str2str( &map );
 	size_t old_size = map->size;
 
+	puts( "~~~> Starting HashMap insertion benchmark" );
+	float start = (float)clock() / CLOCKS_PER_SEC;
 	char buffs[MAP_SZ][BUF_SZ];
 	for( int i = 0; i < MAP_SZ; ++i ) {
 		BUF_SPRINTF( buffs[i] );
 		hm_insert( &map, buffs[i], buffs[i] );
 	}
+	float end = (float)clock() / CLOCKS_PER_SEC;
+	printf( "\t~~~> %fs elapsed\n", end - start );
 
 	for( int i = 0; i < MAP_SZ; ++i ) {
 		assert( buffs[i] == (char const*)hm_get( map, buffs[i] ) );
