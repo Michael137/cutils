@@ -4,7 +4,7 @@ define PROF_FN
 		echo "gmon.out does not exist. Were the sources compiled with the -pg flag?" \\
 		echo "Try: PROFILE=1 make clean all" \\
 	fi && \
-	gprof $(1) gmon.out
+	gprof $(1) gmon.out --flat-profile --graph --line --static-call-graph --brief --all-lines
 endef
 
 .PHONY:
