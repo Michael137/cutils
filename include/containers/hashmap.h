@@ -62,13 +62,16 @@ void hm_insert( HashMap** const map, void const* key, void const* value );
 void hm_insert_typed( HashMap** const map, void const* key, void const* value );
 void const* hm_get( HashMap const* map, void const* key );
 
-void hm_print( HashMap const* const, void (*print_fn)(LinkedListNode_ const*) );
+void hm_print( HashMap const* const,
+			   void ( *print_fn )( LinkedListNode_ const* ) );
 
 size_t hm_debug_get_collisions( HashMap const* map );
 
+// TODO: add bucket distribution info and average load factor
 #define HM_DEBUG_LOG( map )                                                    \
 	do {                                                                       \
-		DEBUG_MORE_( HM_DEBUG, "%s (%ld)\n", DBGSTR( HM_DEBUG, map ),          \
+		DEBUG_MORE_( HM_DEBUG, "%s (%ldE:%ldB:%ldC)\n",                        \
+					 DBGSTR( HM_DEBUG, map ), map->elements, map->size,        \
 					 DBG_CONTAINER_MEM( HM_DEBUG, map, collisions_, 0UL ) );   \
 	} while( 0 )
 

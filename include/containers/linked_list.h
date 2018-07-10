@@ -29,6 +29,7 @@ typedef struct LinkedList_ {
 
 // External methods
 bool ll_push_front( LinkedList**, void const*, const size_t );
+bool ll_push_front_alloc( LinkedList**, void*, const size_t );
 bool ll_pop_front( LinkedList** );
 bool ll_remove( LinkedList**, const size_t );
 bool ll_free( LinkedList* );

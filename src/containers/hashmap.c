@@ -124,8 +124,7 @@ static void hm_insert_( HashMap** const map, void const* key, void const* value,
 	// TODO: memcpy?
 	node->key = key;
 	node->value = value;
-	ll_push_front( &llist, node, sizeof( HashNode_ ) );
-	free( node );
+	ll_push_front_alloc( &llist, node, sizeof( HashNode_ ) );
 
 	( *map )->elements++;
 }

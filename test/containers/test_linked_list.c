@@ -50,10 +50,9 @@ void test_str_alloc()
 	LinkedList* llist;
 	ll_create( &llist );
 	char* msg = strdup( "Allocated String Node" );
-	ll_push_front( &llist, msg, strlen( msg ) + 1 );
-	char* at_msg = ll_at( llist, 0 );
-	assert( strcmp( at_msg, msg ) == 0 );
-	free( msg );
+	ll_push_front_alloc( &llist, msg, strlen( msg ) + 1 );
+	char const* at_msg = ll_at( llist, 0 );
+	assert( strcmp( at_msg, "Allocated String Node" ) == 0 );
 	ll_free( llist );
 }
 

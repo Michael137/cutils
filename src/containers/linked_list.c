@@ -28,15 +28,18 @@ bool ll_create( LinkedList** llist )
 size_t ll_size( LinkedList const* llist ) { return llist->size; }
 
 // TODO: _Generic?
-bool ll_push_front( LinkedList** llist, void const* data,
-					const size_t data_size )
+static bool ll_push_front_( LinkedList** llist, void const* data,
+							const size_t data_size, bool allocated )
 {
 	if( llist && *llist ) {
-		void* copy = malloc( data_size );
-
-		if( copy == NULL ) return LL_FAILURE;
-
-		memcpy( copy, data, data_size );
+		void* copy;
+		if( allocated ) {
+			copy = (void*)data;
+		} else {
+			copy = malloc( data_size );
+			if( copy == NULL ) return LL_FAILURE;
+			memcpy( copy, data, data_size );
+		}
 
 		LinkedListNode_* node = malloc( sizeof( LinkedListNode_ ) );
 
@@ -60,6 +63,22 @@ bool ll_push_front( LinkedList** llist, void const* data,
 			return LL_FAILURE;
 	} else
 		return LL_INVALID_ARGS;
+}
+
+bool ll_push_front_alloc( LinkedList** llist, void* data,
+						  const size_t data_size )
+{
+	bool ret = ll_push_front_( llist, data, data_size, true );
+//	if( ret == LL_SUCCESS ) {
+//		free( data );
+//		data = NULL;
+//	}
+	return ret;
+}
+
+bool ll_push_front( LinkedList** llist, void const* data, const size_t data_size )
+{
+	return ll_push_front_( llist, data, data_size, false );
 }
 
 bool ll_free( LinkedList* llist )
