@@ -5,3 +5,4 @@ a.out
 *.gcno
 *.gcda
 tags
+gmon.out

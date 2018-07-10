@@ -20,6 +20,9 @@ install_utils:
 	$(MAKE) -C src/utils/ll_loop all
 	$(MAKE) -C src/utils/lex all
 
+prof_%:
+	$(MAKE) -f profile.mk $(MAKECMDGOALS)
+
 .PHONY:
 tags:
 	@ctags -R

@@ -53,3 +53,9 @@ CFLAGS += -pedantic-errors
 ifneq "$(COVERAGE)" ""
   CFLAGS += -fprofile-arcs -ftest-coverage
 endif
+
+ifneq "$(PROFILE)" ""
+  # gprof profiling
+  CFLAGS += -pg
+  CFLAGS += -finstrument-functions
+endif
