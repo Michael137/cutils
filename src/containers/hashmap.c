@@ -93,7 +93,7 @@ void hm_free( HashMap* map )
 	map = NULL;
 }
 
-size_t hash_idx( size_t hash, size_t map_size )
+static size_t hash_idx( size_t hash, size_t map_size )
 {
 	// return hash % map_size;
 	return hash & ( map_size - 1 );
@@ -106,9 +106,8 @@ size_t hash_idx( size_t hash, size_t map_size )
 static void hm_insert_( HashMap** const map, void const* key, void const* value,
 						bool rebalancing )
 {
-	// TODO: profile load factor
 	if( !rebalancing && ( *map )->elements >= 0.8 * ( *map )->size ) {
-		hm_rebalance_( map, ( *map )->size * 2 );
+		hm_rebalance_( map, ( *map )->size * 4 );
 	}
 
 	size_t hsh = ( *map )->hash_fn( key );
