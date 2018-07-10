@@ -1,3 +1,8 @@
+ifeq "$(wildcard gmon.out)" ""
+  $(error "gmon.out does not exist. Were the sources compiled with the -pg flag? Try: \
+           PROFILE=1 make clean all")
+endif
+
 .PHONY:
 prof_test_hashmap:
 	./target/containers/test_hashmap
