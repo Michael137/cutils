@@ -7,11 +7,10 @@
 #include <containers/linked_list_helpers.h>
 
 // Test defines
-#define LIST_SZ 200000
+#define LIST_SZ 20000
 #define BUF_SZ 21
 #define BUF_MSG "Node%016d"
 #define BUF_SPRINTF( buffer, ctr ) snprintf( buffer, BUF_SZ, BUF_MSG, ctr );
-
 void test_str_insert()
 {
 	LinkedList* llist;
@@ -67,24 +66,18 @@ void test_delete()
 		ll_push_front( &llist, &i, sizeof( int ) );
 	}
 
-	// FIXME
-	//	// Remove all even nums
-	//	for( int i = 0; i < LIST_SZ; ++i ) {
-	//		if( i % 2 == 0 )
-	//			ll_remove( &llist, i );
-	//	}
-	//
-	//	// Check that only odd nums are left
-	//	for( size_t i = 0; i < llist->size; ++i ) {
-	//		assert( *(int*)ll_at( llist, i ) % 2 != 0 );
-	//		//ll_pop_front( &llist );
-	//	}
-
 	size_t old_size = llist->size;
-	for( size_t i = 0; i < old_size; ++i ) {
-		if( i % 2 == 0 ) ll_pop_front( &llist );
+	for( int i = 0; i < LIST_SZ; ++i ) {
+		if( i % 2 == 0 )
+			ll_remove( &llist, 0 );
 	}
 	assert( llist->size == old_size / 2 );
+
+	old_size = llist->size;
+	for( size_t i = 0; i < old_size; ++i ) {
+		ll_pop_front( &llist );
+	}
+	assert( llist->size == 0 );
 
 	ll_free( llist );
 }
