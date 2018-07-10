@@ -4,6 +4,7 @@ target/*
 a.out
 *.gcno
 *.gcda
+*.gcov
 tags
 gmon.out
 gmon.sum
