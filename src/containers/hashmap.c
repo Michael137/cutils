@@ -121,6 +121,7 @@ static void hm_insert_( HashMap** const map, void const* key, void const* value,
 
 	// TODO: error handling
 	HashNode_* node = malloc( sizeof( HashNode_ ) );
+	// TODO: memcpy?
 	node->key = key;
 	node->value = value;
 	ll_push_front( &llist, node, sizeof( HashNode_ ) );
