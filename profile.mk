@@ -1,5 +1,5 @@
 define PROF_FN
-	$(1) && \
+	@$(1) && \
 	if [[ ! -f "gmon.out" ]]; then \\
 		echo "gmon.out does not exist. Were the sources compiled with the -pg flag?" \\
 		echo "Try: PROFILE=1 make clean all" \\
