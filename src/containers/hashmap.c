@@ -273,3 +273,8 @@ HashPair* hm_find( HashMap const* map, void const* key )
 
 	return NULL;
 }
+
+void hm_remove( HashMap const*, void const* key )
+{
+	// FIXME
+}

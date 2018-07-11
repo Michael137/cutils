@@ -10,17 +10,6 @@
 #define HM_SUCCESS 1
 #define HM_INVALID_ARGS 2
 
-/*
- * TODO:
- *
- * CREATE: done
- * INSERT: done
- * SEARCH: done
- * RESIZE: done
- * KEY SEARCH: done
- * DELETE
- * ITERATOR: done
- */
 typedef struct HashNode_
 {
 
@@ -71,6 +60,7 @@ void hm_print( HashMap const* const,
 size_t hm_debug_get_collisions( HashMap const* map );
 void hm_set_dealloc_fn( HashMap**, void ( *fn )( void* ) );
 HashPair* hm_find( HashMap const*, void const* key );
+void hm_remove( HashMap const*, void const* key );
 
 // TODO: add bucket distribution info and average load factor
 #define HM_DEBUG_LOG( map )                                                    \
