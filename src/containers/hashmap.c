@@ -77,8 +77,7 @@ int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
 	return hm_create_( map, hash_fn, cmp_fn, sc_hm_min_size_ );
 }
 
-static void hm_free_( HashMap* map,
-					  void ( *node_dealloc_fn )( void* ) )
+static void hm_free_( HashMap* map, void ( *node_dealloc_fn )( void* ) )
 {
 	size_t i = 0;
 	for( ; i < map->size; ++i ) {
@@ -92,8 +91,7 @@ static void hm_free_( HashMap* map,
 	map = NULL;
 }
 
-void hm_free_custom( HashMap* map,
-					 void ( *node_dealloc_fn )( void* ) )
+void hm_free_custom( HashMap* map, void ( *node_dealloc_fn )( void* ) )
 {
 	hm_free_( map, node_dealloc_fn );
 }
@@ -256,16 +254,22 @@ int hm_create_ptr2ptr( HashMap** map )
 void hm_print( HashMap const* const map,
 			   void ( *print_fn )( LinkedListNode_ const* node ) )
 {
-	LinkedList const* llist = NULL;
-	size_t i = 0;
-	for( ; i < map->size; ++i ) {
-		llist = map->buckets[i];
-		if( llist->size != 0 ) {
-			printf( "Bucket %ld\n", i );
-			if( print_fn != NULL )
-				ll_print_custom( llist, print_fn );
-			else
-				ll_print( llist );
-		}
+	HM_FOR_EACH_BUCKET_BEGIN( llist, map )
+	if( llist->size != 0 ) {
+		printf( "Bucket %ld\n", i );
+		if( print_fn != NULL )
+			ll_print_custom( llist, print_fn );
+		else
+			ll_print( llist );
 	}
+	HM_FOR_EACH_BUCKET_END()
+}
+
+HashPair* hm_find( HashMap const* map, void const* key )
+{
+	HM_FOR_EACH_BEGIN( elem, map )
+	if( map->cmp_fn( elem->key, key ) ) return elem;
+	HM_FOR_EACH_END()
+
+	return NULL;
 }

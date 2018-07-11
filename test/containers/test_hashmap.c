@@ -154,6 +154,21 @@ void test_print()
 	hm_free( map );
 }
 
+void test_find()
+{
+	HashMap* map;
+	hm_create_str2str( &map );
+	hm_insert( &map, "Key 1", "Value 1" );
+	hm_insert( &map, "Key 2", "Value 2" );
+	hm_insert( &map, "Key 3", "Value 3" );
+	HashPair* pair = hm_find( map, "Key 1" );
+	assert( strcmp( (char const*)pair->key, "Key 1" ) == 0 );
+	assert( strcmp( (char const*)pair->value, "Value 1" ) == 0 );
+	pair = hm_find( map, "Invalid" );
+	assert( pair == NULL );
+	hm_free( map );
+}
+
 int main()
 {
 	printf( "~~~ Starting Hashmap Tests ~~~\n" );
@@ -163,6 +178,7 @@ int main()
 	test_int2int();
 	test_str2str();
 	test_str2int();
+	test_find();
 	test_resize();
 
 	return 0;
