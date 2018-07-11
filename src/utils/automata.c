@@ -40,10 +40,9 @@ static void trans_print_fn( LinkedListNode_ const* node )
 	puts( ">> \tdata:\n>> " );
 	printf( ">> \t%4s\n", sym );
 	printf( ">> \t%s", s0 );
-	if( ( key->start ).is_accepting ) printf( " (final)" );
 	printf( " ----> %s", s1.state_id );
-	if( s1.is_accepting ) printf( " (final)" );
-
+	if( s1.is_accepting ) printf( " (final)\n>> " );
+	if( ( key->start ).is_accepting ) printf( " (final)" );
 	puts( "\n>> " );
 }
 
