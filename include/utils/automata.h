@@ -2,7 +2,6 @@
 #define AUTOMATA_IN_H
 
 #include <containers/hashmap.h>
-#include <containers/linked_list.h>
 
 // Example DFA using transition table:
 
@@ -31,7 +30,6 @@ typedef struct FiniteAutomaton {
 
 	// Map<Trans, State>
 	HashMap* transT;
-	LinkedList* trans_buf_;
 } FA, DFA, NFA;
 
 typedef struct Transition_ {

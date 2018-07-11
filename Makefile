@@ -1,4 +1,4 @@
-all: clean setup install_core install_containers install_utils tags
+all: clean setup tags install_core install_containers install_utils
 
 clean:
 	rm -rf target

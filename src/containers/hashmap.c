@@ -44,6 +44,7 @@ static int hm_create_( HashMap** map, size_t ( *hash_fn )( void const* ),
 		( *map )->hash_fn = hash_fn;
 		( *map )->cmp_fn = cmp_fn;
 		( *map )->elements = 0;
+		( *map )->dealloc_fn = NULL;
 
 #if HM_DEBUG
 		( *map )->collisions_ = 0;
@@ -76,11 +77,12 @@ int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
 	return hm_create_( map, hash_fn, cmp_fn, sc_hm_min_size_ );
 }
 
-void hm_free( HashMap* map )
+static void hm_free_( HashMap* map,
+					  void ( *node_dealloc_fn )( void* ) )
 {
 	size_t i = 0;
 	for( ; i < map->size; ++i ) {
-		ll_free( map->buckets[i] );
+		ll_free_custom( map->buckets[i], node_dealloc_fn );
 		map->buckets[i] = NULL;
 	}
 	free( map->buckets );
@@ -89,6 +91,23 @@ void hm_free( HashMap* map )
 	free( map );
 	map = NULL;
 }
+
+void hm_free_custom( HashMap* map,
+					 void ( *node_dealloc_fn )( void* ) )
+{
+	hm_free_( map, node_dealloc_fn );
+}
+
+// TODO: remove code rep. from default ll dealloc
+//       and find cleaner dealloc injection point for
+//       hm_
+static void default_node_dealloc_fn( void* data )
+{
+	free( data );
+	data = NULL;
+}
+
+void hm_free( HashMap* map ) { hm_free_( map, default_node_dealloc_fn ); }
 
 static size_t hash_idx( size_t hash, size_t map_size )
 {
@@ -134,6 +153,7 @@ static void hm_rebalance_( HashMap** const map, size_t new_size )
 	if( tmp != NULL ) {
 		tmp->hash_fn = ( *map )->hash_fn;
 		tmp->cmp_fn = ( *map )->cmp_fn;
+		tmp->dealloc_fn = ( *map )->dealloc_fn;
 		size_t i = 0;
 		for( ; i < ( *map )->size; ++i ) {
 			LinkedList* llist = ( *map )->buckets[i];
@@ -168,6 +188,11 @@ void const* hm_get( HashMap const* map, void const* key )
 	LL_FOR_EACH_END()
 
 	return NULL;
+}
+
+void hm_set_dealloc_fn( HashMap** map, void ( *fn )( void* ) )
+{
+	( *map )->dealloc_fn = fn;
 }
 
 static size_t default_hash_str_( void const* key )

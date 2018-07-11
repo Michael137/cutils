@@ -16,7 +16,7 @@ typedef struct LinkedList_
 {
 	LinkedListNode_ *head, *tail;
 	size_t size;
-	void ( *dealloc_data_fn_ )( LinkedListNode_* );
+	void ( *dealloc_data_fn_ )( void* );
 
 #if LL_DEBUG
 	char* dbgStr;
@@ -34,6 +34,7 @@ bool ll_push_front_alloc( LinkedList**, void*, const size_t );
 bool ll_pop_front( LinkedList** );
 bool ll_remove( LinkedList**, const size_t );
 bool ll_free( LinkedList* );
+bool ll_free_custom( LinkedList*, void ( *fn )( void* ) );
 void* ll_at( LinkedList const*, const size_t );
 bool ll_create( LinkedList** );
 size_t ll_size( LinkedList const* );
@@ -41,6 +42,7 @@ size_t ll_find_int( LinkedList const*, void const* );
 size_t ll_find_string( LinkedList const*, void const* );
 size_t ll_find( LinkedList const*, void const*,
 				bool ( * )( void const*, void const* ) );
+void ll_set_dealloc_fn( LinkedList** llist, void ( *fn )( void* ) );
 
 #define LL_FOR_EACH_BEGIN( var, llist )                                        \
 	LinkedListNode_* tmp = llist->head;                                        \

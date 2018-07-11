@@ -158,12 +158,12 @@ int main()
 {
 	printf( "~~~ Starting Hashmap Tests ~~~\n" );
 
+	test_print();
 	test_int2str();
 	test_int2int();
 	test_str2str();
 	test_str2int();
 	test_resize();
-	test_print();
 
 	return 0;
 }

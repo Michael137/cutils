@@ -1,10 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include <containers/hashmap.h>
 #include <containers/linked_list.h>
 #include <core/hash.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <utils/automata.h>
 
 static size_t trans_hash_fn( void const* key )
@@ -48,6 +47,17 @@ static void trans_print_fn( LinkedListNode_ const* node )
 	puts( "\n>> " );
 }
 
+void trans_node_dealloc_fn( void* node )
+{
+	void const* key = ( (HashNode_*)node )->key;
+	Transition* trans = (Transition*)key;
+
+	free( trans );
+	trans = NULL;
+
+	free( node );
+	node = NULL;
+}
 /*
  * FA APIs
  */
@@ -55,16 +65,12 @@ void fa_create( FA** fa )
 {
 	*fa = malloc( sizeof( FA ) );
 	hm_create( &( ( *fa )->transT ), trans_hash_fn, trans_cmp_fn );
-	ll_create( &( ( *fa )->trans_buf_ ) );
 }
 
 void fa_free( FA* fa )
 {
-	hm_free( fa->transT );
+	hm_free_custom( fa->transT, trans_node_dealloc_fn );
 	fa->transT = NULL;
-
-	ll_free( fa->trans_buf_ );
-	fa->trans_buf_ = NULL;
 
 	free( fa );
 	fa = NULL;
@@ -78,10 +84,6 @@ void fa_insert( FA* const* const fa, State const* s1, char const* sym,
 	trans->end = *s2;
 	trans->symbol = sym;
 	hm_insert( &( ( *fa )->transT ), trans, s2 );
-
-	// TODO: shouldn't need to keep track of transitions
-	ll_push_front_alloc( &( ( *fa )->trans_buf_ ), trans,
-						 sizeof( Transition ) );
 }
 
 State const* fa_get( FA* fa, Trans const* trans )

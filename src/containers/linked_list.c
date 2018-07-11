@@ -7,13 +7,13 @@
 
 static void ll_inc_size_( LinkedList** llist ) { ( *llist )->size++; }
 
-static void default_dealloc_fn_( LinkedListNode_* data )
+static void default_dealloc_fn_( void* data )
 {
 	free( data );
 	data = NULL;
 }
 
-void ll_set_dealloc_fn( LinkedList** llist, void ( *fn )( LinkedListNode_* ) )
+void ll_set_dealloc_fn( LinkedList** llist, void ( *fn )( void* ) )
 {
 	( *llist )->dealloc_data_fn_ = fn;
 }
@@ -88,13 +88,14 @@ bool ll_push_front( LinkedList** llist, void const* data,
 	return ll_push_front_( llist, data, data_size, false );
 }
 
-bool ll_free( LinkedList* llist )
+static bool ll_free_( LinkedList* llist,
+					  void ( *dealloc_fn )( void* ) )
 {
 	if( llist ) {
 		LinkedListNode_* tmp = llist->head;
 		while( tmp != NULL ) {
 			LinkedListNode_* next = tmp->next;
-			llist->dealloc_data_fn_( tmp->data );
+			dealloc_fn( tmp->data );
 			free( tmp );
 			tmp = next;
 		}
@@ -104,6 +105,17 @@ bool ll_free( LinkedList* llist )
 	}
 
 	return LL_SUCCESS;
+}
+
+bool ll_free_custom( LinkedList* llist,
+					 void ( *dealloc_fn )( void* ) )
+{
+	return ll_free_( llist, dealloc_fn );
+}
+
+bool ll_free( LinkedList* llist )
+{
+	return ll_free_( llist, llist->dealloc_data_fn_ );
 }
 
 void* ll_at( LinkedList const* llist, const size_t idx )
@@ -140,7 +152,7 @@ bool ll_remove( LinkedList** llist, const size_t idx )
 				else
 					prev->next = curr->next;
 
-				(*llist)->dealloc_data_fn_( curr->data );
+				( *llist )->dealloc_data_fn_( curr->data );
 				free( curr );
 				( *llist )->size--;
 
