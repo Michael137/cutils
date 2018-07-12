@@ -274,7 +274,7 @@ HashPair* hm_find( HashMap const* map, void const* key )
 	return NULL;
 }
 
-void hm_remove( HashMap const*, void const* key )
+void hm_remove( __attribute((unused))HashMap const* map, __attribute((unused))void const* key )
 {
 	// FIXME
 }
