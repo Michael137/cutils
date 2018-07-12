@@ -20,6 +20,31 @@
 // * add(Start State, Symbol, End State)
 // (* last)
 
+/*
+ * Utils
+ * -----
+ * RegEx
+ *  |
+ *  v
+ * Parse Tree
+ *  |
+ *  | (Using concat, union, closure rules)
+ *  |
+ *  v
+ * NFA
+ *  |
+ *  | (Transition table to flatten
+ *  |  epsilon states into unique DFA
+ *  |  states; e-closure(trans[S,c]) for each
+ *  |  DFA state from s0)
+ *  |
+ *  v
+ * DFA
+ *  |
+ *  V
+ * DFA Transition Diagram
+ */
+
 typedef struct State_ {
 	char const* state_id;
 	bool is_accepting;
