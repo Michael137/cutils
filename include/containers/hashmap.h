@@ -66,21 +66,22 @@ void hm_remove( HashMap const*, void const* key );
 #define HM_DEBUG_LOG( map )                                                    \
 	do {                                                                       \
 		DEBUG_MORE_( HM_DEBUG, "%s (%ldE:%ldB:%ldC)\n",                        \
-					 DBGSTR( HM_DEBUG, map ), map->elements, map->size,        \
+					 DBGSTR( HM_DEBUG, map ), ( map )->elements,               \
+					 ( map )->size,                                            \
 					 DBG_CONTAINER_MEM( HM_DEBUG, map, collisions_, 0UL ) );   \
 	} while( 0 )
 
 #define HM_FOR_EACH_BUCKET_BEGIN( var, map )                                   \
 	LinkedList const* var = NULL;                                              \
 	size_t i = 0;                                                              \
-	for( ; i < map->size; ++i ) {                                              \
-		var = map->buckets[i];
+	for( ; i < ( map )->size; ++i ) {                                          \
+		var = ( map )->buckets[i];
 
 #define HM_FOR_EACH_BUCKET_END() }
 
 #define HM_FOR_EACH_BEGIN( var, map )                                          \
 	HashNode_* var;                                                            \
-	HM_FOR_EACH_BUCKET_BEGIN( llist, map )                                     \
+	HM_FOR_EACH_BUCKET_BEGIN( llist, ( map ) )                                 \
 	LL_FOR_EACH_BEGIN( var, llist )
 
 #define HM_FOR_EACH_END()                                                      \

@@ -145,27 +145,20 @@ static void hm_insert_( HashMap** const map, void const* key, void const* value,
 
 static void hm_rebalance_( HashMap** const map, size_t new_size )
 {
-	HashMap* tmp;
-	hm_create_( &tmp, NULL, NULL, new_size );
+	HashMap* new;
+	hm_create_( &new, NULL, NULL, new_size );
 
-	if( tmp != NULL ) {
-		tmp->hash_fn = ( *map )->hash_fn;
-		tmp->cmp_fn = ( *map )->cmp_fn;
-		tmp->dealloc_fn = ( *map )->dealloc_fn;
-		size_t i = 0;
-		for( ; i < ( *map )->size; ++i ) {
-			LinkedList* llist = ( *map )->buckets[i];
-			LinkedListNode_* node = llist->head;
-			while( node != NULL ) {
-				hm_insert_( &tmp, ( (HashNode_*)node->data )->key,
-							( (HashNode_*)node->data )->value, true );
-				node = node->next;
-			}
-		}
-
-		hm_free( *map );
-		*map = tmp;
+	if( new != NULL ) {
+		new->hash_fn = ( *map )->hash_fn;
+		new->cmp_fn = ( *map )->cmp_fn;
+		new->dealloc_fn = ( *map )->dealloc_fn;
+		HM_FOR_EACH_BEGIN( node, ( *map ) )
+		hm_insert_( &new, node->key, node->value, true );
+		HM_FOR_EACH_END()
 	}
+
+	hm_free( *map );
+	*map = new;
 }
 
 void hm_insert( HashMap** const map, void const* key, void const* value )
@@ -274,7 +267,11 @@ HashPair* hm_find( HashMap const* map, void const* key )
 	return NULL;
 }
 
-void hm_remove( __attribute((unused))HashMap const* map, __attribute((unused))void const* key )
+void hm_remove( __attribute( ( unused ) ) HashMap const* map,
+				__attribute( ( unused ) ) void const* key )
 {
 	// FIXME
+	// for each bucket
+	// 		find key
+	// 			ll_remove
 }
