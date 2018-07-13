@@ -14,7 +14,7 @@ static size_t trans_hash_fn( void const* key )
 	snprintf( str, sizeof( str ), "%s%s%s", ( tmp->start ).state_id,
 			  ( tmp->end ).state_id, tmp->symbol );
 
-	return hash_str_djb( str );
+	return hash_str_djb2( str );
 }
 
 static bool trans_cmp_fn( void const* key, void const* value )

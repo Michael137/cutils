@@ -188,7 +188,7 @@ void hm_set_dealloc_fn( HashMap** map, void ( *fn )( void* ) )
 
 static size_t default_hash_str_( void const* key )
 {
-	return hash_str_djb( (char const*)key );
+	return hash_str_djb2( (char const*)key );
 }
 
 static bool default_cmp_str_( void const* e1, void const* e2 )

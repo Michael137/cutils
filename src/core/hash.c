@@ -1,7 +1,7 @@
 #include <core/hash.h>
 
-// djb hash
-size_t hash_str_djb( char const* str )
+// djb2 hash
+size_t hash_str_djb2( char const* str )
 {
 	size_t hash = 5381;
 	int c;
