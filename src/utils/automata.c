@@ -46,6 +46,7 @@ static void trans_print_fn( LinkedListNode_ const* node )
 	puts( "\n>> " );
 }
 
+// TODO: general key dealloc fn in parameterized macro
 void trans_node_dealloc_fn( void* node )
 {
 	void const* key = ( (HashNode_*)node )->key;

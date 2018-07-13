@@ -99,13 +99,13 @@ void hm_free_custom( HashMap* map, void ( *node_dealloc_fn )( void* ) )
 // TODO: remove code rep. from default ll dealloc
 //       and find cleaner dealloc injection point for
 //       hm_
-static void default_node_dealloc_fn( void* data )
+static void default_node_dealloc_fn_( void* data )
 {
 	free( data );
 	data = NULL;
 }
 
-void hm_free( HashMap* map ) { hm_free_( map, default_node_dealloc_fn ); }
+void hm_free( HashMap* map ) { hm_free_( map, default_node_dealloc_fn_ ); }
 
 static size_t hash_idx( size_t hash, size_t map_size )
 {
@@ -249,7 +249,7 @@ void hm_print( HashMap const* const map,
 {
 	HM_FOR_EACH_BUCKET_BEGIN( llist, map )
 	if( llist->size != 0 ) {
-		printf( "Bucket %ld\n", i );
+		printf( "Bucket %ld\n", _hm_ctr );
 		if( print_fn != NULL )
 			ll_print_custom( llist, print_fn );
 		else
@@ -267,11 +267,14 @@ HashPair* hm_find( HashMap const* map, void const* key )
 	return NULL;
 }
 
-void hm_remove( __attribute( ( unused ) ) HashMap const* map,
-				__attribute( ( unused ) ) void const* key )
+void hm_remove( HashMap** map, void const* key )
 {
-	// FIXME
-	// for each bucket
-	// 		find key
-	// 			ll_remove
+	// TODO: once ll_remove takes custom dealloc, add customization point for
+	// hm_remove
+	HM_FOR_EACH_BEGIN( elem, ( *map ) )
+	if( ( *map )->cmp_fn( key, elem->key ) ) {
+		ll_remove( (LinkedList**)( &_hm_buckets ), _ll_ctr );
+		return;
+	}
+	HM_FOR_EACH_END()
 }

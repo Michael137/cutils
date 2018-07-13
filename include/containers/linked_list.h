@@ -45,12 +45,14 @@ size_t ll_find( LinkedList const*, void const*,
 void ll_set_dealloc_fn( LinkedList** llist, void ( *fn )( void* ) );
 
 #define LL_FOR_EACH_BEGIN( var, llist )                                        \
-	LinkedListNode_* tmp = llist->head;                                        \
-	while( tmp != NULL ) {                                                     \
-		var = tmp->data;
+	LinkedListNode_* _tmp = ( llist )->head;                                   \
+	size_t _ll_ctr = 0;                                                        \
+	while( _tmp != NULL ) {                                                    \
+		var = _tmp->data;
 
 #define LL_FOR_EACH_END()                                                      \
-	tmp = tmp->next;                                                           \
+	_tmp = _tmp->next;                                                         \
+	_ll_ctr++;                                                                 \
 	}
 
 #endif // LINKED_LIST_H_IN

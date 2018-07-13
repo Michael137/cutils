@@ -60,7 +60,7 @@ void hm_print( HashMap const* const,
 size_t hm_debug_get_collisions( HashMap const* map );
 void hm_set_dealloc_fn( HashMap**, void ( *fn )( void* ) );
 HashPair* hm_find( HashMap const*, void const* key );
-void hm_remove( HashMap const*, void const* key );
+void hm_remove( HashMap**, void const* key );
 
 // TODO: add bucket distribution info and average load factor
 #define HM_DEBUG_LOG( map )                                                    \
@@ -73,16 +73,16 @@ void hm_remove( HashMap const*, void const* key );
 
 #define HM_FOR_EACH_BUCKET_BEGIN( var, map )                                   \
 	LinkedList const* var = NULL;                                              \
-	size_t i = 0;                                                              \
-	for( ; i < ( map )->size; ++i ) {                                          \
-		var = ( map )->buckets[i];
+	size_t _hm_ctr = 0;                                                        \
+	for( ; _hm_ctr < ( map )->size; ++_hm_ctr ) {                              \
+		var = ( map )->buckets[_hm_ctr];
 
 #define HM_FOR_EACH_BUCKET_END() }
 
 #define HM_FOR_EACH_BEGIN( var, map )                                          \
 	HashNode_* var;                                                            \
-	HM_FOR_EACH_BUCKET_BEGIN( llist, ( map ) )                                 \
-	LL_FOR_EACH_BEGIN( var, llist )
+	HM_FOR_EACH_BUCKET_BEGIN( _hm_buckets, ( map ) )                           \
+	LL_FOR_EACH_BEGIN( var, _hm_buckets )
 
 #define HM_FOR_EACH_END()                                                      \
 	LL_FOR_EACH_END()                                                          \

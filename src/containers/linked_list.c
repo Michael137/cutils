@@ -88,8 +88,7 @@ bool ll_push_front( LinkedList** llist, void const* data,
 	return ll_push_front_( llist, data, data_size, false );
 }
 
-static bool ll_free_( LinkedList* llist,
-					  void ( *dealloc_fn )( void* ) )
+static bool ll_free_( LinkedList* llist, void ( *dealloc_fn )( void* ) )
 {
 	if( llist ) {
 		LinkedListNode_* tmp = llist->head;
@@ -107,8 +106,7 @@ static bool ll_free_( LinkedList* llist,
 	return LL_SUCCESS;
 }
 
-bool ll_free_custom( LinkedList* llist,
-					 void ( *dealloc_fn )( void* ) )
+bool ll_free_custom( LinkedList* llist, void ( *dealloc_fn )( void* ) )
 {
 	return ll_free_( llist, dealloc_fn );
 }
@@ -152,6 +150,7 @@ bool ll_remove( LinkedList** llist, const size_t idx )
 				else
 					prev->next = curr->next;
 
+				// FIXME: Allow dealloc fn as arg
 				( *llist )->dealloc_data_fn_( curr->data );
 				free( curr );
 				( *llist )->size--;

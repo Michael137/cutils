@@ -1,10 +1,9 @@
 #include <assert.h> // assert
+#include <containers/hashmap.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-#include <containers/hashmap.h>
 
 // GNU Scientific Library
 #include <gsl/gsl_rng.h> //
@@ -169,6 +168,39 @@ void test_find()
 	hm_free( map );
 }
 
+static void _test_remove_dealloc_fn( void* node )
+{
+	void const* key = ( (HashNode_*)node )->key;
+	char* str = (char*)key;
+
+	free( str );
+	str = NULL;
+
+	free( node );
+	node = NULL;
+}
+
+void test_remove()
+{
+	HashMap* map;
+	hm_create_str2int( &map );
+	char* str1 = strdup( "Alloc 1" );
+	char* str2 = strdup( "Alloc 2" );
+	char* str3 = strdup( "Alloc 3" );
+	int v1 = 100;
+	int v2 = -100;
+	int v3 = 0xDEADBEEF;
+	hm_insert( &map, str1, &v1 );
+	hm_insert( &map, str2, &v2 );
+	hm_insert( &map, str3, &v3 );
+
+	assert( *(int*)hm_get( map, str2 ) == v2 );
+	hm_remove( &map, str2 );
+	assert( hm_get( map, str2 ) == NULL );
+	hm_free_custom( map, _test_remove_dealloc_fn );
+	free( str2 );
+}
+
 int main()
 {
 	printf( "~~~ Starting Hashmap Tests ~~~\n" );
@@ -179,6 +211,7 @@ int main()
 	test_str2str();
 	test_str2int();
 	test_find();
+	test_remove();
 	test_resize();
 
 	return 0;
