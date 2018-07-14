@@ -38,7 +38,7 @@ bool ll_has_loop_naive_hashed( LinkedList const* llist )
 {
 	bool found = false;
 	HashMap* map;
-	hm_create_ptr2ptr( &map );
+	hm_create_ptr( &map );
 
 	LinkedListNode_* head = llist->head;
 	while( head != NULL ) {

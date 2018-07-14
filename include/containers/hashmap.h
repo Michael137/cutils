@@ -40,11 +40,9 @@ typedef struct HashMap_
 
 int hm_create( HashMap** map, size_t ( *hash_fn )( void const* ),
 			   bool ( *cmp_fn )( void const*, void const* ) );
-int hm_create_str2int( HashMap** map );
-int hm_create_str2str( HashMap** map );
-int hm_create_int2int( HashMap** map );
-int hm_create_int2str( HashMap** map );
-int hm_create_ptr2ptr( HashMap** map );
+int hm_create_str( HashMap** map );
+int hm_create_int( HashMap** map );
+int hm_create_ptr( HashMap** map );
 
 void hm_free( HashMap* map );
 void hm_free_custom( HashMap* map, void ( *dealloc_fn )( void* ) );

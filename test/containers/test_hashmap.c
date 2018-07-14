@@ -17,7 +17,7 @@
 static void test_str2str()
 {
 	HashMap* str_map;
-	hm_create_str2str( &str_map );
+	hm_create_str( &str_map );
 	char* allocated = strdup( "Allocated" );
 	hm_insert( &str_map, "Key1", "Value1" );
 	hm_insert( &str_map, "Key2", "Value2" );
@@ -36,7 +36,7 @@ static void test_str2str()
 static void test_str2int()
 {
 	HashMap* int_map;
-	hm_create_str2int( &int_map );
+	hm_create_str( &int_map );
 	int val1 = -1231;
 	int val2 = 31232;
 	int val3 = 137;
@@ -52,7 +52,7 @@ static void test_str2int()
 static void test_int2int()
 {
 	HashMap* int2int_map;
-	hm_create_int2int( &int2int_map );
+	hm_create_int( &int2int_map );
 	int val1 = -1231;
 	int val2 = 31232;
 	int val3 = 137;
@@ -72,7 +72,7 @@ static void test_int2int()
 static void test_int2str()
 {
 	HashMap* int2str_map;
-	hm_create_int2str( &int2str_map );
+	hm_create_int( &int2str_map );
 	int key1 = -121;
 	int key2 = 21238;
 	int key3 = 30198;
@@ -90,7 +90,7 @@ static void test_int2str()
 static void test_resize()
 {
 	HashMap* map;
-	hm_create_str2str( &map );
+	hm_create_str( &map );
 	size_t old_size = map->size;
 
 	puts( "~~~> Starting HashMap insertion benchmark" );
@@ -140,7 +140,7 @@ static void test_resize()
 void test_print()
 {
 	HashMap* map;
-	hm_create_str2str( &map );
+	hm_create_str( &map );
 	int old_size = map->size;
 
 	char buffs[old_size * 2][BUF_SZ];
@@ -156,7 +156,7 @@ void test_print()
 void test_find()
 {
 	HashMap* map;
-	hm_create_str2str( &map );
+	hm_create_str( &map );
 	hm_insert( &map, "Key 1", "Value 1" );
 	hm_insert( &map, "Key 2", "Value 2" );
 	hm_insert( &map, "Key 3", "Value 3" );
@@ -183,7 +183,7 @@ static void _test_remove_dealloc_fn( void* node )
 void test_remove()
 {
 	HashMap* map;
-	hm_create_str2int( &map );
+	hm_create_str( &map );
 	char* str1 = strdup( "Alloc 1" );
 	char* str2 = strdup( "Alloc 2" );
 	char* str3 = strdup( "Alloc 3" );

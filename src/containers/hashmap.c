@@ -219,27 +219,17 @@ static bool default_cmp_ptr_( void const* e1, void const* e2 )
 	return (uintptr_t)e1 == (uintptr_t)e2;
 }
 
-int hm_create_str2int( HashMap** map )
+int hm_create_str( HashMap** map )
 {
 	return hm_create( map, default_hash_str_, default_cmp_str_ );
 }
 
-int hm_create_str2str( HashMap** map )
-{
-	return hm_create( map, default_hash_str_, default_cmp_str_ );
-}
-
-int hm_create_int2int( HashMap** map )
+int hm_create_int( HashMap** map )
 {
 	return hm_create( map, default_hash_int_, default_cmp_int_ );
 }
 
-int hm_create_int2str( HashMap** map )
-{
-	return hm_create( map, default_hash_int_, default_cmp_int_ );
-}
-
-int hm_create_ptr2ptr( HashMap** map )
+int hm_create_ptr( HashMap** map )
 {
 	return hm_create( map, default_hash_ptr_, default_cmp_ptr_ );
 }

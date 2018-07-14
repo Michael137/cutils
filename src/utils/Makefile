@@ -31,6 +31,8 @@ compile_src: $(OBJ)
 .PHONY: clean
 clean:
 	rm -f $(PROJ_OBJDIR)/*.o
+	rm -f *.gcno
+	rm -f *.gcda
 	rm -f gmon.out
 
 # Tests

@@ -31,6 +31,10 @@ test_ll_loop:
 .PHONY:
 clean:
 	rm -f $(OBJDIR)/test_ll_loop
+	rm -f *.gcda
+	rm -f *.gcno
+	rm -f gmon.out
+	rm -f gmon.sum
 
 test:
 	$(OBJDIR)/test_ll_loop

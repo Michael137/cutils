@@ -28,6 +28,9 @@ compile_src: $(OBJ)
 clean:
 	rm -f $(OBJDIR)/*.o *~ core $(INCLUDES)/*~ \
 	rm -f $(OBJDIR)/test_hash
+	rm -f gmon.out
+	rm -f *.gcno
+	rm -f *.gcda
 
 # Tests
 test_hash: $(TESTDIR)/test_hash.c $(OBJ) $(HDRS)
