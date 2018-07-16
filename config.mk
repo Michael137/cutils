@@ -32,9 +32,13 @@ CFLAGS += -Wunknown-pragmas
 CFLAGS += -Winline
 CFLAGS += -Wnull-dereference
 
-# Warnings requires instrumentation
+# Warnings that require instrumentation
 CFLAGS += -Wstrict-aliasing
 CFLAGS += -fstrict-aliasing
+
+# Misc. flags
+# (see: gcc --march=native -Q --help=target)
+CFLAGS += -march=native
 
 # Sanitizers
 ifneq "$(DEBUG)" ""
