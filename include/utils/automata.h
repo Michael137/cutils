@@ -39,25 +39,28 @@
  *  |  DFA state from s0)
  *  |
  *  v
- * DFA
+ * DFA (can also go straight to DFA from parse tree)
  *  |
  *  V
  * DFA Transition Diagram
  */
 
-typedef struct State_ {
+typedef struct State_
+{
 	char const* state_id;
 	bool is_accepting;
 } State;
 
-typedef struct FiniteAutomaton {
+typedef struct FiniteAutomaton
+{
 	State start_state;
 
 	// Map<Trans, State>
 	HashMap* transT;
 } FA, DFA, NFA;
 
-typedef struct Transition_ {
+typedef struct Transition_
+{
 	State start;
 	State end;
 	char const* symbol;
