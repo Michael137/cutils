@@ -16,6 +16,10 @@ prof_test_linkedlist:
 	$(call PROF_FN, target/containers/test_linked_list)
 
 .PHONY:
+prof_test_nary_tree:
+	$(call PROF_FN, target/containers/test_nary_tree)
+
+.PHONY:
 prof_utils_ll_loop:
 	$(call PROF_FN, target/bin/test_ll_loop)
 

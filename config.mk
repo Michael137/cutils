@@ -4,10 +4,12 @@ SANITIZE_FLAGS=
 ifneq "$(DEBUG)" ""
   CFLAGS += -DLL_DEBUG=1
   CFLAGS += -DHM_DEBUG=1
+  CFLAGS += -DNT_DEBUG=1
   CFLAGS += -O0 -g
 else
   CFLAGS += -DLL_DEBUG=0
   CFLAGS += -DHM_DEBUG=0
+  CFLAGS += -DNT_DEBUG=0
   CFLAGS += -O3
 endif
 

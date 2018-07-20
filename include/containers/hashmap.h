@@ -86,4 +86,8 @@ void hm_remove( HashMap**, void const* key );
 	LL_FOR_EACH_END()                                                          \
 	HM_FOR_EACH_BUCKET_END()
 
+#define HM_SET_DBGSTR( container, msg ) SET_DBGSTR( HM_DEBUG, container, msg )
+#define HM_SET_DBG_CONTAINER_MEM( container, member, value )                   \
+	SET_DBG_CONTAINER_MEM( HM_DEBUG, container, member, value )
+
 #endif // HASHMAP_H_IN

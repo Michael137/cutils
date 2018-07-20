@@ -46,10 +46,9 @@ static int hm_create_( HashMap** map, size_t ( *hash_fn )( void const* ),
 		( *map )->elements = 0;
 		( *map )->dealloc_fn = NULL;
 
-#if HM_DEBUG
-		( *map )->collisions_ = 0;
-		( *map )->dbgStr = "HashMap created";
-#endif
+		HM_SET_DBGSTR( ( *map ), "HashMap Created" );
+		HM_SET_DBG_CONTAINER_MEM( ( *map ), collisions_, 0 );
+
 		( *map )->buckets = malloc( sizeof( LinkedList ) * size );
 		if( ( *map )->buckets == NULL ) {
 			free( *map );

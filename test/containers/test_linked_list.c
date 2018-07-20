@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <containers/linked_list.h>
 #include <containers/linked_list_helpers.h>
 

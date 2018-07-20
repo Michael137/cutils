@@ -27,9 +27,7 @@ bool ll_create( LinkedList** llist )
 		( *llist )->size = 0;
 		( *llist )->dealloc_data_fn_ = default_dealloc_fn_;
 
-#if LL_DEBUG
-		( *llist )->dbgStr = "Linked List Created";
-#endif
+		LL_SET_DBGSTR( ( *llist ), "Linked List Created" );
 
 		return LL_SUCCESS;
 	} else
@@ -58,9 +56,7 @@ static bool ll_push_front_( LinkedList** llist, void const* data,
 			node->data = copy;
 			node->type_tag_ = UNKNOWN;
 
-#if LL_DEBUG
-			node->dbgStr = "Node created";
-#endif // LL_DEBUG
+			LL_SET_DBGSTR( node, "Node Created" );
 
 			LinkedListNode_* tmp = ( *llist )->head;
 			node->next = tmp;

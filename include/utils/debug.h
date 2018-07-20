@@ -17,11 +17,28 @@
 #define _DBG_0( container, member, default ) default
 #define _DBG_1( container, member, default ) ( container )->member
 
+// For non "char* dbgStr" members in DEBUG mode
 #define DBG_CONTAINER_MEM( debug_type, container, member, default )            \
 	_DBG_( debug_type )( container, member, default )
 
-// For containers that have conditional "dbgStr" members
+// For containers that have conditional "char* dbgStr" members
 #define DBGSTR( debug_type, container )                                        \
 	DBG_CONTAINER_MEM( debug_type, container, dbgStr, "" )
+
+// If debug_type is off then assigns to stub var which is out of scope past the
+// do loop
+#define SET_DBGSTR( debug_type, container, msg )                               \
+	do {                                                                       \
+		DBG_CONTAINER_MEM( debug_type, container, dbgStr,                      \
+						   __attribute( ( unused ) ) char* tmp_stub_var_ ) =   \
+			msg;                                                               \
+	} while( 0 )
+
+#define SET_DBG_CONTAINER_MEM( debug_type, container, member, value )          \
+	do {                                                                       \
+		DBG_CONTAINER_MEM( debug_type, container, member,                      \
+						   __attribute( ( unused ) ) void* tmp_stub_var_ ) =   \
+			value;                                                             \
+	} while( 0 )
 
 #endif // DEBUG_H_IN

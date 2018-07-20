@@ -55,6 +55,8 @@ void ll_set_dealloc_fn( LinkedList** llist, void ( *fn )( void* ) );
 	_ll_ctr++;                                                                 \
 	}
 
+#define LL_SET_DBGSTR( container, msg ) SET_DBGSTR( LL_DEBUG, container, msg )
+
 #endif // LINKED_LIST_H_IN
 
 // TODO: implement alternative linked list with only macros as

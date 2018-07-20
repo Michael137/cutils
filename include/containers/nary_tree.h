@@ -2,6 +2,9 @@
 #define NARY_TREE_H
 
 #include <stddef.h>
+#include <utils/debug.h>
+
+#define NT_SET_DBGSTR( container, msg ) SET_DBGSTR( NT_DEBUG, container, msg )
 
 typedef struct TreeNode_
 {
@@ -35,7 +38,7 @@ typedef struct Tree_
 #endif
 } NTree;
 
-void nt_create( NTree* tree );
+void nt_create( NTree** tree );
 void nt_free( NTree* tree );
 
 void nt_insert( NTree** tree, void const* data );
