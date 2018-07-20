@@ -16,11 +16,13 @@ TESTDIR=../../test/$(PROJECT)
 # Headers to include
 _HDRS = linked_list.h linked_list_internal.h linked_list_helpers.h
 _HDRS += hashmap.h
+_HDRS += nary_tree.h
 # Prepend include path to every header
 HDRS = $(patsubst %,$(INCLUDES)/$(PROJECT)/%,$(_HDRS))
 
 _OBJ = linked_list.o linked_list_internal.o linked_list_helpers.o
 _OBJ += hashmap.o
+_OBJ += nary_tree.o
 OBJ = $(patsubst %,$(OBJDIR)/%,$(_OBJ))
 
 # TODO: cleaner inclusion of other project
@@ -39,6 +41,7 @@ clean:
 	rm -f $(OBJDIR)/*.o *~ core $(INCLUDES)/*~ \
 	rm -f $(OBJDIR)/test_linked_list \
 	rm -f $(OBJDIR)/test_hashmap
+	rm -f $(OBJDIR)/test_nary_tree \
 	rm -f gmon.out
 	rm -f *.gcno
 	rm -f *.gcda
@@ -51,15 +54,20 @@ test_linked_list: $(TESTDIR)/test_linked_list.c $(OBJ) $(HDRS)
 test_hashmap: $(TESTDIR)/test_hashmap.c $(OBJ) $(HDRS)
 	$(CC) $^ $(CFLAGS) -o $(OBJDIR)/$@ -lgsl -lgslcblas -lm
 
+test_nary_tree: $(TESTDIR)/test_nary_tree.c $(OBJ) $(HDRS)
+	$(CC) $^ $(CFLAGS) -o $(OBJDIR)/$@
+
 .PHONY:
 test:
 	$(OBJDIR)/test_linked_list
 	$(OBJDIR)/test_hashmap
+	$(OBJDIR)/test_nary_tree
 
 # TODO: move to separate script taking test name as argument
 .PHONY: leak
 leak:
 	@valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=no --track-origins=yes $(OBJDIR)/test_linked_list || \
-	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=no --track-origins=yes $(OBJDIR)/test_hashmap
+	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=no --track-origins=yes $(OBJDIR)/test_hashmap || \
+	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=no --track-origins=yes $(OBJDIR)/test_nary_tree
 
-all: clean compile_src test_linked_list test_hashmap test
+all: clean compile_src test_linked_list test_hashmap test_nary_tree test

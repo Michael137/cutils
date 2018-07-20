@@ -1,12 +1,15 @@
 #ifndef NARY_TREE_H
 #define NARY_TREE_H
 
-typedef struct TreeNode_ {
+#include <stddef.h>
+
+typedef struct TreeNode_
+{
 	// 36b
-	NTreeNode_* next;	// sibling node to the right
-	NTreeNode_* prev;	// sibling node to the left
-	NTreeNode_* child;	// first child node
-	NTreeNode_* parent;
+	struct TreeNode_* next;  // sibling node to the right
+	struct TreeNode_* prev;  // sibling node to the left
+	struct TreeNode_* child; // first child node
+	struct TreeNode_* parent;
 
 	// 8b
 	void* data;
@@ -18,9 +21,10 @@ typedef struct TreeNode_ {
 
 } NTreeNode;
 
-typedef struct Tree_ {
+typedef struct Tree_
+{
 	// 52b
-	TreeNode_* root;
+	struct TreeNode_* root;
 
 	// 8b
 	size_t size;
