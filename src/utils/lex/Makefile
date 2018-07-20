@@ -1,4 +1,8 @@
 include ../../../config.mk
 
-all:
+clean: stub
+
+all: stub
+
+stub:
 	$(warning "This is an incomplete makefile from the lex project")

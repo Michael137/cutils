@@ -6,6 +6,11 @@ clean:
 	rm -f gmon.out
 	rm -f gmon.sum
 	rm -f *.gcov
+	$(MAKE) -C src/utils clean
+	$(MAKE) -C src/utils/ll_loop clean
+	$(MAKE) -C src/utils/lex clean
+	$(MAKE) -C src/core clean
+	$(MAKE) -C src/containers clean
 
 setup:
 	$(shell mkdir -p target/bin)
