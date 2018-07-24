@@ -38,9 +38,9 @@ typedef struct Tree_
 #endif
 } NTree;
 
-void nt_create( NTree** tree );
-void nt_free( NTree* tree );
+void nt_create( NTree** );
+void nt_free( NTree* );
 
-void nt_insert( NTree** tree, void const* data );
+void nt_insert( NTree**, void* const );
 
 #endif // NARY_TREE_H
