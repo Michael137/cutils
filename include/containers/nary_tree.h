@@ -42,5 +42,6 @@ void nt_create( NTree** );
 void nt_free( NTree* );
 
 void nt_insert( NTree**, void* const );
+NTree* nt_from_array( void* const [] );
 
 #endif // NARY_TREE_H
