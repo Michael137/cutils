@@ -8,3 +8,4 @@ a.out
 tags
 gmon.out
 gmon.sum
+*.so
