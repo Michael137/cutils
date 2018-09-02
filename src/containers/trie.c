@@ -4,6 +4,8 @@
 #include <stdlib.h>
 
 #define ALPHABET_SZ 26
+#define ASSERT_WORD( container, str )                                          \
+	if( t_search( container, str ) ) printf( "Found %s!\n", str );
 
 typedef struct TrieNode_
 {
@@ -13,11 +15,17 @@ typedef struct TrieNode_
 
 } TrieNode;
 
-// ASCII: 97-122
+typedef struct Trie_
+{
+	TrieNode* root;
+} Trie;
+
+// ASCII: 97-122 (a-z)
+// 'a' -> 97 - 97 == 0
 int t_idx_from_char( char letter )
 {
-	int hash = letter - '0';
-	return hash - 97;
+	int hash = tolower( letter ) - '0';
+	return hash - (int)'a';
 }
 
 void t_create_node( TrieNode** node )
@@ -29,11 +37,11 @@ void t_create_node( TrieNode** node )
 	( *node )->is_word_end = false;
 }
 
-void t_insert( TrieNode** node, char const* str )
+void t_insert_node( TrieNode** node, char const* str )
 {
 	TrieNode* trav = *node;
 	for( int i = 0; str[i] != '\0'; ++i ) {
-		int idx = t_idx_from_char( tolower( str[i] ) );
+		int idx = t_idx_from_char( str[i] );
 
 		if( trav->children[idx] == NULL )
 			t_create_node( &( trav->children[idx] ) );
@@ -44,11 +52,11 @@ void t_insert( TrieNode** node, char const* str )
 	trav->is_word_end = true;
 }
 
-bool t_search( TrieNode* node, char const* str )
+bool t_search_from_node( TrieNode* node, char const* str )
 {
 	TrieNode* tmp = node;
 	for( int i = 0; str[i] != '\0'; ++i ) {
-		int idx = t_idx_from_char( tolower( str[i] ) );
+		int idx = t_idx_from_char( str[i] );
 
 		if( tmp->children[idx] == NULL ) return false;
 
@@ -58,22 +66,38 @@ bool t_search( TrieNode* node, char const* str )
 	return tmp->is_word_end;
 }
 
+void t_create( Trie** trie )
+{
+	( *trie ) = malloc( sizeof( Trie ) );
+	t_create_node( &( ( *trie )->root ) );
+}
+
+void t_insert( Trie** trie, char const* str )
+{
+	t_insert_node( &( ( *trie )->root ), str );
+}
+
+bool t_search( Trie* trie, char const* str )
+{
+	t_search_from_node( trie->root, str );
+}
+
 void t_free() {}
 
 int main()
 {
-	TrieNode* root;
-	t_create_node( &root );
-	t_insert( &root, "Hell" );
-	t_insert( &root, "Hellorun" );
-	//	t_insert( &root, "Hello" );
-	//	t_insert( &root, "Hellboy" );
-	//	t_insert( &root, "World" );
+	Trie* trie;
+	t_create( &trie );
 
-	if( t_search( root, "Hell" ) ) printf( "Found Hell!\n" );
-	if( t_search( root, "Hello" ) ) printf( "Found Hello!\n" );
-	if( t_search( root, "Hellorun" ) ) printf( "Found Hellorun!\n" );
-	if( t_search( root, "Hel" ) ) printf( "Found Hel!\n" );
+	t_insert( &trie, "Hello" );
+	t_insert( &trie, "Hellorun" );
+
+	ASSERT_WORD( trie, "Hell" );
+	ASSERT_WORD( trie, "Hello" );
+	ASSERT_WORD( trie, "HELLO" );
+	ASSERT_WORD( trie, "Hello" );
+	ASSERT_WORD( trie, "Hellorun" );
+	ASSERT_WORD( trie, "Hel" );
 
 	return 0;
 }
