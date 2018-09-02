@@ -22,18 +22,13 @@ typedef struct Trie_
 
 // ASCII: 97-122 (a-z)
 // 'a' -> 97 - 97 == 0
-int t_idx_from_char( char letter )
-{
-	int hash = tolower( letter ) - '0';
-	return hash - (int)'a';
-}
+int t_idx_from_char( char letter ) { return tolower( letter ) - 'a'; }
 
 void t_create_node( TrieNode** node )
 {
 	( *node ) = malloc( sizeof( TrieNode ) );
 	for( int i = 0; i < ALPHABET_SZ; ++i )
 		( *node )->children[i] = NULL;
-
 	( *node )->is_word_end = false;
 }
 
@@ -43,8 +38,10 @@ void t_insert_node( TrieNode** node, char const* str )
 	for( int i = 0; str[i] != '\0'; ++i ) {
 		int idx = t_idx_from_char( str[i] );
 
-		if( trav->children[idx] == NULL )
+		if( trav->children[idx] == NULL ) {
 			t_create_node( &( trav->children[idx] ) );
+			printf( "Allocated at: %d\n", idx );
+		}
 
 		trav = trav->children[idx];
 	}
@@ -82,7 +79,23 @@ bool t_search( Trie* trie, char const* str )
 	t_search_from_node( trie->root, str );
 }
 
-void t_free() {}
+void t_free_node( TrieNode* node )
+{
+	if( node == NULL ) return;
+
+	for( int i = 0; i < ALPHABET_SZ; ++i )
+		t_free_node( node->children[i] );
+
+	free( node );
+	node = NULL;
+}
+
+void t_free( Trie* trie )
+{
+	t_free_node( trie->root );
+	free( trie );
+	trie = NULL;
+}
 
 int main()
 {
@@ -98,6 +111,8 @@ int main()
 	ASSERT_WORD( trie, "Hello" );
 	ASSERT_WORD( trie, "Hellorun" );
 	ASSERT_WORD( trie, "Hel" );
+
+	t_free( trie );
 
 	return 0;
 }
