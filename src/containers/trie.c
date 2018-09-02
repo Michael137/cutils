@@ -38,10 +38,8 @@ void t_insert_node( TrieNode** node, char const* str )
 	for( int i = 0; str[i] != '\0'; ++i ) {
 		int idx = t_idx_from_char( str[i] );
 
-		if( trav->children[idx] == NULL ) {
+		if( trav->children[idx] == NULL )
 			t_create_node( &( trav->children[idx] ) );
-			printf( "Allocated at: %d\n", idx );
-		}
 
 		trav = trav->children[idx];
 	}
