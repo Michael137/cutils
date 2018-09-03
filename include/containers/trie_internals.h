@@ -18,7 +18,7 @@ typedef struct TrieNode_
 
 // ASCII: 97-122 (a-z)
 // E.g.: 'a' -> 97 - 97 == 0
-inline int t_idx_from_char( char letter ) { return tolower( letter ) - 'a'; }
+static inline int t_idx_from_char( char letter ) { return tolower( letter ) - 'a'; }
 
 void t_create_node( TrieNode** node );
 void t_insert_node( TrieNode** node, char const* str );

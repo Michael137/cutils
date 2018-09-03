@@ -50,6 +50,8 @@ clean:
 	rm -f *.gcda
 
 # Tests
+## TODO: no need to compile all object files into all tests;
+##       should only link what's needed (see command output)
 test_linked_list: $(TESTDIR)/test_linked_list.c $(OBJ) $(HDRS)
 	$(CC) $^ $(CFLAGS) -o $(OBJDIR)/$@
 
