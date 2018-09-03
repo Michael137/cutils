@@ -78,4 +78,4 @@ leak:
 	-@valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=no --track-origins=yes $(OBJDIR)/test_nary_tree
 	-@valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=no --track-origins=yes $(OBJDIR)/test_trie
 
-all: clean compile_src test_linked_list test_hashmap test_nary_tree test test_trie
+all: clean compile_src test_linked_list test_hashmap test_nary_tree test_trie test
