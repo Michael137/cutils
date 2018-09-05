@@ -1,0 +1,5 @@
+lexer generator
+
+In: set of regexes
+IR: combined nfa of input->dfa
+Out: Scanner to read and match input
