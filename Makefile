@@ -22,6 +22,7 @@ install_utils:
 	$(shell mkdir -p target/utils)
 	$(MAKE) -C src/utils all
 	$(MAKE) -C src/utils/ll_loop all
+	$(MAKE) -C src/utils/graph all
 	$(MAKE) -C src/utils/lex all
 
 prof_%:
