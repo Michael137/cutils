@@ -1,6 +1,8 @@
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <mutex>
+#include <thread>
 #include <vector>
 
 template<class T> struct Node
@@ -12,19 +14,27 @@ template<class T> struct Node
    public:
 	int key; // Hash of item
 	std::shared_ptr<Node<T>> next;
-
-	void lock(){};
-	void unlock(){};
+	std::mutex lock;
 
 	// For logical deletion
 	bool isMarked() { return marked_; }
 	T getItem() { return item_; }
 
-	Node( T item )
+	explicit Node( T item )
 	    : key( std::hash<T>{}( item ) )
 	    , next( nullptr )
 	    , marked_( false )
 	    , item_( item )
+	    , lock()
+	{
+	}
+
+	Node( T item, int key )
+	    : key( key )
+	    , next( nullptr )
+	    , marked_( false )
+	    , item_( item )
+	    , lock()
 	{
 	}
 };
@@ -33,50 +43,40 @@ template<class T> struct Node
 template<class T> class LazyList
 {
    public:
+	LazyList()
+	    : head_( std::make_shared<Node<T>>( T(),
+	                                        std::numeric_limits<int>::min() ) )
+	    , tail_( std::make_shared<Node<T>>( T(),
+	                                        std::numeric_limits<int>::max() ) )
+	{
+		head_->next = tail_;
+	}
+
 	bool add( T item )
 	{
 		int key = std::hash<T>{}( item );
 		while( true )
 		{
 			auto pred = head_;
-			auto curr = head_->next;
+			auto curr = pred->next;
 			while( curr->key < key )
 			{
 				pred = curr;
 				curr = curr->next;
 			}
 
-			pred->lock();
-			try
+			std::scoped_lock lock( pred->lock, curr->lock );
+			if( validate( pred, curr ) )
 			{
-				FinallyWrapper<void()> predUnlock(
-				    [&pred]() { pred->unlock(); } );
-				curr->lock();
-				try
+				if( curr->key == key )
+					return false;
+				else
 				{
-					FinallyWrapper<void()> currUnlock(
-					    [&curr]() { curr->unlock(); } );
-					if( validate( *curr, *pred ) )
-					{
-						if( curr->key == key )
-							return false;
-						else
-						{
-							auto node  = std::make_shared<Node<T>>( item );
-							node->next = curr;
-							pred->next = node;
-							return true;
-						}
-					}
+					auto node  = std::make_shared<Node<T>>( item );
+					node->next = curr;
+					pred->next = node;
+					return true;
 				}
-				catch( ... )
-				{
-					std::terminate();
-				}
-			}
-			catch( ... )
-			{
-				std::terminate();
 			}
 		}
 
@@ -84,23 +84,15 @@ template<class T> class LazyList
 	}
 	bool remove( T item ) { return true; }
 	bool contains( T const& item ) { return true; }
-	bool validate( Node<T> const& a, Node<T> const& b ) { return true; }
+	// bool validate( Node<T> const& a, Node<T> const& b ) { return true; }
+	bool validate( std::shared_ptr<Node<T>> a, std::shared_ptr<Node<T>> b )
+	{
+		return true;
+	}
 
    private:
 	std::shared_ptr<Node<T>> head_;
-
-	template<class F> class FinallyWrapper
-	{
-	   public:
-		FinallyWrapper( std::function<F> finally_fn )
-		    : fn_( finally_fn )
-		{
-		}
-		~FinallyWrapper() { fn_(); }
-
-	   private:
-		std::function<F> fn_;
-	};
+	std::shared_ptr<Node<T>> tail_;
 };
 
 int main()
