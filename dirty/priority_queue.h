@@ -19,7 +19,7 @@ typedef struct {
 #define PQ_RIGHT(idx_) (idx_ * 2 + 2)
 #define PARENT(idx_) (idx_ / 2)
 
-int heap_insert(Heap* heap, int key);
+int heap_insert(Heap* heap, int key, int size);
 int heap_remove(Heap* heap, int key);
 int heap_find(Heap* heap, int key);
 int heap_peek(Heap* heap);
