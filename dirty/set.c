@@ -97,8 +97,6 @@ bool add_tail(Set* set, int item)
 // Concurrent insertion
 bool set_add(Set* set, int item)
 {
-	if(set == NULL)
-		return false;
 	pthread_mutex_lock(&set->coarse_lock);
 
 	if(set->elements == 0)
@@ -161,9 +159,9 @@ success:
 
 bool set_remove(Set* set, int item)
 {
-	if(set == NULL || set->elements == 0)
-		return false;
 	pthread_mutex_lock(&set->coarse_lock);
+	if(set->elements == 0)
+		goto error;
 
 	if(set->elements == 1)
 	{
