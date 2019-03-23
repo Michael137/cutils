@@ -11,6 +11,7 @@ typedef struct Node {
 	struct Node* prev;
 	int data;
 	// size_t key; // (UNUSED) Hash code of item
+	pthread_mutex_t fine_lock;
 } Node;
 
 typedef struct {
@@ -71,6 +72,7 @@ bool add_head(Set* set, int item)
 	if(new_node == NULL)
 		return false;
 	new_node->data = item;
+	pthread_mutex_init( &new_node->fine_lock, NULL );
 	new_node->next = set->head;
 	new_node->prev = NULL;
 	if(set->head != NULL)
@@ -87,6 +89,7 @@ bool add_tail(Set* set, int item)
 	if(new_node == NULL)
 		return false;
 	new_node->data = item;
+	pthread_mutex_init( &new_node->fine_lock, NULL );
 	new_node->prev = set->tail;
 	new_node->next = NULL;
 	set->tail->next = new_node;
@@ -97,7 +100,9 @@ bool add_tail(Set* set, int item)
 // Concurrent insertion
 bool set_add(Set* set, int item)
 {
+#ifdef COARSE_LOCK
 	pthread_mutex_lock(&set->coarse_lock);
+#endif
 
 	if(set->elements == 0)
 	{
@@ -140,6 +145,7 @@ bool set_add(Set* set, int item)
 		if(new_node == NULL)
 			goto error;
 		new_node->data = item;
+		pthread_mutex_init( &new_node->fine_lock, NULL );
 		curr->prev = new_node;
 		new_node->next = curr;
 		new_node->prev = pred;
@@ -148,12 +154,16 @@ bool set_add(Set* set, int item)
 	}
 
 error:
+#ifdef COARSE_LOCK
 	pthread_mutex_unlock(&set->coarse_lock);
+#endif
 	return false;
 
 success:
 	set->elements++;
+#ifdef COARSE_LOCK
 	pthread_mutex_unlock(&set->coarse_lock);
+#endif
 	return true;
 }
 
@@ -210,13 +220,14 @@ success:
 /* Test routines */
 typedef struct {
 	Set* set;
-	int num;
+	int start_num;
+	int end_num;
 } thread_arg;
 
 void* thread_fn(void* arg)
 {
 	thread_arg* ta = arg;
-	for(int i = 0; i < ta->num; ++i)
+	for(int i = ta->start_num; i < ta->end_num; ++i)
 		set_add(ta->set, i);
 	pthread_exit(NULL);
 }
@@ -227,10 +238,12 @@ int main(int argc, char* argv[]) {
 	Set* s = set_create();
 
 	thread_arg1.set = s;
-	thread_arg1.num = 7;
+	thread_arg1.start_num = -100;
+	thread_arg1.end_num = 200;
 
 	thread_arg2.set = s;
-	thread_arg2.num = 14;
+	thread_arg2.start_num = -100;
+	thread_arg2.end_num = 100;
 
 	pthread_t t1;
 	pthread_t t2;
@@ -239,12 +252,12 @@ int main(int argc, char* argv[]) {
 	pthread_join(t1, NULL);
 	pthread_join(t2, NULL);
 
-	Node* it = s->head;
-	while(it != NULL)
-	{
-		printf( "%d ", it->data );
-		it = it->next;
-	}
+//	Node* it = s->head;
+//	while(it != NULL)
+//	{
+//		printf( "%d ", it->data );
+//		it = it->next;
+//	}
 	printf("%d\n", s->elements);
 	set_free(s);
 	return 0;
