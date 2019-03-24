@@ -3,47 +3,40 @@
 
 #include <assert.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-#define DQ_FULL( dq_ ) ( dq->elements == dq->capacity )
-#define DQ_EMPTY( dq_ ) ( dq->elements == 0 )
-
-#define dequeue_init( type, name, size )                                       \
-	typedef struct                                                             \
-	{                                                                          \
-		size_t capacity;                                                       \
-		size_t elements;                                                       \
-		size_t head;                                                           \
-		type* data;                                                            \
-	} dequeue_##type
+// Full if write pointer is one slot behind the read pointer
+#define DQ_FULL( circ_ ) ( circ_->readp == ( ( circ_->writep + 1 ) % circ_->capacity ) )
+#define DQ_EMPTY( circ_ ) ( circ_->readp == circ_->writep )
 
 typedef struct
 {
 	size_t capacity; // Maximum size buffer can reach
-	size_t elements; // Current number of valid elements
-	size_t head;     // Index of start to currently valid data
-	void** data;     // Contents of buffer
-} Dequeue;
+	size_t readp;
+	size_t writep;
+	void** data; // Contents of buffer
+} CircBuf;
 
-Dequeue* dq_create( size_t size )
+CircBuf* circ_create( size_t size )
 {
 	assert( size > 0 );
-	Dequeue* dq = malloc( sizeof( Dequeue ) );
-	if( dq )
+	CircBuf* crc = malloc( sizeof( CircBuf ) );
+	if( crc )
 	{
-		dq->data = malloc( sizeof( void* ) * size );
-		if( dq->data == NULL )
+		crc->data = malloc( sizeof( void* ) * size );
+		if( crc->data == NULL )
 		{
-			free( dq );
-			dq = NULL;
+			free( crc );
+			crc = NULL;
 			return NULL;
 		}
-		dq->elements = 0;
-		dq->head     = -1;
-		dq->capacity = size;
-		return dq;
+		crc->writep   = 0;
+		crc->readp    = 0;
+		crc->capacity = size + 1;
+		return crc;
 	}
 	else
 	{
@@ -51,43 +44,41 @@ Dequeue* dq_create( size_t size )
 	}
 }
 
-void enqueue( Dequeue* dq, void* item )
+void* circ_read( CircBuf* crc )
 {
-	assert( dq != NULL );
-	dq->head++;
-	dq->data[dq->head] = item;
-	dq->elements++;
+	assert( crc != NULL );
+	assert( !( DQ_EMPTY( crc ) ) );
+	void* ret = crc->data[crc->readp];
+	crc->readp = ( crc->readp + 1 ) % crc->capacity;
+	return ret;
 }
 
-void* dequeue( Dequeue* dq )
+void circ_write( CircBuf* crc, void* item )
 {
-	assert( dq != NULL );
-	assert( !DQ_EMPTY( dq ) );
-	assert( dq->head < dq->elements );
-	void* item = dq->data[dq->head];
-	dq->head--;
-	dq->elements--;
-	return item;
+	assert( crc != NULL );
+	assert( !DQ_FULL( crc ) );
+	crc->data[crc->writep] = item;
+	crc->writep           = ( crc->writep + 1 ) % crc->capacity;
 }
 
-void dq_free( Dequeue* dq )
+void circ_free( CircBuf* crc )
 {
-	if( dq )
+	if( crc )
 	{
-		free( dq->data );
-		free( dq );
-		dq = NULL;
+		free( crc->data );
+		free( crc );
+		crc = NULL;
 	}
 }
 
 int main()
 {
-	Dequeue* dq = dq_create( 1024 );
-	int x = 5;
-	int y = 6;
-	enqueue( dq, (void*)&x );
-	enqueue( dq, (void*)&y );
-	printf( "%d\n", *(int*)dequeue( dq ) );
-	dq_free( dq );
+	CircBuf* crc = circ_create( 8 );
+	for(int i = 0; i < 32; ++i)
+	{
+		circ_write( crc, (void*)&i );
+		printf( "%d %d %d\n", *(int*)circ_read( crc ), crc->writep, crc->readp );
+	}
+	circ_free( crc );
 	return 0;
 }
