@@ -1,5 +1,9 @@
 // Double-ended queue implemented
 // using a circular buffer
+//
+// Other interesting reference implementation is
+// the lock-free thread-safe ring buffer in the
+// FreeBSD kernel: https://github.com/freebsd/freebsd/blob/master/sys/sys/buf_ring.h
 
 #include <assert.h>
 #include <stddef.h>
