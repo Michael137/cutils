@@ -9,3 +9,13 @@ wget --no-clobber --convert-links --random-wait -r -p -E -e robots=off -U mozill
 * **NB: remove "-maxdepth 1" to search into subdirectories**
 
 find . -type f ! -name some-regex-pattern-* -maxdepth 1 -exec mv {} some/path/ \;
+
+# Mount flash drive
+ls /dev/da*
+
+>> ... /dev/da0s1
+
+mkdir /media/flash
+mount_msdosfs /dev/da0s1 /media/flash
+
+ls /media/flash
