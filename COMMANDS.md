@@ -19,3 +19,5 @@ mkdir /media/flash
 mount_msdosfs /dev/da0s1 /media/flash
 
 ls /media/flash
+
+umount /dev/da0s1
