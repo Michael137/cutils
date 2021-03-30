@@ -14,14 +14,14 @@ using namespace std::chrono_literals;
 std::mutex g_mtx;
 
 // clang-format off
-#ifndef _WIN32
+#ifdef _WIN32
+#error "Demo not supported on MSVC"
+#else
 #	define HOTPATCH_ALIGN(alignment)               \
              __attribute__((ms_hook_prologue))     \
              __attribute__((noinline))             \
              __attribute__((noclone))              \
              __attribute__((aligned(alignment)))
-#else
-#	define HOTPATCH_ALIGN(alignment)
 #endif
 
 #define HOTPATCH HOTPATCH_ALIGN(8)
