@@ -31,61 +31,66 @@ std::atomic<bool> g_shouldPatch{false};
 #define HOTPATCH HOTPATCH_ALIGN(8)
 // clang-format on
 
-static constexpr int PAGE_SIZE = 4096;
-
-void hotpatch( void* target, void* replacement )
+template<size_t ALIGNMENT = 8>
+class Patcher
 {
-	// Is 8-byte aligned?
-	assert( ( reinterpret_cast<uintptr_t>( target ) & 0x07 ) == 0 );
-
-	void* page = reinterpret_cast<void*>( reinterpret_cast<uintptr_t>( target )
-	                                      & ~0xfff );
-
-	// Doesn't work on W^X (write XOR execute) systems
-	mprotect( page, PAGE_SIZE, PROT_WRITE | PROT_EXEC );
-
-	// To account for E9 instruction sub 5 bytes
-	uint32_t rel
-	    = static_cast<char*>( replacement ) - static_cast<char*>( target ) - 5;
-
-	// Create x86 jump instruction to replacement address
-	// Assumes addrs lay within 2gb
-	union {
+	union Instruction {
 		uint8_t data[8];
 		uint64_t alignment;
-	} instruction
-	    = {{0xe9, static_cast<uint8_t>( rel >> 0 ),
-	        static_cast<uint8_t>( rel >> 8 ), static_cast<uint8_t>( rel >> 16 ),
-	        static_cast<uint8_t>( rel >> 24 )}};
+	};
 
-	*reinterpret_cast<uint64_t*>( target )
-	    = *reinterpret_cast<uint64_t*>( instruction.data );
+	static constexpr int PAGE_SIZE = 4096;
 
-	mprotect( page, PAGE_SIZE, PROT_EXEC );
-}
+	static void checkAlignment( void* ptr )
+	{
+		assert( 0 == reinterpret_cast<std::uintptr_t>( ptr ) % ALIGNMENT );
+	}
 
-void unpatch( void* target )
-{
-	// Is 8-byte aligned?
-	assert( ( reinterpret_cast<uintptr_t>( target ) & 0x07 ) == 0 );
+	static void patchImpl( void* target, Instruction instr )
+	{
+		// Remove offset bits from virtual address (lower 12-bits)
+		void* page = reinterpret_cast<void*>(
+		    reinterpret_cast<std::uintptr_t>( target ) & ~0b111111111111 );
 
-	void* page = reinterpret_cast<void*>( reinterpret_cast<uintptr_t>( target )
-	                                      & ~0xfff );
+		// Doesn't work on W^X (write XOR execute) systems
+		mprotect( page, PAGE_SIZE, PROT_WRITE | PROT_EXEC );
 
-	// Doesn't work on W^X (write XOR execute) systems
-	mprotect( page, PAGE_SIZE, PROT_WRITE | PROT_EXEC );
+		*reinterpret_cast<uint64_t*>( target )
+		    = *reinterpret_cast<uint64_t*>( instr.data );
 
-	// Replace hook stub with NOPs
-	union {
-		uint8_t data[8];
-		uint64_t alignment;
-	} instruction = {{0x48, 0x48, 0x48, 0x48, 0x48, 0x48, 0x48, 0x48}};
+		mprotect( page, PAGE_SIZE, PROT_EXEC );
+	}
 
-	*reinterpret_cast<uint64_t*>( target )
-	    = *reinterpret_cast<uint64_t*>( instruction.data );
+   public:
+	static void hotpatch( void* target, void* replacement )
+	{
+		checkAlignment( target );
 
-	mprotect( page, PAGE_SIZE, PROT_EXEC );
-}
+		// To account for E9 instruction sub 5 bytes
+		uint32_t rel = static_cast<char*>( replacement )
+		               - static_cast<char*>( target ) - 5;
+
+		// Create x86 jump instruction to replacement address
+		// Assumes addrs lay within 2gb
+		Instruction instruction = {{0xe9, static_cast<uint8_t>( rel >> 0 ),
+		                            static_cast<uint8_t>( rel >> 8 ),
+		                            static_cast<uint8_t>( rel >> 16 ),
+		                            static_cast<uint8_t>( rel >> 24 )}};
+
+		patchImpl( target, instruction );
+	}
+
+	static void unpatch( void* target )
+	{
+		checkAlignment( target );
+
+		// Replace hook stub with NOPs
+		Instruction instruction
+		    = {{0x48, 0x48, 0x48, 0x48, 0x48, 0x48, 0x48, 0x48}};
+
+		patchImpl( target, instruction );
+	}
+};
 
 HOTPATCH
 int toHotpatch( int num )
@@ -131,13 +136,13 @@ __attribute__( ( optimize( "O0" ) ) ) void hotpatcherCb( int arg )
 		// Listen for signal
 		if( g_shouldPatch )
 		{
-			hotpatch( reinterpret_cast<void*>( toHotpatch ),
-			          reinterpret_cast<void*>( replacement ) );
+			Patcher<8>::hotpatch( reinterpret_cast<void*>( toHotpatch ),
+			                      reinterpret_cast<void*>( replacement ) );
 			g_shouldPatch = false;
 		}
 		else
 		{
-			unpatch( reinterpret_cast<void*>( toHotpatch ) );
+			Patcher<8>::unpatch( reinterpret_cast<void*>( toHotpatch ) );
 			g_shouldPatch = true;
 		}
 	}
