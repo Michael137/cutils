@@ -106,12 +106,13 @@ __attribute__( ( optimize( "O0" ) ) ) void workerCb( int arg )
 {
 	for( int i = 0;; ++i )
 	{
-		std::unique_lock<std::mutex> lck( g_mtx );
-		toHotpatch( arg );
+		{
+			std::lock_guard<std::mutex> lck( g_mtx );
+			toHotpatch( arg );
+		}
 
 		if( i >= 10 )
 		{
-			lck.unlock();
 			g_cv.notify_one();
 			i = 0;
 		}
